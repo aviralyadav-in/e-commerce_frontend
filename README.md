@@ -132,74 +132,7 @@ Overall structure ka main focus hota hai:
 * Customer trust building
 * Better mobile and desktop experience
 
-Isi structure ko reference lekar Niya Bags frontend design plan kiya gaya hai.
 
-
-## Niya Bags Homepage Structure (Visual Flow)
-
-┌──────────────────────────────────────────────┐
-│                OFFER STRIP                  │
-│        Sale / Offers / Announcements        │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│               HEADER / NAVBAR               │
-│ ☰  🔍        NIYA BAGS        ♡ 🛒 👤        │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│               HERO BANNER                   │
-│     Carousel / Autoplay Video / Models      │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│              NEW ARRIVALS                   │
-│      Latest Bags + Discount Highlights      │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│               BEST SELLERS                  │
-│        Most Popular / Trending Bags         │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│   SHOP BY CATEGORY – PRIMARY (Women Focus)  │
-│ Sling | Tote | Clutch | Crossbody | Bucket  │
-│ Coin Purse | Handbag | Mini Bag             │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│  SHOP BY CATEGORY – SECONDARY (Broader)     │
-│ Women | Men | Kids | Corporate Gifts        │
-│ Travel Essentials | Premium Collection      │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│          BRAND VALUE / PREMIUM SECTION      │
-│ Eco-friendly | Handmade | Sustainable       │
-│ Premium Craftsmanship                       │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│            CUSTOMER REVIEWS                 │
-│ ⭐⭐⭐⭐⭐  User Cards + Bag Image + Name        │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│          NEWSLETTER SUBSCRIPTION            │
-│         Email Box + Subscribe Button        │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│              FOOTER LINKS                   │
-│ My Account | Orders | Wishlist | Contact    │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│        STILL CURIOUS? / ABOUT SECTION       │
-│ About Us | Our Story | Loyalty Program      │
-│ Sustainability | Product Care | Reach Us    │
-└──────────────────────────────────────────────┘
 
 
 
