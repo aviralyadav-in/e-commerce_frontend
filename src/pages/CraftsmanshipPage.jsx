@@ -1,21 +1,21 @@
 function CraftsmanshipPage() {
   return (
-    <main className="bg-[#faf9f5] text-[#073b4c]">
+    <main className="bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]">
       {/* HERO */}
       <section className="px-5 py-16 md:px-10 md:py-24">
         <div className="mx-auto grid max-w-[1200px] items-center gap-10 md:grid-cols-2 md:gap-16">
           <div>
-            <p className="mb-3 text-[9px] font-semibold tracking-[0.25em] text-[#c39920]">
+            <p className="mb-3 text-[9px] font-semibold tracking-[0.25em] text-[var(--color-accent)]">
               THE ART BEHIND NIYA
             </p>
 
-            <h1 className="font-serif text-[42px] leading-[1.02] md:text-[64px]">
+            <h1 className="font-serif text-[42px] leading-[1.02] text-[var(--color-text-primary)] md:text-[64px]">
               Crafted by Hand.
               <br />
               Inspired by India.
             </h1>
 
-            <p className="mt-6 max-w-[500px] text-[14px] leading-7 text-[#60777e]">
+            <p className="mt-6 max-w-[500px] text-[14px] leading-7 text-[var(--color-text-secondary)]">
               India has always carried its stories through what its hands
               create. At Niya, we bring that spirit into contemporary
               handbags—where traditional craftsmanship meets a modern sense of
@@ -34,7 +34,7 @@ function CraftsmanshipPage() {
       </section>
 
       {/* HISTORY */}
-      <section className="bg-[#f2eee5] px-5 py-16 md:px-10 md:py-20">
+      <section className="bg-[var(--color-bg-tertiary)] px-5 py-16 md:px-10 md:py-20">
         <div className="mx-auto grid max-w-[1200px] items-center gap-10 md:grid-cols-2 md:gap-16">
           <div className="overflow-hidden">
             <img
@@ -45,15 +45,15 @@ function CraftsmanshipPage() {
           </div>
 
           <div>
-            <p className="mb-3 text-[10px] font-semibold tracking-[0.25em] text-[#c39920]">
+            <p className="mb-3 text-[10px] font-semibold tracking-[0.25em] text-[var(--color-accent)]">
               A CRAFTING TRADITION
             </p>
 
-            <h2 className="font-serif text-[34px] leading-tight md:text-[48px]">
+            <h2 className="font-serif text-[34px] leading-tight text-[var(--color-text-primary)] md:text-[48px]">
               A Heritage Made by Hand
             </h2>
 
-            <div className="mt-6 space-y-4 text-[14px] leading-7 text-[#60777e]">
+            <div className="mt-6 space-y-4 text-[14px] leading-7 text-[var(--color-text-secondary)]">
               <p>
                 For centuries, Indian artisans have transformed simple materials
                 into objects of beauty and purpose.
@@ -78,38 +78,44 @@ function CraftsmanshipPage() {
       <section className="px-5 py-16 md:px-10 md:py-20">
         <div className="mx-auto max-w-[1200px]">
           <div className="mb-10 max-w-[600px]">
-            <p className="mb-3 text-[9px] font-semibold tracking-[0.25em] text-[#c39920]">
+            <p className="mb-3 text-[9px] font-semibold tracking-[0.25em] text-[var(--color-accent)]">
               THE DETAILS
             </p>
 
-            <h2 className="font-serif text-[34px] leading-tight md:text-[48px]">
+            <h2 className="font-serif text-[34px] leading-tight text-[var(--color-text-primary)] md:text-[48px]">
               Where Patience Becomes Craft
             </h2>
           </div>
 
           <div className="grid gap-5 md:grid-cols-3">
-            <article className="border-t border-[#d5cdbd] pt-5">
-              <h3 className="font-serif text-2xl">Hand Stitching</h3>
+            <article className="border-t border-[var(--color-border-soft)] pt-5">
+              <h3 className="font-serif text-2xl text-[var(--color-text-primary)]">
+                Hand Stitching
+              </h3>
 
-              <p className="mt-3 text-[14px] leading-6 text-[#60777e]">
+              <p className="mt-3 text-[14px] leading-6 text-[var(--color-text-secondary)]">
                 Slow, deliberate and precise. Every stitch reflects the patience
                 behind handmade work.
               </p>
             </article>
 
-            <article className="border-t border-[#d5cdbd] pt-5">
-              <h3 className="font-serif text-2xl">Weaving</h3>
+            <article className="border-t border-[var(--color-border-soft)] pt-5">
+              <h3 className="font-serif text-2xl text-[var(--color-text-primary)]">
+                Weaving
+              </h3>
 
-              <p className="mt-3 text-[14px] leading-6 text-[#60777e]">
+              <p className="mt-3 text-[14px] leading-6 text-[var(--color-text-secondary)]">
                 Inspired by India's rich textile traditions, where threads
                 become patterns, texture and character.
               </p>
             </article>
 
-            <article className="border-t border-[#d5cdbd] pt-5">
-              <h3 className="font-serif text-2xl">Hand Finishing</h3>
+            <article className="border-t border-[var(--color-border-soft)] pt-5">
+              <h3 className="font-serif text-2xl text-[var(--color-text-primary)]">
+                Hand Finishing
+              </h3>
 
-              <p className="mt-3 text-[11px] leading-6 text-[#60777e]">
+              <p className="mt-3 text-[14px] leading-6 text-[var(--color-text-secondary)]">
                 The final details are where a piece comes alive—carefully
                 finished by hand rather than rushed.
               </p>
@@ -119,10 +125,10 @@ function CraftsmanshipPage() {
       </section>
 
       {/* EDITORIAL */}
-      <section className="bg-[#073b4c] px-5 py-16 text-white md:px-10 md:py-20">
+      <section className="bg-[var(--color-bg-dark-section)] px-5 py-16 text-[var(--color-text-on-dark)] md:px-10 md:py-20">
         <div className="mx-auto grid max-w-[1200px] items-center gap-10 md:grid-cols-[1.1fr_0.9fr] md:gap-16">
           <div>
-            <p className="mb-3 text-[9px] font-semibold tracking-[0.25em] text-[#c39920]">
+            <p className="mb-3 text-[9px] font-semibold tracking-[0.25em] text-[var(--color-accent)]">
               OUR PHILOSOPHY
             </p>
 
@@ -132,14 +138,14 @@ function CraftsmanshipPage() {
               Made to Last.
             </h2>
 
-            <p className="mt-6 max-w-[520px] text-[14px] leading-7 text-white/65">
+            <p className="mt-6 max-w-[520px] text-[14px] leading-7 text-[var(--color-text-on-dark-muted)]">
               We believe a bag should feel personal. That is why we value the
               details that cannot be hurried—the texture of the material, the
               precision of a stitch and the quiet finishing touches that give
               every piece its character.
             </p>
 
-            <p className="mt-4 text-[14px] leading-7 text-white/65">
+            <p className="mt-4 text-[14px] leading-7 text-[var(--color-text-on-dark-muted)]">
               Luxury, to us, is not excess. It is intention.
             </p>
           </div>
@@ -157,27 +163,27 @@ function CraftsmanshipPage() {
       {/* INDIA TO NIYA */}
       <section className="px-5 py-16 md:px-10 md:py-20">
         <div className="mx-auto max-w-[800px] text-center">
-          <p className="mb-3 text-[10px] font-semibold tracking-[0.25em] text-[#c39920]">
+          <p className="mb-3 text-[10px] font-semibold tracking-[0.25em] text-[var(--color-accent)]">
             OUR INSPIRATION
           </p>
 
-          <h2 className="font-serif text-[36px] leading-tight md:text-[50px]">
+          <h2 className="font-serif text-[36px] leading-tight text-[var(--color-text-primary)] md:text-[50px]">
             From Indian Heritage
             <br />
             to Modern Luxury
           </h2>
 
-          <p className="mx-auto mt-6 max-w-[650px] text-[16px] leading-7 text-[#60777e]">
+          <p className="mx-auto mt-6 max-w-[650px] text-[16px] leading-7 text-[var(--color-text-secondary)]">
             Niya takes inspiration from India's many craft traditions while
             keeping the language distinctly contemporary.
           </p>
 
-          <p className="mx-auto mt-4 max-w-[650px] text-[14px] leading-7 text-[#60777e]">
+          <p className="mx-auto mt-4 max-w-[650px] text-[14px] leading-7 text-[var(--color-text-secondary)]">
             The colours, textures, patience and artistry found across Indian
             craftsmanship influence the way we think about our bags.
           </p>
 
-          <p className="mx-auto mt-4 max-w-[650px] text-[14px] leading-7 text-[#60777e]">
+          <p className="mx-auto mt-4 max-w-[650px] text-[14px] leading-7 text-[var(--color-text-secondary)]">
             The result is not a replica of tradition. It is our interpretation
             of it.
           </p>
@@ -185,21 +191,21 @@ function CraftsmanshipPage() {
       </section>
 
       {/* CLOSING */}
-      <section className="border-t border-[#e1e7e6] bg-[#f2eee5] px-5 py-16 text-center md:px-10 md:py-20">
-        <p className="mb-3 text-[9px] font-semibold tracking-[0.25em] text-[#c39920]">
+      <section className="border-t border-[var(--color-border-soft)] bg-[var(--color-bg-tertiary)] px-5 py-16 text-center md:px-10 md:py-20">
+        <p className="mb-3 text-[9px] font-semibold tracking-[0.25em] text-[var(--color-accent)]">
           THE NIYA PROMISE
         </p>
 
-        <h2 className="font-serif text-[36px] leading-tight md:text-[50px]">
+        <h2 className="font-serif text-[36px] leading-tight text-[var(--color-text-primary)] md:text-[50px]">
           Every Bag Carries a Story.
         </h2>
 
-        <p className="mx-auto mt-5 max-w-[550px] text-[14px] leading-7 text-[#60777e]">
+        <p className="mx-auto mt-5 max-w-[550px] text-[14px] leading-7 text-[var(--color-text-secondary)]">
           A story of skilled hands, thoughtful design and a heritage that
           continues to inspire.
         </p>
 
-        <p className="mt-2 text-[14px] text-[#60777e]">
+        <p className="mt-2 text-[14px] text-[var(--color-text-secondary)]">
           Made for today. Rooted in where we come from.
         </p>
       </section>

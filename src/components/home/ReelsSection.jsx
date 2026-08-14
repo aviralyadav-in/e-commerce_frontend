@@ -1,123 +1,150 @@
-import { useState } from "react";
-
-const reels = [
-  {
-    id: 1,
-    image:
-      "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=700&q=85",
-    title: "Everyday elegance",
-  },
-  {
-    id: 2,
-    image:
-      "https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=700&q=85",
-    title: "Style it your way",
-  },
-  {
-    id: 3,
-    image:
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=85",
-    title: "Behind the craft",
-  },
-  {
-    id: 4,
-    image:
-      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=700&q=85",
-    title: "The Niya edit",
-  },
-];
+import { useEffect, useState } from "react";
+import { getReels } from "../../api/api";
 
 function ReelsSection() {
+  const [reels, setReels] = useState([]);
   const [selectedReel, setSelectedReel] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function loadReels() {
+      try {
+        const data = await getReels();
+
+        if (mounted) {
+          setReels(Array.isArray(data) ? data : []);
+        }
+      } catch (error) {
+        console.error("Failed to load reels:", error);
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadReels();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  if (loading) {
+    return (
+      <section className="bg-[var(--color-bg-primary)] px-5 py-14 md:px-10 md:py-20">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="mb-7 text-center md:mb-9">
+            <p className="mb-2 text-[9px] font-semibold tracking-[0.22em] text-[var(--color-accent)]">
+              FOLLOW THE STORY
+            </p>
+
+            <h2 className="font-serif text-[34px] leading-tight text-[var(--color-text-primary)] md:text-[40px]">
+              Niya Reels
+            </h2>
+
+            <p className="mt-2 text-[10px] text-[var(--color-text-muted)]">
+              A closer look at the world of Niya.
+            </p>
+          </div>
+
+          <p className="py-10 text-center text-[10px] tracking-[0.12em] text-[var(--color-text-muted)]">
+            LOADING REELS...
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  if (reels.length === 0) {
+    return (
+      <section className="bg-[var(--color-bg-primary)] px-5 py-14 md:px-10 md:py-20">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="mb-7 text-center md:mb-9">
+            <p className="mb-2 text-[9px] font-semibold tracking-[0.22em] text-[var(--color-accent)]">
+              FOLLOW THE STORY
+            </p>
+
+            <h2 className="font-serif text-[34px] leading-tight text-[var(--color-text-primary)] md:text-[40px]">
+              Niya Reels
+            </h2>
+
+            <p className="mt-2 text-[10px] text-[var(--color-text-muted)]">
+              A closer look at the world of Niya.
+            </p>
+          </div>
+
+          <p className="py-10 text-center text-[10px] text-[var(--color-text-muted)]">
+            No reels available.
+          </p>
+        </div>
+      </section>
+    );
+  }
+
+  /*
+    Duplicate the reels so the animation can loop seamlessly.
+    The second set follows immediately after the first set.
+  */
+  const scrollingReels = [...reels, ...reels];
 
   return (
-    <section className="bg-[#faf9f5] px-5 py-14 md:px-10 md:py-20">
+    <section className="overflow-hidden bg-[var(--color-bg-primary)] px-5 py-14 md:px-10 md:py-20">
       <div className="mx-auto max-w-[1440px]">
-        {/* Heading */}
+        {/* HEADER */}
         <div className="mb-7 text-center md:mb-9">
-          <p className="mb-2 text-[9px] font-semibold tracking-[0.22em] text-[#c39920]">
+          <p className="mb-2 text-[9px] font-semibold tracking-[0.22em] text-[var(--color-accent)]">
             FOLLOW THE STORY
           </p>
 
-          <h2 className="font-serif text-[34px] leading-tight text-[#073b4c] md:text-[40px]">
+          <h2 className="font-serif text-[34px] leading-tight text-[var(--color-text-primary)] md:text-[40px]">
             Niya Reels
           </h2>
 
-          <p className="mt-2 text-[10px] text-[#73868c]">
+          <p className="mt-2 text-[10px] text-[var(--color-text-muted)]">
             A closer look at the world of Niya.
           </p>
         </div>
 
-        {/* Horizontal swipe container */}
-        <div
-          className="
-            flex
-            snap-x
-            snap-mandatory
-            gap-3
-            overflow-x-auto
-            pb-2
-            scrollbar-none
-            [-ms-overflow-style:none]
-            [scrollbar-width:none]
-            [&::-webkit-scrollbar]:hidden
-          "
-        >
-          {reels.map((reel) => (
-            <button
-              key={reel.id}
-              type="button"
-              onClick={() => setSelectedReel(reel)}
-              className="
-                group
-                relative
-                aspect-[9/14]
-                w-[calc((100vw-37px)/2)]
-                shrink-0
-                snap-start
-                overflow-hidden
-                text-left
-                sm:w-[220px]
-                md:w-[250px]
-                lg:w-[280px]
-              "
-            >
-              <img
-                src={reel.image}
-                alt={reel.title}
-                className="
-                  h-full
-                  w-full
-                  object-cover
-                  transition-transform
-                  duration-500
-                  group-hover:scale-105
-                "
-              />
+        {/* AUTO-SCROLL REELS */}
+        <div className="relative overflow-hidden">
+          <div className="reels-marquee flex w-max gap-3 hover:[animation-play-state:paused]">
+            {scrollingReels.map((reel, index) => (
+              <button
+                key={`${reel.id}-${index}`}
+                type="button"
+                onClick={() => setSelectedReel(reel)}
+                className="group relative aspect-[9/14] w-[calc((100vw-37px)/2)] shrink-0 overflow-hidden text-left sm:w-[220px] md:w-[250px] lg:w-[280px]"
+              >
+                <img
+                  src={reel.image || reel.thumbnail}
+                  alt={reel.title}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
 
-              {/* Dark gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#073b4c]/75 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#073b4c]/75 via-transparent to-transparent" />
 
-              {/* Play button */}
-              <span className="absolute left-1/2 top-1/2 grid h-10 w-10 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-[11px] text-[#073b4c] shadow-sm">
-                ▶
-              </span>
+                <span className="absolute left-1/2 top-1/2 grid h-10 w-10 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white/90 text-[11px] text-[#073b4c] shadow-sm">
+                  ▶
+                </span>
 
-              {/* Reel title */}
-              <span className="absolute bottom-4 left-4 right-4 font-serif text-[14px] text-white">
-                {reel.title}
-              </span>
-            </button>
-          ))}
+                <span className="absolute bottom-4 left-4 right-4 font-serif text-[14px] text-white">
+                  {reel.title}
+                </span>
+              </button>
+            ))}
+          </div>
         </div>
 
-        {/* Mobile swipe hint */}
-        <p className="mt-3 text-center text-[8px] tracking-[0.15em] text-[#9a9d9c] md:hidden">
+        <p className="mt-3 text-center text-[8px] tracking-[0.15em] text-[var(--color-text-muted)] md:hidden">
           SWIPE TO EXPLORE →
         </p>
       </div>
 
-      {/* Preview Modal */}
+      {/* MODAL */}
       {selectedReel && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-[#021f29]/80 px-5 backdrop-blur-sm"
@@ -128,7 +155,7 @@ function ReelsSection() {
             onClick={(event) => event.stopPropagation()}
           >
             <img
-              src={selectedReel.image}
+              src={selectedReel.image || selectedReel.thumbnail}
               alt={selectedReel.title}
               className="h-full w-full object-cover"
             />
@@ -156,6 +183,30 @@ function ReelsSection() {
           </div>
         </div>
       )}
+
+      {/* MARQUEE ANIMATION */}
+      <style>{`
+        .reels-marquee {
+          animation: niyaReelsScroll 35s linear infinite;
+          will-change: transform;
+        }
+
+        @keyframes niyaReelsScroll {
+          from {
+            transform: translateX(0);
+          }
+
+          to {
+            transform: translateX(calc(-50% - 6px));
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .reels-marquee {
+            animation: none;
+          }
+        }
+      `}</style>
     </section>
   );
 }

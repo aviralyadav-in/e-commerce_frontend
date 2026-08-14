@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
 import { FiHeart, FiShoppingBag } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
-import { getFeaturedProducts } from "../../api/api";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  getFeaturedProducts,
+  getBestSellerProducts,
+  getNewArrivalProducts,
+} from "../../api/api";
 
 function FeaturedProducts() {
-  const [products, setProducts] = useState([]);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [bestSellerProducts, setBestSellerProducts] = useState([]);
+  const [newArrivalProducts, setNewArrivalProducts] = useState([]);
+
   const [loading, setLoading] = useState(true);
 
   const [wishlistItems, setWishlistItems] = useState([]);
@@ -13,32 +20,51 @@ function FeaturedProducts() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    let mounted = true;
+
     async function loadProducts() {
       try {
-        const data = await getFeaturedProducts();
-        setProducts(data);
+        const [featured, bestSellers, newArrivals] = await Promise.all([
+          getFeaturedProducts(),
+          getBestSellerProducts(),
+          getNewArrivalProducts(),
+        ]);
+
+        if (mounted) {
+          setFeaturedProducts(Array.isArray(featured) ? featured : []);
+          setBestSellerProducts(Array.isArray(bestSellers) ? bestSellers : []);
+          setNewArrivalProducts(Array.isArray(newArrivals) ? newArrivals : []);
+        }
       } catch (error) {
         console.error("Failed to load products:", error);
       } finally {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     }
 
     loadProducts();
 
-    const savedWishlist = JSON.parse(
-      localStorage.getItem("niyaWishlist") || "[]",
-    );
+    try {
+      const savedWishlist = JSON.parse(
+        localStorage.getItem("niyaWishlist") || "[]",
+      );
 
-    const savedCart = JSON.parse(localStorage.getItem("niyaCart") || "[]");
+      const savedCart = JSON.parse(localStorage.getItem("niyaCart") || "[]");
 
-    setWishlistItems(savedWishlist);
-    setCartItems(savedCart);
+      setWishlistItems(Array.isArray(savedWishlist) ? savedWishlist : []);
+      setCartItems(Array.isArray(savedCart) ? savedCart : []);
+    } catch {
+      setWishlistItems([]);
+      setCartItems([]);
+    }
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
-  // ===============================
-  // TOGGLE WISHLIST
-  // ===============================
   function toggleWishlist(product) {
     const existingWishlist = JSON.parse(
       localStorage.getItem("niyaWishlist") || "[]",
@@ -48,15 +74,9 @@ function FeaturedProducts() {
       (item) => item.id === product.id,
     );
 
-    let updatedWishlist;
-
-    if (alreadyExists) {
-      updatedWishlist = existingWishlist.filter(
-        (item) => item.id !== product.id,
-      );
-    } else {
-      updatedWishlist = [...existingWishlist, product];
-    }
+    const updatedWishlist = alreadyExists
+      ? existingWishlist.filter((item) => item.id !== product.id)
+      : [...existingWishlist, product];
 
     localStorage.setItem("niyaWishlist", JSON.stringify(updatedWishlist));
 
@@ -65,27 +85,14 @@ function FeaturedProducts() {
     window.dispatchEvent(new Event("niyaWishlistUpdated"));
   }
 
-  // ===============================
-  // TOGGLE CART
-  // ===============================
   function toggleCart(product) {
     const existingCart = JSON.parse(localStorage.getItem("niyaCart") || "[]");
 
     const alreadyExists = existingCart.some((item) => item.id === product.id);
 
-    let updatedCart;
-
-    if (alreadyExists) {
-      updatedCart = existingCart.filter((item) => item.id !== product.id);
-    } else {
-      updatedCart = [
-        ...existingCart,
-        {
-          ...product,
-          quantity: 1,
-        },
-      ];
-    }
+    const updatedCart = alreadyExists
+      ? existingCart.filter((item) => item.id !== product.id)
+      : [...existingCart, { ...product, quantity: 1 }];
 
     localStorage.setItem("niyaCart", JSON.stringify(updatedCart));
 
@@ -102,11 +109,300 @@ function FeaturedProducts() {
     return cartItems.some((item) => item.id === productId);
   }
 
+  function renderProductCard(product, sectionType) {
+    const wishlistActive = isInWishlist(product.id);
+    const cartActive = isInCart(product.id);
+
+    let badgeText = "FEATURED";
+
+    if (sectionType === "bestSeller") {
+      badgeText = "BEST SELLER";
+    } else if (sectionType === "newArrival") {
+      badgeText = "NEW";
+    } else if (product.discountPercentage) {
+      badgeText = "SPECIAL";
+    }
+
+    return (
+      <article
+        key={product.id}
+        onClick={() => navigate(`/product/${product.id}`)}
+        className="group cursor-pointer"
+      >
+        {/* PRODUCT IMAGE */}
+        <div
+          className="
+            relative aspect-[4/5] overflow-hidden
+            bg-[var(--color-bg-tertiary)]
+            dark:bg-slate-800
+          "
+        >
+          <img
+            src={product.thumbnail || product.images?.[0]}
+            alt={product.title}
+            loading="lazy"
+            className="
+              h-full w-full object-cover
+              transition duration-500
+              group-hover:scale-[1.03]
+            "
+          />
+
+          {/* WISHLIST */}
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              toggleWishlist(product);
+            }}
+            className={`
+              absolute right-3 top-3
+              grid h-8 w-8 place-items-center
+              rounded-full transition
+
+              ${
+                wishlistActive
+                  ? "bg-[var(--color-dark-section)] text-white dark:bg-white dark:text-slate-900"
+                  : "bg-[var(--color-bg-secondary)]/90 text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)] dark:bg-slate-900/90 dark:text-white dark:hover:bg-slate-800"
+              }
+            `}
+            aria-label={
+              wishlistActive ? "Remove from wishlist" : "Add to wishlist"
+            }
+          >
+            <FiHeart
+              size={14}
+              strokeWidth={1.5}
+              fill={wishlistActive ? "currentColor" : "none"}
+            />
+          </button>
+
+          {/* BADGE */}
+          <span
+            className="
+              absolute left-3 top-3
+              bg-[var(--color-dark-section)]
+              px-2 py-1
+              text-[7px]
+              tracking-wide
+              text-white
+              dark:bg-white
+              dark:text-slate-900
+            "
+          >
+            {badgeText}
+          </span>
+
+          {/* CART */}
+          <button
+            type="button"
+            onClick={(event) => {
+              event.stopPropagation();
+              toggleCart(product);
+            }}
+            className={`
+              absolute bottom-2 left-2 right-2
+              flex h-8 items-center justify-center
+              gap-1 px-1
+              text-[6px] font-semibold tracking-0
+              transition
+
+              sm:bottom-3 sm:left-3 sm:right-3
+              sm:h-9 sm:gap-2 sm:px-2 sm:text-[7px]
+
+              ${
+                cartActive
+                  ? "bg-[var(--color-dark-section)] text-white opacity-100 dark:bg-white dark:text-slate-900"
+                  : "bg-[var(--color-bg-secondary)]/95 text-[var(--color-text-primary)] opacity-0 group-hover:opacity-100 dark:bg-slate-900/95 dark:text-white"
+              }
+            `}
+          >
+            <FiShoppingBag size={9} className="shrink-0" />
+
+            <span className="whitespace-nowrap">
+              {cartActive ? "ADDED TO BAG ✓" : "ADD TO BAG"}
+            </span>
+          </button>
+        </div>
+
+        {/* PRODUCT INFO */}
+        <div className="pt-4">
+          <p
+            className="
+              text-[8px]
+              uppercase
+              tracking-[0.12em]
+              text-[var(--color-accent)]
+              dark:text-slate-400
+            "
+          >
+            {product.category?.name || "Bags"}
+          </p>
+
+          <h3
+            className="
+              mt-1
+              text-[11px]
+              font-medium
+              text-[var(--color-text-primary)]
+              dark:text-white
+            "
+          >
+            {product.title}
+          </h3>
+
+          <p
+            className="
+              mt-2
+              text-[11px]
+              font-semibold
+              text-[var(--color-text-primary)]
+              dark:text-white
+            "
+          >
+            ₹{Math.round(product.price * 83).toLocaleString("en-IN")}
+          </p>
+        </div>
+      </article>
+    );
+  }
+
+  function renderSection({
+    id,
+    eyebrow,
+    title,
+    description,
+    products,
+    sectionType,
+  }) {
+    return (
+      <section
+        id={id}
+        className="
+          bg-[var(--color-bg-secondary)]
+          px-5 py-12
+          transition-colors duration-300
+
+          md:px-10 md:py-16
+
+          dark:bg-slate-950
+        "
+      >
+        <div className="mx-auto max-w-[1440px]">
+          {/* SECTION HEADER */}
+          <div className="mb-8 flex items-end justify-between">
+            <div>
+              <p
+                className="
+                  mb-2
+                  text-[9px]
+                  font-semibold
+                  tracking-[0.22em]
+                  text-[var(--color-accent)]
+                  dark:text-slate-400
+                "
+              >
+                {eyebrow}
+              </p>
+
+              <h2
+                className="
+                  font-serif
+                  text-[34px]
+                  text-[var(--color-text-primary)]
+                  md:text-[40px]
+                  dark:text-white
+                "
+              >
+                {title}
+              </h2>
+
+              <p
+                className="
+                  mt-2
+                  max-w-[560px]
+                  text-[12px]
+                  leading-5
+                  text-[var(--color-text-muted)]
+                  dark:text-slate-400
+                "
+              >
+                {description}
+              </p>
+            </div>
+
+            {/* VIEW ALL */}
+            <Link
+              to="/shop"
+              className="
+                hidden
+                border-b
+                border-[var(--color-accent)]
+                pb-1
+                text-[9px]
+                font-semibold
+                text-[var(--color-text-primary)]
+                transition
+                hover:opacity-60
+
+                sm:block
+
+                dark:border-slate-500
+                dark:text-white
+              "
+            >
+              View All →
+            </Link>
+          </div>
+
+          {/* PRODUCTS */}
+          {products.length === 0 ? (
+            <p
+              className="
+                py-10
+                text-center
+                text-[11px]
+                text-[var(--color-text-muted)]
+                dark:text-slate-400
+              "
+            >
+              No products available.
+            </p>
+          ) : (
+            <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+              {products.map((product) =>
+                renderProductCard(product, sectionType),
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+    );
+  }
+
+  /* LOADING */
   if (loading) {
     return (
-      <section id="featured" className="bg-white px-5 py-16 md:px-10 md:py-20">
+      <section
+        id="featured"
+        className="
+          bg-[var(--color-bg-secondary)]
+          px-5 py-12
+          transition-colors duration-300
+          md:px-10 md:py-16
+          dark:bg-slate-950
+        "
+      >
         <div className="mx-auto max-w-[1440px]">
-          <p className="text-center text-[11px] tracking-[0.15em] text-[#6b7f85]">
+          <p
+            className="
+              text-center
+              text-[11px]
+              tracking-[0.15em]
+              text-[var(--color-text-muted)]
+              dark:text-slate-400
+            "
+          >
             LOADING COLLECTION...
           </p>
         </div>
@@ -115,122 +411,40 @@ function FeaturedProducts() {
   }
 
   return (
-    <section id="featured" className="bg-white px-5 py-16 md:px-10 md:py-20">
-      <div className="mx-auto max-w-[1440px]">
-        <div className="mb-8 flex items-end justify-between">
-          <div>
-            <p className="mb-2 text-[9px] font-semibold tracking-[0.22em] text-[#c39920]">
-              CURATED FOR YOU
-            </p>
+    <>
+      {/* FEATURED PIECES */}
+      {renderSection({
+        id: "featured",
+        eyebrow: "CURATED FOR YOU",
+        title: "Featured Pieces",
+        description:
+          "Timeless silhouettes crafted with intention, designed to become part of your everyday story.",
+        products: featuredProducts,
+        sectionType: "featured",
+      })}
 
-            <h2 className="font-serif text-[34px] text-[#073b4c] md:text-[40px]">
-              Featured Pieces
-            </h2>
+      {/* BEST SELLERS */}
+      {renderSection({
+        id: "best-sellers",
+        eyebrow: "MOST LOVED",
+        title: "Best Sellers",
+        description:
+          "Discover the pieces our customers love most, chosen for their timeless appeal and everyday elegance.",
+        products: bestSellerProducts,
+        sectionType: "bestSeller",
+      })}
 
-            <p className="mt-3 max-w-[500px] text-[11px] leading-5 text-[#73868c]">
-              Timeless silhouettes crafted with intention, designed to become
-              part of your everyday story.
-            </p>
-          </div>
-
-          <a
-            href="#categories"
-            className="hidden border-b border-[#c39920] pb-1 text-[9px] font-semibold text-[#073b4c] sm:block"
-          >
-            View All →
-          </a>
-        </div>
-
-        {products.length === 0 ? (
-          <p className="py-10 text-center text-[11px] text-[#6b7f85]">
-            No products available.
-          </p>
-        ) : (
-          <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-            {products.map((product) => {
-              const wishlistActive = isInWishlist(product.id);
-              const cartActive = isInCart(product.id);
-
-              return (
-                <article
-                  key={product.id}
-                  onClick={() => navigate(`/product/${product.id}`)}
-                  className="group cursor-pointer"
-                >
-                  <div className="relative aspect-[4/5] overflow-hidden bg-[#f0f2f1]">
-                    <img
-                      src={product.thumbnail || product.images?.[0]}
-                      alt={product.title}
-                      className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
-                    />
-
-                    {/* WISHLIST */}
-                    <button
-                      type="button"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        toggleWishlist(product);
-                      }}
-                      className={`absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full transition ${
-                        wishlistActive
-                          ? "bg-[#073b4c] text-white"
-                          : "bg-white/90 text-[#073b4c] hover:bg-white"
-                      }`}
-                      aria-label="Toggle wishlist"
-                    >
-                      <FiHeart
-                        size={14}
-                        strokeWidth={1.5}
-                        fill={wishlistActive ? "currentColor" : "none"}
-                      />
-                    </button>
-
-                    {/* BADGE */}
-                    <span className="absolute left-3 top-3 bg-[#073b4c] px-2 py-1 text-[7px] tracking-wide text-white">
-                      {product.discountPercentage ? "SPECIAL" : "FEATURED"}
-                    </span>
-
-                    {/* CART */}
-                    <button
-                      type="button"
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        toggleCart(product);
-                      }}
-                      className={`absolute bottom-2 left-2 right-2 flex h-8 items-center justify-center gap-1 px-1 text-[6px] font-semibold tracking-0 transition sm:bottom-3 sm:left-3 sm:right-3 sm:h-9 sm:gap-2 sm:px-2 sm:text-[7px] ${
-                        cartActive
-                          ? "bg-[#073b4c] text-white opacity-100"
-                          : "bg-white/95 text-[#073b4c] opacity-0 group-hover:opacity-100"
-                      }`}
-                    >
-                      <FiShoppingBag size={9} className="shrink-0" />
-
-                      <span className="whitespace-nowrap">
-                        {cartActive ? "ADDED TO BAG ✓" : "ADD TO BAG"}
-                      </span>
-                    </button>
-                  </div>
-
-                  <div className="pt-4">
-                    <p className="text-[8px] uppercase tracking-[0.12em] text-[#9a7a26]">
-                      {product.category?.name || "Bags"}
-                    </p>
-
-                    <h3 className="mt-1 text-[11px] font-medium text-[#073b4c]">
-                      {product.title}
-                    </h3>
-
-                    <p className="mt-2 text-[11px] font-semibold text-[#073b4c]">
-                      ₹{Math.round(product.price * 83).toLocaleString("en-IN")}
-                    </p>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
-        )}
-      </div>
-    </section>
+      {/* NEW ARRIVALS */}
+      {renderSection({
+        id: "new-arrivals",
+        eyebrow: "JUST IN",
+        title: "New Arrivals",
+        description:
+          "Explore the latest silhouettes and refined designs created to bring a fresh touch to your collection.",
+        products: newArrivalProducts,
+        sectionType: "newArrival",
+      })}
+    </>
   );
 }
 

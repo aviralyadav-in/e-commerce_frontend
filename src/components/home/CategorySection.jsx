@@ -25,38 +25,40 @@ function CategorySection() {
   return (
     <section
       id="categories"
-      className="bg-[#faf9f5] px-5 py-16 md:px-10 md:py-20"
+      className="bg-[var(--color-bg-primary)] px-5 py-16 md:px-10 md:py-20"
     >
       <div className="mx-auto max-w-[1440px]">
         <div className="mb-7 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="mb-2 text-[9px] font-semibold tracking-[0.22em] text-[#c39920]">
+            <p className="mb-2 text-[9px] font-semibold tracking-[0.22em] text-[var(--color-accent)]">
               EXPLORE THE COLLECTION
             </p>
 
-            <h2 className="font-serif text-[34px] font-medium text-[#073b4c] md:text-[40px]">
+            <h2 className="font-serif text-[34px] font-medium text-[var(--color-text-primary)] md:text-[40px]">
               Shop by Category
             </h2>
           </div>
 
-          <div className="flex w-fit items-center rounded-full border border-[#dce5e6] bg-white p-1">
+          <div className="flex w-fit items-center rounded-full border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-1">
             <button
+              type="button"
               onClick={() => setGender("women")}
               className={`rounded-full px-4 py-2 text-[9px] transition ${
                 gender === "women"
-                  ? "bg-[#073b4c] text-white"
-                  : "text-[#73868c]"
+                  ? "bg-[var(--color-dark-section)] text-white"
+                  : "text-[var(--color-text-muted)]"
               }`}
             >
               Women
             </button>
 
             <button
+              type="button"
               onClick={() => setGender("men")}
               className={`rounded-full px-4 py-2 text-[9px] transition ${
                 gender === "men"
-                  ? "bg-[#073b4c] text-white"
-                  : "text-[#73868c]"
+                  ? "bg-[var(--color-dark-section)] text-white"
+                  : "text-[var(--color-text-muted)]"
               }`}
             >
               Men
@@ -74,6 +76,7 @@ function CategorySection() {
               <img
                 src={`https://images.unsplash.com/photo-${image}?auto=format&fit=crop&w=700&q=85`}
                 alt={name}
+                loading="lazy"
                 className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
               />
 
@@ -81,6 +84,7 @@ function CategorySection() {
 
               <div className="absolute bottom-4 left-0 w-full text-center text-white">
                 <h3 className="font-serif text-[16px]">{name}</h3>
+
                 <p className="mt-1 text-[8px] text-white/75">{count}</p>
               </div>
             </a>

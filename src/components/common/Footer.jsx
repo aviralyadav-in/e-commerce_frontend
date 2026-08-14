@@ -1,91 +1,131 @@
-import {
-  FiFacebook,
-  FiInstagram,
-  FiMail,
-  FiTwitter,
-} from "react-icons/fi";
+import { useEffect, useState } from "react";
+import { FiFacebook, FiInstagram, FiMail, FiYoutube } from "react-icons/fi";
+import { Link } from "react-router-dom";
+import { getFooter } from "../../api/api";
+
+const iconMap = {
+  Instagram: FiInstagram,
+  Facebook: FiFacebook,
+  YouTube: FiYoutube,
+  Email: FiMail,
+};
 
 function Footer() {
-  return (
-    <footer className="bg-[#073b4c] px-5 py-12 text-white md:px-10 md:py-14">
-      <div className="mx-auto max-w-[1100px]">
-        {/* Footer Grid */}
-        <div className="grid grid-cols-2 gap-x-8 gap-y-10 md:grid-cols-4 md:gap-x-12 lg:grid-cols-5">
-          {/* Brand */}
-          <div className="col-span-2 md:col-span-2 lg:col-span-2">
-            <h2 className="font-serif text-2xl">Niya Bags</h2>
+  const [footer, setFooter] = useState(null);
 
-            <p className="mt-4 max-w-[320px] text-[10px] leading-6 text-white/55">
-              Modern luxury handbags thoughtfully designed and handcrafted
-              for the woman who carries her own story.
+  useEffect(() => {
+    async function loadFooter() {
+      try {
+        const data = await getFooter();
+        setFooter(data);
+      } catch (error) {
+        console.error("Failed to load footer:", error);
+      }
+    }
+
+    loadFooter();
+  }, []);
+
+  if (!footer) return null;
+
+  return (
+    <footer className="bg-[var(--color-dark-section)] px-5 py-10 text-white md:px-8 md:py-12">
+      <div className="mx-auto max-w-[1100px]">
+        {/* MAIN */}
+        <div className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4 lg:grid-cols-5">
+          {/* BRAND */}
+          <div className="col-span-2 lg:col-span-2">
+            <h2 className="font-serif text-2xl">{footer.brand.name}</h2>
+
+            <p className="mt-3 max-w-[300px] text-[11px] leading-5 text-white/55">
+              {footer.brand.description}
             </p>
 
-            <div className="mt-5 flex gap-3">
-              {[FiInstagram, FiFacebook, FiTwitter, FiMail].map(
-                (Icon, index) => (
+            {/* SOCIAL */}
+            <div className="mt-4 flex gap-2">
+              {footer.socialLinks.map((social) => {
+                const Icon = iconMap[social.platform];
+
+                if (!Icon) return null;
+
+                return (
                   <a
-                    key={index}
-                    href="#"
-                    className="grid h-8 w-8 place-items-center rounded-full border border-white/15 text-white/70 transition hover:border-[#d2a92e] hover:text-[#d2a92e]"
+                    key={social.id}
+                    href={social.url}
+                    aria-label={social.platform}
+                    className="grid h-8 w-8 place-items-center rounded-full border border-white/15 text-white/70 transition hover:border-[var(--color-accent-bright)] hover:text-[var(--color-accent-bright)]"
                   >
                     <Icon size={13} />
                   </a>
-                )
-              )}
+                );
+              })}
             </div>
           </div>
 
-          {/* Shop */}
-          <div>
-            <h3 className="mb-5 text-[9px] font-semibold tracking-[0.18em] text-[#d2a92e]">
-              SHOP
-            </h3>
+          {/* FOOTER SECTIONS */}
+          {footer.sections.map((section, index) => (
+            <div
+              key={section.id}
+              className={
+                index === 1 ? "col-span-2 md:col-span-1 lg:col-span-1" : ""
+              }
+            >
+              <h3 className="mb-3 text-[10px] font-semibold tracking-[0.16em] text-[var(--color-accent-bright)]">
+                {section.title}
+              </h3>
 
-            <div className="flex flex-col gap-3 text-[9px] text-white/60">
-              <a href="#categories">All Bags</a>
-              <a href="#categories">New Arrivals</a>
-              <a href="#featured">Bestsellers</a>
-              <a href="#categories">Women</a>
-              <a href="#categories">Men</a>
+              <div className="flex flex-col gap-2 text-[11px] text-white/60">
+                {section.links.map((link) => (
+                  <Link
+                    key={link.id}
+                    to={link.path}
+                    className="transition hover:text-white"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
+          ))}
+        </div>
 
-          {/* About */}
-          <div>
-            <h3 className="mb-5 text-[9px] font-semibold tracking-[0.18em] text-[#d2a92e]">
-              ABOUT
-            </h3>
+        {/* SUPPORT */}
+        <div className="mt-7 border-t border-white/10 pt-5">
+          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-[10px] font-medium tracking-[0.12em] text-white/75">
+                {footer.customerService.heading}
+              </p>
 
-            <div className="flex flex-col gap-3 text-[9px] text-white/60">
-              <a href="#craftsmanship">Our Story</a>
-              <a href="#craftsmanship">Craftsmanship</a>
-              <a href="#featured">Journal</a>
-              <a href="#reviews">Reviews</a>
+              <p className="mt-0.5 text-[10px] text-white/40">
+                {footer.customerService.description}
+              </p>
             </div>
-          </div>
 
-          {/* Help */}
-          <div>
-            <h3 className="mb-5 text-[9px] font-semibold tracking-[0.18em] text-[#d2a92e]">
-              HELP
-            </h3>
-
-            <div className="flex flex-col gap-3 text-[9px] text-white/60">
-              <a href="#">Contact Us</a>
-              <a href="#">Shipping & Returns</a>
-              <a href="#">Care Guide</a>
-              <a href="#">FAQs</a>
-            </div>
+            <a
+              href={`mailto:${footer.customerService.email}`}
+              className="mt-2 flex items-center gap-2 text-[11px] text-white/60 transition hover:text-[var(--color-accent-bright)] sm:mt-0"
+            >
+              <FiMail size={13} />
+              {footer.customerService.email}
+            </a>
           </div>
         </div>
 
-        {/* Bottom */}
-        <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-[8px] text-white/35 sm:flex-row sm:items-center sm:justify-between">
-          <p>© 2026 Niya Bags. All rights reserved.</p>
+        {/* BOTTOM */}
+        <div className="mt-5 flex flex-col gap-2 border-t border-white/10 pt-4 text-[10px] text-white/35 sm:flex-row sm:items-center sm:justify-between">
+          <p>{footer.copyright}</p>
 
-          <div className="flex gap-5">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms & Conditions</a>
+          <div className="flex gap-4">
+            {footer.legalLinks.map((link) => (
+              <Link
+                key={link.id}
+                to={link.path}
+                className="transition hover:text-white"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
         </div>
       </div>
@@ -94,4 +134,3 @@ function Footer() {
 }
 
 export default Footer;
-

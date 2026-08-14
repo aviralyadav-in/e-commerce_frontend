@@ -7,7 +7,25 @@ function HeroBanner() {
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
-    getHeroBanners().then(setSlides);
+    let mounted = true;
+
+    async function loadHeroBanners() {
+      try {
+        const data = await getHeroBanners();
+
+        if (mounted) {
+          setSlides(Array.isArray(data) ? data : []);
+        }
+      } catch (error) {
+        console.error("Failed to load hero banners:", error);
+      }
+    }
+
+    loadHeroBanners();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -22,7 +40,7 @@ function HeroBanner() {
 
   if (!slides.length) {
     return (
-      <section className="flex min-h-[540px] items-center bg-[#073b4c]">
+      <section className="flex min-h-[540px] items-center bg-[var(--color-dark-section)]">
         <div className="mx-auto w-full max-w-[1440px] px-6">
           <div className="h-5 w-28 animate-pulse bg-white/20" />
         </div>
@@ -33,7 +51,7 @@ function HeroBanner() {
   const slide = slides[current];
 
   return (
-    <section className="relative min-h-[540px] overflow-hidden bg-[#073b4c] md:min-h-[570px]">
+    <section className="relative min-h-[540px] overflow-hidden bg-[var(--color-dark-section)] md:min-h-[570px]">
       {slides.map((item, index) => (
         <div
           key={item.id}
@@ -45,6 +63,7 @@ function HeroBanner() {
             src={item.image}
             alt={item.title.replace("\n", " ")}
             className="h-full w-full object-cover"
+            loading={index === 0 ? "eager" : "lazy"}
           />
         </div>
       ))}
@@ -53,13 +72,13 @@ function HeroBanner() {
 
       <div className="relative mx-auto flex min-h-[540px] max-w-[1440px] items-center px-6 md:min-h-[570px] md:px-14">
         <div className="max-w-[560px] text-white">
-          <p className="mb-4 text-[9px] font-semibold tracking-[0.28em] text-[#d2a92e]">
+          <p className="mb-4 text-[9px] font-semibold tracking-[0.28em] text-[var(--color-accent-bright)]">
             THE NIYA EDIT
           </p>
 
           <h1 className="font-serif text-[48px] font-medium leading-[0.98] tracking-[-0.02em] sm:text-[58px] md:text-[72px]">
             {slide.title.split("\n").map((line, index) => (
-              <span key={line}>
+              <span key={`${line}-${index}`}>
                 {line}
                 {index < slide.title.split("\n").length - 1 && <br />}
               </span>
@@ -72,7 +91,7 @@ function HeroBanner() {
 
           <a
             href={slide.buttonLink}
-            className="mt-7 inline-flex items-center gap-4 rounded-full bg-[#d2a92e] px-6 py-3 text-[10px] font-semibold text-[#073b4c] transition hover:bg-[#e2bc42]"
+            className="mt-7 inline-flex items-center gap-4 rounded-full bg-[var(--color-accent-bright)] px-6 py-3 text-[10px] font-semibold text-[#073b4c] transition hover:opacity-90"
           >
             {slide.buttonText}
             <span>→</span>
@@ -80,7 +99,9 @@ function HeroBanner() {
         </div>
       </div>
 
+      {/* PREVIOUS */}
       <button
+        type="button"
         onClick={() =>
           setCurrent(
             (previous) => (previous - 1 + slides.length) % slides.length,
@@ -92,7 +113,9 @@ function HeroBanner() {
         <FiChevronLeft size={16} />
       </button>
 
+      {/* NEXT */}
       <button
+        type="button"
         onClick={() => setCurrent((previous) => (previous + 1) % slides.length)}
         className="absolute right-5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full border border-white/30 bg-black/10 text-white"
         aria-label="Next slide"
@@ -100,15 +123,20 @@ function HeroBanner() {
         <FiChevronRight size={16} />
       </button>
 
+      {/* DOTS */}
       <div className="absolute bottom-5 left-1/2 flex -translate-x-1/2 gap-1.5">
         {slides.map((item, index) => (
           <button
             key={item.id}
+            type="button"
             onClick={() => setCurrent(index)}
             className={`h-1.5 rounded-full transition-all ${
-              index === current ? "w-6 bg-[#d2a92e]" : "w-1.5 bg-white/50"
+              index === current
+                ? "w-6 bg-[var(--color-accent-bright)]"
+                : "w-1.5 bg-white/50"
             }`}
             aria-label={`Go to slide ${index + 1}`}
+            aria-current={index === current ? "true" : undefined}
           />
         ))}
       </div>

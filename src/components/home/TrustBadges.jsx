@@ -25,7 +25,7 @@ const benefits = [
 
 function TrustBadges() {
   return (
-    <section className="w-full overflow-hidden border-y border-[#e5e2da]">
+    <section className="w-full overflow-hidden border-y border-[var(--color-border)]">
       <div className="flex w-max animate-niya-marquee">
         {[...benefits, ...benefits].map((benefit, index) => {
           const Icon = benefit.icon;
@@ -33,18 +33,18 @@ function TrustBadges() {
           return (
             <div
               key={`${benefit.title}-${index}`}
-              className="flex w-[190px] shrink-0 items-center gap-2 border-r border-[#e5e2da] px-4 py-3 sm:w-[230px] sm:gap-3 sm:px-6"
+              className="flex w-[190px] shrink-0 items-center gap-2 border-r border-[var(--color-border)] px-4 py-3 sm:w-[230px] sm:gap-3 sm:px-6"
             >
-              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#c39920]/40 text-[#a98525]">
+              <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[var(--color-accent)]/40 text-[var(--color-accent)]">
                 <Icon size={13} strokeWidth={1.3} />
               </div>
 
               <div className="min-w-0">
-                <h3 className="whitespace-nowrap text-[7px] font-semibold uppercase tracking-[0.08em] text-[#073b4c] sm:text-[9px]">
+                <h3 className="whitespace-nowrap text-[7px] font-semibold uppercase tracking-[0.08em] text-[var(--color-text-primary)] sm:text-[9px]">
                   {benefit.title}
                 </h3>
 
-                <p className="mt-0.5 whitespace-nowrap text-[6.5px] text-[#7b898c] sm:text-[8px]">
+                <p className="mt-0.5 whitespace-nowrap text-[6.5px] text-[var(--color-text-muted)] sm:text-[8px]">
                   {benefit.text}
                 </p>
               </div>

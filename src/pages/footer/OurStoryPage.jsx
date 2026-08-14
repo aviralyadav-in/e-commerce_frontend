@@ -1,0 +1,98 @@
+import { useEffect, useState } from "react";
+import { getFooterPage } from "../../api/api";
+
+function OurStoryPage() {
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    const loadPage = async () => {
+      try {
+        const result = await getFooterPage("our-story");
+
+        if (result) {
+          setData(result);
+        }
+      } catch (error) {
+        console.error("Failed to load Our Story page:", error);
+      }
+    };
+
+    loadPage();
+  }, []);
+
+  if (!data) {
+    return (
+      <main className="min-h-screen bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+        <div className="mx-auto max-w-6xl px-5 py-10 sm:px-6 lg:px-8">
+          Loading...
+        </div>
+      </main>
+    );
+  }
+
+  return (
+    <main className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+      {/* ================= HERO ================= */}
+      <section className="border-b border-slate-200 dark:border-slate-800">
+        <div className="mx-auto max-w-6xl px-5 py-7 sm:px-6 lg:px-8 lg:py-9">
+          <p className="text-xs font-medium uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+            {data.eyebrow}
+          </p>
+
+          <h1 className="mt-2 max-w-4xl font-serif text-4xl leading-[1.08] sm:text-5xl lg:text-6xl">
+            {data.title}
+          </h1>
+
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400 sm:text-base">
+            {data.intro}
+          </p>
+        </div>
+      </section>
+
+      {/* ================= JOURNEY ================= */}
+      <section>
+        <div className="mx-auto max-w-6xl px-5 py-9 sm:px-6 lg:px-8 lg:py-11">
+          <div className="max-w-2xl">
+            <p className="text-xs uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
+              The Journey
+            </p>
+
+            <h2 className="mt-1 font-serif text-3xl leading-tight sm:text-4xl">
+              From an idea to Niya.
+            </h2>
+          </div>
+
+          <div className="mt-7 grid gap-7 border-t border-slate-200 pt-7 dark:border-slate-800 md:grid-cols-3">
+            {data.sections?.map((section, index) => (
+              <article key={section.title}>
+                <span className="text-xs tracking-widest text-slate-400 dark:text-slate-500">
+                  0{index + 1}
+                </span>
+
+                <h3 className="mt-2 font-serif text-2xl">
+                  {section.title}
+                </h3>
+
+                <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-400">
+                  {section.content}
+                </p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ================= QUOTE ================= */}
+      <section className="border-y border-slate-200 bg-slate-50/70 dark:border-slate-800 dark:bg-slate-900/50">
+        <div className="mx-auto max-w-6xl px-5 py-8 sm:px-6 lg:px-8 lg:py-10">
+          <p className="max-w-2xl font-serif text-2xl leading-relaxed sm:text-3xl">
+            “The best designs are the ones that become part of your everyday
+            life.”
+          </p>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+export default OurStoryPage;

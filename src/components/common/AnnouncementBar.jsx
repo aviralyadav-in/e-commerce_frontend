@@ -5,18 +5,40 @@ function AnnouncementBar() {
   const [announcements, setAnnouncements] = useState([]);
 
   useEffect(() => {
-    getAnnouncements().then(setAnnouncements);
+    let mounted = true;
+
+    async function loadAnnouncements() {
+      try {
+        const data = await getAnnouncements();
+
+        if (mounted) {
+          setAnnouncements(Array.isArray(data) ? data : []);
+        }
+      } catch (error) {
+        console.error("Failed to load announcements:", error);
+      }
+    }
+
+    loadAnnouncements();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
+  if (!announcements.length) {
+    return null;
+  }
+
   return (
-    <div className="h-7 overflow-hidden bg-[#073b4c] text-white">
+    <div className="h-7 overflow-hidden bg-[var(--color-dark-section)] text-white">
       <div className="mx-auto flex h-full max-w-[1440px] items-center justify-around gap-8 px-5 text-[9px] tracking-wide">
         {announcements.map((item) => (
           <span
             key={item.id}
             className="hidden items-center gap-2 whitespace-nowrap first:flex sm:flex"
           >
-            <span className="text-[#d2a92e]">✦</span>
+            <span className="text-[var(--color-accent-bright)]">✦</span>
             {item.text}
           </span>
         ))}

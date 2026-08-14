@@ -1,19 +1,81 @@
 @import "tailwindcss";
+
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* ================================
+   NIYA BAGS THEME
+================================ */
+
+:root {
+  color-scheme: light;
+
+  --color-bg-primary: #faf9f5;
+  --color-bg-secondary: #ffffff;
+  --color-bg-tertiary: #f2eee5;
+
+  --color-text-primary: #073b4c;
+  --color-text-secondary: #385b66;
+  --color-text-muted: #73868c;
+
+  --color-border: #e5ebea;
+  --color-border-soft: #e8eded;
+
+  --color-accent: #c39920;
+  --color-accent-bright: #d2a92e;
+
+  --color-dark-section: #073b4c;
+  --color-dark-section-secondary: #0b4658;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --color-bg-primary: #101c20;
+  --color-bg-secondary: #142328;
+  --color-bg-tertiary: #1b2d32;
+
+  --color-text-primary: #f5f1e8;
+  --color-text-secondary: #d5e0e3;
+  --color-text-muted: #9aabb0;
+
+  --color-border: #2a3d42;
+  --color-border-soft: #263a40;
+
+  --color-accent: #d2a92e;
+  --color-accent-bright: #e0b83c;
+
+  --color-dark-section: #071d24;
+  --color-dark-section-secondary: #0d3039;
+}
+
+/* ================================
+   GLOBAL
+================================ */
 
 html {
   scroll-behavior: smooth;
 }
 
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
 body {
   margin: 0;
-  background: #faf9f5;
-  color: #073b4c;
+  background: var(--color-bg-primary);
+  color: var(--color-text-primary);
   font-family: Arial, Helvetica, sans-serif;
+  transition:
+    background-color 200ms ease,
+    color 200ms ease;
 }
 
 button,
-input {
+input,
+textarea,
+select {
   font: inherit;
 }
 
@@ -28,6 +90,34 @@ a {
 img {
   display: block;
 }
+
+/* ================================
+   THEME TRANSITIONS
+================================ */
+
+*,
+*::before,
+*::after {
+  border-color: var(--color-border);
+}
+
+body,
+header,
+section,
+footer,
+article,
+nav,
+input,
+button {
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease;
+}
+
+/* ================================
+   MARQUEE
+================================ */
 
 @keyframes niya-marquee {
   from {

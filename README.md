@@ -132,7 +132,74 @@ Overall structure ka main focus hota hai:
 * Customer trust building
 * Better mobile and desktop experience
 
+Isi structure ko reference lekar Niya Bags frontend design plan kiya gaya hai.
 
+
+## Niya Bags Homepage Structure (Visual Flow)
+
+┌──────────────────────────────────────────────┐
+│                OFFER STRIP                  │
+│        Sale / Offers / Announcements        │
+└──────────────────────────────────────────────┘
+↓
+┌──────────────────────────────────────────────┐
+│               HEADER / NAVBAR               │
+│ ☰  🔍        NIYA BAGS        ♡ 🛒 👤        │
+└──────────────────────────────────────────────┘
+↓
+┌──────────────────────────────────────────────┐
+│               HERO BANNER                   │
+│     Carousel / Autoplay Video / Models      │
+└──────────────────────────────────────────────┘
+↓
+┌──────────────────────────────────────────────┐
+│              NEW ARRIVALS                   │
+│      Latest Bags + Discount Highlights      │
+└──────────────────────────────────────────────┘
+↓
+┌──────────────────────────────────────────────┐
+│               BEST SELLERS                  │
+│        Most Popular / Trending Bags         │
+└──────────────────────────────────────────────┘
+↓
+┌──────────────────────────────────────────────┐
+│   SHOP BY CATEGORY – PRIMARY (Women Focus)  │
+│ Sling | Tote | Clutch | Crossbody | Bucket  │
+│ Coin Purse | Handbag | Mini Bag             │
+└──────────────────────────────────────────────┘
+↓
+┌──────────────────────────────────────────────┐
+│  SHOP BY CATEGORY – SECONDARY (Broader)     │
+│ Women | Men | Kids | Corporate Gifts        │
+│ Travel Essentials | Premium Collection      │
+└──────────────────────────────────────────────┘
+↓
+┌──────────────────────────────────────────────┐
+│          BRAND VALUE / PREMIUM SECTION      │
+│ Eco-friendly | Handmade | Sustainable       │
+│ Premium Craftsmanship                       │
+└──────────────────────────────────────────────┘
+↓
+┌──────────────────────────────────────────────┐
+│            CUSTOMER REVIEWS                 │
+│ ⭐⭐⭐⭐⭐  User Cards + Bag Image + Name        │
+└──────────────────────────────────────────────┘
+↓
+┌──────────────────────────────────────────────┐
+│          NEWSLETTER SUBSCRIPTION            │
+│         Email Box + Subscribe Button        │
+└──────────────────────────────────────────────┘
+↓
+┌──────────────────────────────────────────────┐
+│              FOOTER LINKS                   │
+│ My Account | Orders | Wishlist | Contact    │
+└──────────────────────────────────────────────┘
+↓
+┌──────────────────────────────────────────────┐
+│        STILL CURIOUS? / ABOUT SECTION       │
+│ About Us | Our Story | Loyalty Program      │
+│ Sustainability | Product Care | Reach Us    │
+└──────────────────────────────────────────────┘
 
 
 
@@ -146,3 +213,64 @@ Password: emilyspass
 
 API 
 https://docs.google.com/document/d/1IlDxJNyfF44v21QcicvUZT3Zk3Tp1TMV7_3XqprD6aM/edit?usp=sharing
+
+
+
+**Products**
+
+1. What will be the exact response structure for `GET /products`?
+2. Will `category` come as a populated object with `id`, `name`, and `slug`, or only as a category ID?
+3. How will Featured, Best Seller and New Arrival products be fetched?
+4. For New Arrivals, will there be an `isNewArrival` field or will it be based on `createdAt`?
+5. For product images, should the frontend use `images[]` or the virtual `image` field?
+
+**Discount / Sale**
+6. Should `price` be the original price and `discountPrice` the final sale price?
+7. How should the frontend identify a product that is on sale?
+8. Will the API provide `discountPercentage`, or should the frontend calculate it?
+9. What will `discountPrice` be when there is no discount — `null`, `0`, or omitted?
+10. Will there be an API/filter to fetch all products currently on sale?
+11. If we later have sale campaigns with start/end dates, will that require a separate Sale/Promotion model?
+
+**Categories / Filtering**
+12. How will Men/Women/Unisex products be identified and filtered? Is a `gender` field planned?
+13. What API should the frontend use for category filtering?
+14. What API should be used for product search?
+
+**Home Page Content**
+15. What will be the endpoints for banners, announcements, campaign, reels and brand story?
+16. Will these APIs return only active content, or does the frontend need to filter using `isActive`?
+17. Will `order` already be applied by the backend?
+
+**Authentication**
+18. What will be the final login API endpoint and request/response structure?
+19. After login, what token will be returned and how should the frontend send it with future requests?
+20. Which user fields will be returned after login?
+
+**Errors / API**
+21. What will the standard error response format be?
+22. Will the product APIs support pagination (`page`, `limit`)?
+23. What are the final API base URL and all endpoint names that I should use in the frontend?
+
+SHOP
+
+All Bags
+New Collection (optional — only if you eventually have a dedicated collection page)
+Sale (keep only if you plan to implement discounts/sale)
+
+ABOUT
+
+Our Story
+About Niya
+
+HELP
+
+Contact Us
+Shipping & Returns
+Care Guide
+FAQs
+
+LEGAL
+
+Privacy Policy
+Terms & Conditions
