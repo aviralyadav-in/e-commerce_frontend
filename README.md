@@ -1,276 +1,409 @@
-# React + Vite
+# Niya Bags — Luxury Handbag E-Commerce Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
-
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-
-
-
-
-
-## Common Structure Observed in Modern Bag Brand Websites
-
-
-
-### 1. Offer Strip (Top Announcement Bar)
-
-* Top par ek slim color strip hoti hai.
-* Isme current offers, sale ya special announcements show hote hain.
-
-### 2. Header / Navigation
-
-* Left side: Hamburger menu aur search icon.
-* Center: Brand logo.
-* Right side: Wishlist, Cart aur Profile icons.
-* Minimal layout website ko clean aur premium look deta hai.
-
-### 3. Hero Banner
-
-* Large carousel ya autoplay video.
-* Models bags carry karte hue dikhaye jate hain.
-* Brand feel aur collection highlight hota hai.
-
-### 4. New Arrivals Section
-
-* Big attractive product images.
-* Latest launches aur discounts highlight kiye jate hain.
-
-### 5. Best Sellers
-
-* Most popular bags ko separate section me showcase kiya jata hai.
-
-### 6. Shop by Category (Two-Level Category Structure)
-
-Niya Bags ki target audience mainly women hai, isliye category section ko do parts me plan kiya gaya hai.
-
-#### Primary Category Section (Women-focused)
-
-Homepage par pehle fashionable bag categories prominently show ki jayengi:
-
-* Sling Bags
-* Tote Bags
-* Clutch Bags
-* Crossbody Bags
-* Coin Purses
-* Bucket Bags
-* Handbags
-* Mini Bags
-
-Ye section quick product discovery aur female shoppers ko direct relevant categories tak le jane ke liye rakha gaya hai.
-
-#### Secondary Category Section (Broader Audience)
-
-Kuch sections ke baad broader shopping categories show ki jayengi:
-
-* Women
-* Men
-* Kids
-* Corporate Gifts
-* Travel Essentials
-* Premium Collections
-
-Is second-level section ka purpose website ko sirf women bags tak limited na rakhkar family aur gifting audience tak expand karna hai.
-
-
-### 7. Brand Value / Premium Section
-
-* Brand ko premium dikhane ke liye key points:
-
-  * Eco-friendly
-  * Handmade
-  * Sustainable materials
-  * Premium craftsmanship
-
-### 8. Customer Reviews
-
-* Carousel style testimonials.
-* Small product image, customer name, review text aur star rating show hoti hai.
-* Usually static testimonial cards hote hain.
-
-### 9. Newsletter Subscription
-
-* Email input box + subscribe button.
-* Users ko updates aur offers receive karne ka option diya jata hai.
-
-### 10. Footer Information
-
-* My Account
-* Orders
-* Wishlist
-* Contact
-
-### 11. About / Brand Information (Still Curious?)
-
-* All About Brand
-* Our Story
-* Loyalty Program
-* Sustainability
-* Product Care
-* Reach Out To Us
+Niya Bags is a modern and premium e-commerce frontend designed for a luxury handbag brand. The project focuses on clean UI, premium visual presentation, responsive design, smooth product discovery, and an API-based product architecture.
 
 ---
 
-## Design Observation Summary
+## Project Status
 
-Overall structure ka main focus hota hai:
+**Current Status:** Frontend development in progress
 
-* Clean navigation
-* Strong visual storytelling
-* Easy product discovery
-* Premium brand perception
-* Customer trust building
-* Better mobile and desktop experience
+The major frontend structure and core shopping experience have been implemented. The project is currently being refined and prepared for integration with the final backend APIs.
 
-Isi structure ko reference lekar Niya Bags frontend design plan kiya gaya hai.
+### Currently Implemented
+
+* Premium responsive homepage
+* Announcement bar
+* Responsive navbar
+* Search overlay
+* Light/Dark theme support
+* Hero banner
+* Trust/benefits section
+* Shop by Category
+* Featured Products
+* Best Sellers section
+* New Arrivals section
+* Campaign/spotlight section
+* Niya Reels section
+* Brand Craftsmanship section
+* Customer Reviews section
+* Newsletter section
+* Responsive footer
+* Shop/Product listing page
+* Product details page
+* Wishlist functionality
+* Cart functionality
+* Product search UI
+* Product suggestions
+* React Router based navigation
+* API-based product fetching
+* Reusable product components
+* Responsive layouts for desktop and mobile
+
+---
+
+## Tech Stack
+
+### Frontend
+
+* **React 19.2.8** — UI development
+* **Vite** — Development server and build tool
+* **Tailwind CSS** — Styling and responsive UI
+* **React Router DOM 7.18.2** — Client-side routing
+* **React Icons 5.7.0** — Icons
+* **Axios 1.19.0** — API requests
+
+### State & Application Management
+
+* **React Context API**
+
+  * Cart state
+  * Wishlist state
+  * Authentication state
+  * Theme state
+
+* **Redux Toolkit 2.x**
+
+* **React Redux 9.3.0**
+
+### Backend / API Integration
+
+The frontend is structured to consume REST APIs.
+
+Expected backend stack:
+
+* Node.js
+* Express.js
+* MongoDB
+* Mongoose
+* JWT Authentication
+
+The final backend API will provide products, categories, authentication, banners, announcements, campaigns and other dynamic content.
+
+---
+
+## Main Features
+
+### 1. Premium Homepage
+
+The homepage is divided into reusable sections:
+
+1. Announcement Bar
+2. Navbar
+3. Hero Banner
+4. Trust Badges
+5. Shop by Category
+6. Featured Products
+7. Best Sellers
+8. New Arrivals
+9. Campaign Spotlight
+10. Niya Reels
+11. Brand Craftsmanship
+12. Customer Reviews
+13. Newsletter
+14. Footer
+
+The design follows a minimal, elegant and premium fashion-commerce aesthetic.
+
+---
+
+### 2. Product System
+
+Products are fetched through APIs instead of relying on permanent local mock data.
+
+Implemented functionality includes:
+
+* Product listing
+* Product details
+* Product images
+* Product pricing
+* Product suggestions
+* Product search
+* Featured products
+* Best sellers
+* New arrivals
+* Product navigation using product IDs
+
+The frontend is designed so that product data can be replaced with the final backend response without rebuilding the UI structure.
+
+---
+
+### 3. Shop Page
+
+The Shop page provides the main product browsing experience.
+
+Current functionality includes:
+
+* Fetching products from API
+* Product cards
+* Product images
+* Product names
+* Pricing
+* Wishlist actions
+* Product detail navigation
+* Filtering structure
+* Responsive product grid
+
+---
+
+### 4. Search
+
+A search overlay has been implemented in the navbar.
+
+Users can:
+
+* Open search from the navbar
+* Search products
+* View matching product suggestions
+* Select a product
+* Navigate directly to its product details page
+
+The search system is structured so that it can later use a dedicated backend search endpoint.
+
+---
+
+### 5. Wishlist
+
+Wishlist functionality is implemented on the frontend.
+
+Users can:
+
+* Add products to wishlist
+* Remove products from wishlist
+* View wishlist count
+* Access wishlist products
+* Maintain wishlist data using browser storage
+
+---
+
+### 6. Shopping Cart
+
+Cart functionality is implemented using a reusable cart context.
+
+The cart system supports:
+
+* Adding products
+* Removing products
+* Updating cart items
+* Cart count
+* Cart persistence
+* Cart page
+* Product-to-cart interaction
+
+---
+
+### 7. Theme Support
+
+The website includes Light and Dark theme support.
+
+A dedicated Theme Context manages the selected theme across the application.
+
+---
+
+### 8. Responsive Design
+
+The UI is designed for:
+
+* Desktop
+* Laptop
+* Tablet
+* Mobile
+
+Tailwind CSS responsive utilities are used throughout the application.
 
 
-## Niya Bags Homepage Structure (Visual Flow)
 
-┌──────────────────────────────────────────────┐
-│                OFFER STRIP                  │
-│        Sale / Offers / Announcements        │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│               HEADER / NAVBAR               │
-│ ☰  🔍        NIYA BAGS        ♡ 🛒 👤        │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│               HERO BANNER                   │
-│     Carousel / Autoplay Video / Models      │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│              NEW ARRIVALS                   │
-│      Latest Bags + Discount Highlights      │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│               BEST SELLERS                  │
-│        Most Popular / Trending Bags         │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│   SHOP BY CATEGORY – PRIMARY (Women Focus)  │
-│ Sling | Tote | Clutch | Crossbody | Bucket  │
-│ Coin Purse | Handbag | Mini Bag             │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│  SHOP BY CATEGORY – SECONDARY (Broader)     │
-│ Women | Men | Kids | Corporate Gifts        │
-│ Travel Essentials | Premium Collection      │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│          BRAND VALUE / PREMIUM SECTION      │
-│ Eco-friendly | Handmade | Sustainable       │
-│ Premium Craftsmanship                       │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│            CUSTOMER REVIEWS                 │
-│ ⭐⭐⭐⭐⭐  User Cards + Bag Image + Name        │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│          NEWSLETTER SUBSCRIPTION            │
-│         Email Box + Subscribe Button        │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│              FOOTER LINKS                   │
-│ My Account | Orders | Wishlist | Contact    │
-└──────────────────────────────────────────────┘
-↓
-┌──────────────────────────────────────────────┐
-│        STILL CURIOUS? / ABOUT SECTION       │
-│ About Us | Our Story | Loyalty Program      │
-│ Sustainability | Product Care | Reach Us    │
-└──────────────────────────────────────────────┘
+## API Integration
 
+The frontend uses Axios for API communication.
 
+The API base URL is configured through an environment variable:
 
+```env
+VITE_API_BASE_URL=your_api_base_url
+```
 
+Current frontend API functions include:
 
+* `getAllProducts()`
+* `getFeaturedProducts()`
+* `getBestSellerProducts()`
+* `getNewArrivalProducts()`
+* `getProductById()`
+* `getSuggestedProducts()`
+* `getAnnouncements()`
 
+The frontend is intentionally separated from the API implementation so backend endpoints can be changed without affecting individual UI components.
 
-Username: emilys
-Password: emilyspass
+---
 
+## Product & Category Architecture
 
-API 
-https://docs.google.com/document/d/1IlDxJNyfF44v21QcicvUZT3Zk3Tp1TMV7_3XqprD6aM/edit?usp=sharing
+The final backend is expected to support:
 
+### Products
 
+* Product name
+* Description
+* Price
+* Discount price
+* Images
+* Category
+* Gender
+* Product status
+* Creation date
+* Stock information
 
-**Products**
+### Categories
 
-1. What will be the exact response structure for `GET /products`?
-2. Will `category` come as a populated object with `id`, `name`, and `slug`, or only as a category ID?
-3. How will Featured, Best Seller and New Arrival products be fetched?
-4. For New Arrivals, will there be an `isNewArrival` field or will it be based on `createdAt`?
-5. For product images, should the frontend use `images[]` or the virtual `image` field?
+Categories should support:
 
-**Discount / Sale**
-6. Should `price` be the original price and `discountPrice` the final sale price?
-7. How should the frontend identify a product that is on sale?
-8. Will the API provide `discountPercentage`, or should the frontend calculate it?
-9. What will `discountPrice` be when there is no discount — `null`, `0`, or omitted?
-10. Will there be an API/filter to fetch all products currently on sale?
-11. If we later have sale campaigns with start/end dates, will that require a separate Sale/Promotion model?
+* Category name
+* Slug
+* Parent category
+* Subcategory
+* Gender/category association
 
-**Categories / Filtering**
-12. How will Men/Women/Unisex products be identified and filtered? Is a `gender` field planned?
-13. What API should the frontend use for category filtering?
-14. What API should be used for product search?
+Slugs will be used for clean category-based navigation and filtering.
 
-**Home Page Content**
-15. What will be the endpoints for banners, announcements, campaign, reels and brand story?
-16. Will these APIs return only active content, or does the frontend need to filter using `isActive`?
-17. Will `order` already be applied by the backend?
+---
 
-**Authentication**
-18. What will be the final login API endpoint and request/response structure?
-19. After login, what token will be returned and how should the frontend send it with future requests?
-20. Which user fields will be returned after login?
+## Future Backend Integration
 
-**Errors / API**
-21. What will the standard error response format be?
-22. Will the product APIs support pagination (`page`, `limit`)?
-23. What are the final API base URL and all endpoint names that I should use in the frontend?
+The following functionality will be connected once the final backend APIs are available:
 
-SHOP
+* Dynamic product categories
+* Men/Women/Unisex filtering
+* Backend product search
+* Pagination
+* Real featured products
+* Real best sellers
+* Real new arrivals
+* Discount and sale system
+* Sale campaigns
+* Dynamic banners
+* Dynamic announcements
+* Campaign content
+* Reels
+* Brand story/content
+* User authentication
+* JWT-based authorization
+* User account management
+* Orders
+* Order history
+* Backend wishlist
+* Backend cart
+* Stock management
 
-All Bags
-New Collection (optional — only if you eventually have a dedicated collection page)
-Sale (keep only if you plan to implement discounts/sale)
+---
 
-ABOUT
+## Discount & Sale System
 
-Our Story
-About Niya
+The frontend is prepared for product discounts.
 
-HELP
+The final backend can provide:
 
-Contact Us
-Shipping & Returns
-Care Guide
-FAQs
+* Original price
+* Discounted price
+* Discount percentage
+* Sale status
+* Sale start date
+* Sale end date
 
-LEGAL
+For larger promotional campaigns, a dedicated promotion/sale system can be introduced in the backend.
 
-Privacy Policy
-Terms & Conditions
+---
+
+## Authentication
+
+Authentication will be integrated with the final backend API.
+
+Planned functionality:
+
+* User registration
+* User login
+* JWT authentication
+* Protected routes
+* User account
+* Logout
+* Order history
+* Wishlist synchronization
+* Cart synchronization
+
+---
+
+## Design Direction
+
+Niya Bags follows a premium fashion-commerce visual language.
+
+### Design Principles
+
+* Minimal
+* Elegant
+* Luxury-focused
+* Clean layouts
+* Strong product imagery
+* Spacious sections
+* Responsive design
+* Simple navigation
+* Consistent typography
+* Smooth interactions
+
+### Visual Direction
+
+The interface primarily uses:
+
+* Deep teal / dark blue
+* Warm white / cream
+* Muted gold
+* Soft light accents
+
+The design combines elegant typography with modern sans-serif UI elements.
+
+---
+
+## Development Goals
+
+The main goal of the project is to build a scalable luxury e-commerce frontend that can later connect to a complete production backend.
+
+The architecture is being kept reusable so that:
+
+* UI components remain independent
+* API logic stays centralized
+* Product sections can be reused
+* Categories can become dynamic
+* Authentication can be added without restructuring the application
+* Backend integration can happen with minimal UI changes
+
+---
+
+## Current Development Phase
+
+**Phase 1 — Frontend UI & Structure**
+Completed / In Progress
+
+**Phase 2 — API Integration**
+In Progress
+
+**Phase 3 — Backend Integration**
+Planned
+
+**Phase 4 — Authentication & User System**
+Planned
+
+**Phase 5 — Cart, Wishlist & Orders with Backend**
+Planned
+
+**Phase 6 — Discounts, Sales & Promotions**
+Planned
+
+**Phase 7 — Testing, Optimization & Deployment**
+Planned
+
+---
+
+## Author
+
+**Niya Bags — E-Commerce Frontend Project**
+
+Built using React, Vite and Tailwind CSS with an API-first architecture.

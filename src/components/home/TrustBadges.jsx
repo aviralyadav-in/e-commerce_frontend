@@ -27,7 +27,7 @@ function TrustBadges() {
   return (
     <section className="w-full overflow-hidden border-y border-[var(--color-border)]">
       <div className="flex w-max animate-niya-marquee">
-        {[...benefits, ...benefits].map((benefit, index) => {
+        {[...benefits, ...benefits, ...benefits].map((benefit, index) => {
           const Icon = benefit.icon;
 
           return (
