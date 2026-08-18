@@ -598,3 +598,129 @@ export const getFooterPage = async (slug) => {
     return footerContent[slug] || null;
   }
 };
+// ===============================
+// SALE PRODUCTS
+// ===============================
+// Temporary frontend data for Sale.
+// Later this can be replaced with:
+// const response = await api.get("/products/sale");
+// return response.data;
+
+export async function getSaleProducts() {
+  return [
+    {
+      id: "sale-1",
+      title: "Niya Classic Tote",
+      price: 4999,
+      salePrice: 3999,
+      discount: 20,
+      category: "Totes",
+      thumbnail:
+        "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=85",
+      isOnSale: true,
+    },
+    {
+      id: "sale-2",
+      title: "Niya Luna Shoulder Bag",
+      price: 5999,
+      salePrice: 4499,
+      discount: 25,
+      category: "Shoulder Bags",
+      thumbnail:
+        "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=900&q=85",
+      isOnSale: true,
+    },
+    {
+      id: "sale-3",
+      title: "Niya Mini Crossbody",
+      price: 3999,
+      salePrice: 2999,
+      discount: 25,
+      category: "Crossbody Bags",
+      thumbnail:
+        "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=900&q=85",
+      isOnSale: true,
+    },
+    {
+      id: "sale-4",
+      title: "Niya Signature Handbag",
+      price: 6999,
+      salePrice: 4899,
+      discount: 30,
+      category: "Handbags",
+      thumbnail:
+        "https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=900&q=85",
+      isOnSale: true,
+    },
+    {
+      id: "sale-5",
+      title: "Niya Evening Clutch",
+      price: 4499,
+      salePrice: 3599,
+      discount: 20,
+      category: "Clutches",
+      thumbnail:
+        "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=900&q=85",
+      isOnSale: true,
+    },
+    {
+      id: "sale-6",
+      title: "Niya Everyday Shoulder Bag",
+      price: 5499,
+      salePrice: 3849,
+      discount: 30,
+      category: "Shoulder Bags",
+      thumbnail:
+        "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=85",
+      isOnSale: true,
+    },
+  ];
+}
+// ===============================
+// 404 PAGE — FLYING BAGS
+// ===============================
+
+export async function getNotFoundBags() {
+  return [
+    {
+      id: 1,
+      image:
+        "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=500&q=85",
+    },
+    {
+      id: 2,
+      image:
+        "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=500&q=85",
+    },
+    {
+      id: 3,
+      image:
+        "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=500&q=85",
+    },
+    {
+      id: 4,
+      image:
+        "https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=500&q=85",
+    },
+    {
+      id: 5,
+      image:
+        "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=500&q=85",
+    },
+    {
+      id: 6,
+      image:
+        "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=500&q=85",
+    },
+    {
+      id: 7,
+      image:
+        "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&w=500&q=85",
+    },
+    {
+      id: 8,
+      image:
+        "https://images.unsplash.com/photo-1585488436022-7c5a1a6b9b6e?auto=format&fit=crop&w=500&q=85",
+    },
+  ];
+}

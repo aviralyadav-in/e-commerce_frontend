@@ -22,6 +22,8 @@ import ShippingReturnsPage from "../pages/footer/ShippingReturnsPage";
 import SizeCarePage from "../pages/footer/SizeCarePage";
 import FAQPage from "../pages/footer/FAQPage";
 import LegalPage from "../pages/footer/LegalPage";
+import SalePage from "../pages/SalePage";
+import NotFoundPage from "../pages/NotFoundPage";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -54,6 +56,8 @@ export default function AppRoutes() {
         {/* HOME */}
         <Route path="/" element={<HomePage />} />
 
+        <Route path="/sale" element={<SalePage />} />
+
         {/* MAIN PAGES */}
         <Route path="/shop" element={<ShopPage />} />
         <Route path="/product/:id" element={<ProductDetails />} />
@@ -71,7 +75,7 @@ export default function AppRoutes() {
         <Route path="/contact" element={<ContactPage />} />
 
         {/* FOOTER - CUSTOMER CARE */}
-        <Route path="/shipping-returns" element={<ShippingReturnsPage />} />
+        <Route path="/shipping-returns" element={ <ShippingReturnsPage />} />
 
         <Route path="/size-guide" element={<SizeCarePage />} />
         <Route path="/care-guide" element={<SizeCarePage />} />
@@ -81,6 +85,7 @@ export default function AppRoutes() {
         {/* FOOTER - LEGAL */}
         <Route path="/privacy-policy" element={<LegalPage />} />
         <Route path="/terms-of-use" element={<LegalPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
 
       {!hideLayout && <Footer />}

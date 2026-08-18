@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FiHeart, FiSliders, FiX } from "react-icons/fi";
+import { FiHeart, FiSliders, FiX, FiChevronDown } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import { getAllProducts } from "../api/api";
 
@@ -8,6 +8,18 @@ function ShopPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+  const [openSections, setOpenSections] = useState({
+    women: true,
+    men: false,
+    collection: false,
+  });
+
+  const [mobileOpenSections, setMobileOpenSections] = useState({
+    women: true,
+    men: false,
+    collection: false,
+  });
 
   useEffect(() => {
     async function loadProducts() {
@@ -29,35 +41,118 @@ function ShopPage() {
     loadProducts();
   }, []);
 
+  const toggleSection = (section) => {
+    setOpenSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
+
+  const toggleMobileSection = (section) => {
+    setMobileOpenSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
+
+  const womenCategories = [
+    "Tote Bags",
+    "Shoulder Bags",
+    "Clutches",
+    "Mini Bags",
+  ];
+
+  const menCategories = ["Wallets", "Office Bags"];
+
+  const collections = ["Featured", "Best Sellers", "New Arrivals"];
+
+  const FilterSection = ({ title, section, items, mobile = false }) => {
+    const isOpen = mobile ? mobileOpenSections[section] : openSections[section];
+
+    const handleToggle = mobile
+      ? () => toggleMobileSection(section)
+      : () => toggleSection(section);
+
+    return (
+      <div className="border-t border-[var(--color-border)]">
+        <button
+          type="button"
+          onClick={handleToggle}
+          className="flex w-full items-center justify-between py-4 text-left"
+        >
+          <span className="text-[10px] font-semibold tracking-[0.16em] text-[var(--color-text-primary)]">
+            {title}
+          </span>
+
+          <FiChevronDown
+            size={14}
+            strokeWidth={1.4}
+            className={`transition-transform duration-300 ${
+              isOpen ? "rotate-180" : ""
+            }`}
+          />
+        </button>
+
+        <div
+          className={`grid transition-all duration-300 ease-in-out ${
+            isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+          }`}
+        >
+          <div className="overflow-hidden">
+            <div className="pb-5 space-y-3">
+              {items.map((item) => (
+                <label
+                  key={item}
+                  className="flex cursor-pointer items-center gap-3 text-[11px] text-[var(--color-text-muted)] transition hover:text-[var(--color-text-primary)]"
+                >
+                  <input
+                    type="checkbox"
+                    disabled
+                    className="h-3.5 w-3.5 accent-[var(--color-accent)]"
+                  />
+
+                  <span>{item}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <main className="min-h-screen bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]">
       {/* ================= PAGE HEADER ================= */}
       <section className="border-b border-[var(--color-border)]">
-        <div className="mx-auto max-w-[1440px] px-5 py-12 md:px-10 md:py-16">
-          <p className="mb-3 text-[9px] font-semibold tracking-[0.25em] text-[var(--color-accent)]">
-            THE COLLECTION
-          </p>
+        <div className="mx-auto max-w-[1440px] px-5 py-4 md:px-10 md:py-8">
+          <div className="flex flex-col justify-between gap-3 md:flex-row md:items-end">
+            <div>
+              <p className="mb-1.5 text-[8px] font-semibold tracking-[0.24em] text-[var(--color-accent)]">
+                THE COLLECTION
+              </p>
 
-          <h1 className="font-serif text-4xl text-[var(--color-text-primary)] md:text-5xl">
-            Shop All
-          </h1>
+              <h1 className="font-serif text-3xl leading-none text-[var(--color-text-primary)] md:text-4xl">
+                Shop All
+              </h1>
+            </div>
 
-          <p className="mt-4 max-w-[560px] text-xs leading-6 text-[var(--color-text-muted)]">
-            Discover the complete Niya Bags collection, thoughtfully designed
-            for every moment.
-          </p>
+            <p className="max-w-[420px] text-[10px] leading-5 text-[var(--color-text-muted)] md:text-right">
+              Discover the complete Niya Bags collection, thoughtfully designed
+              for every moment.
+            </p>
+          </div>
         </div>
       </section>
 
       {/* ================= SHOP CONTENT ================= */}
-      <section className="mx-auto max-w-[1440px] px-5 py-8 md:px-10 md:py-14">
+      <section className="mx-auto max-w-[1440px] px-5 py-5 md:px-10 md:py-8">
         {/* ================= MOBILE TOOLBAR ================= */}
-        <div className="mb-7 flex items-center justify-between md:hidden">
-          <p className="text-[10px] tracking-[0.15em] text-[var(--color-text-muted)]">
+        <div className="mb-5 flex items-center justify-between md:hidden">
+          <p className="text-[9px] tracking-[0.15em] text-[var(--color-text-muted)]">
             {loading ? "LOADING..." : `${products.length} PRODUCTS`}
           </p>
 
-          {/* SMALL FILTER ICON */}
           <button
             type="button"
             onClick={() => setMobileFiltersOpen(true)}
@@ -80,9 +175,9 @@ function ShopPage() {
             />
 
             {/* PANEL */}
-            <aside className="absolute right-0 top-0 h-full w-[82%] max-w-[340px] overflow-y-auto bg-[var(--color-bg-primary)] px-5 py-6 shadow-xl">
+            <aside className="absolute right-0 top-0 flex h-full w-[82%] max-w-[340px] flex-col bg-[var(--color-bg-primary)] shadow-xl">
               {/* PANEL HEADER */}
-              <div className="mb-7 flex items-center justify-between border-b border-[var(--color-border)] pb-5">
+              <div className="flex items-center justify-between border-b border-[var(--color-border)] px-5 py-5">
                 <p className="text-[10px] font-semibold tracking-[0.2em] text-[var(--color-text-primary)]">
                   FILTERS
                 </p>
@@ -97,190 +192,73 @@ function ShopPage() {
                 </button>
               </div>
 
-              {/* WOMEN */}
-              <div className="border-t border-[var(--color-border)] pt-5">
-                <p className="text-xs font-semibold text-[var(--color-text-primary)]">
-                  WOMEN
-                </p>
+              {/* SCROLLABLE FILTERS */}
+              <div className="flex-1 overflow-y-auto px-5 py-2">
+                <FilterSection
+                  title="WOMEN"
+                  section="women"
+                  items={womenCategories}
+                  mobile
+                />
 
-                <div className="mt-4 space-y-3 text-xs text-[var(--color-text-muted)]">
-                  {[
-                    "Tote Bags",
-                    "Shoulder Bags",
-                    "Crossbody Bags",
-                    "Clutches",
-                    "Mini Bags",
-                    "Backpacks",
-                  ].map((category) => (
-                    <label key={category} className="flex items-center gap-3">
-                      <input
-                        type="checkbox"
-                        disabled
-                        className="h-3.5 w-3.5 accent-[var(--color-accent)]"
-                      />
-                      {category}
-                    </label>
-                  ))}
-                </div>
-              </div>
+                <FilterSection
+                  title="MEN"
+                  section="men"
+                  items={menCategories}
+                  mobile
+                />
 
-              {/* MEN */}
-              <div className="mt-8 border-t border-[var(--color-border)] pt-5">
-                <p className="text-xs font-semibold text-[var(--color-text-primary)]">
-                  MEN
-                </p>
-
-                <div className="mt-4 space-y-3 text-xs text-[var(--color-text-muted)]">
-                  {[
-                    "Handbags",
-                    "Office Bags",
-                    "Briefcases",
-                    "Crossbody Bags",
-                    "Travel Bags",
-                    "Backpacks",
-                  ].map((category) => (
-                    <label key={category} className="flex items-center gap-3">
-                      <input
-                        type="checkbox"
-                        disabled
-                        className="h-3.5 w-3.5 accent-[var(--color-accent)]"
-                      />
-                      {category}
-                    </label>
-                  ))}
-                </div>
-              </div>
-
-              {/* COLLECTION */}
-              <div className="mt-8 border-t border-[var(--color-border)] pt-5">
-                <p className="text-xs font-semibold text-[var(--color-text-primary)]">
-                  COLLECTION
-                </p>
-
-                <div className="mt-4 space-y-3 text-xs text-[var(--color-text-muted)]">
-                  {["Featured", "Best Sellers", "New Arrivals"].map(
-                    (collection) => (
-                      <label
-                        key={collection}
-                        className="flex items-center gap-3"
-                      >
-                        <input
-                          type="checkbox"
-                          disabled
-                          className="h-3.5 w-3.5 accent-[var(--color-accent)]"
-                        />
-                        {collection}
-                      </label>
-                    ),
-                  )}
-                </div>
+                <FilterSection
+                  title="COLLECTION"
+                  section="collection"
+                  items={collections}
+                  mobile
+                />
               </div>
             </aside>
           </div>
         )}
 
-        <div className="grid grid-cols-1 gap-10 md:grid-cols-[220px_1fr]">
+        {/* ================= MAIN SHOP LAYOUT ================= */}
+        <div className="grid grid-cols-1 gap-7 md:grid-cols-[190px_1fr] lg:grid-cols-[210px_1fr]">
           {/* ================= DESKTOP SIDEBAR ================= */}
           <aside className="hidden md:block">
-            <div className="sticky top-24">
-              <p className="mb-5 text-[10px] font-semibold tracking-[0.2em] text-[var(--color-text-primary)]">
-                FILTERS
-              </p>
-
-              {/* WOMEN */}
-              <div className="border-t border-[var(--color-border)] pt-5">
-                <p className="text-xs font-semibold text-[var(--color-text-primary)]">
-                  WOMEN
+            <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pr-3">
+              <div className="mb-2">
+                <p className="text-[9px] font-semibold tracking-[0.2em] text-[var(--color-text-primary)]">
+                  FILTERS
                 </p>
-
-                <div className="mt-4 space-y-3 text-xs text-[var(--color-text-muted)]">
-                  {[
-                    "Tote Bags",
-                    "Shoulder Bags",
-                    "Crossbody Bags",
-                    "Clutches",
-                    "Mini Bags",
-                    "Backpacks",
-                  ].map((category) => (
-                    <label key={category} className="flex items-center gap-3">
-                      <input
-                        type="checkbox"
-                        disabled
-                        className="h-3.5 w-3.5 accent-[var(--color-accent)]"
-                      />
-                      {category}
-                    </label>
-                  ))}
-                </div>
               </div>
 
-              {/* MEN */}
-              <div className="mt-8 border-t border-[var(--color-border)] pt-5">
-                <p className="text-xs font-semibold text-[var(--color-text-primary)]">
-                  MEN
-                </p>
+              <FilterSection
+                title="WOMEN"
+                section="women"
+                items={womenCategories}
+              />
 
-                <div className="mt-4 space-y-3 text-xs text-[var(--color-text-muted)]">
-                  {[
-                    "Handbags",
-                    "Office Bags",
-                    "Briefcases",
-                    "Crossbody Bags",
-                    "Travel Bags",
-                    "Backpacks",
-                  ].map((category) => (
-                    <label key={category} className="flex items-center gap-3">
-                      <input
-                        type="checkbox"
-                        disabled
-                        className="h-3.5 w-3.5 accent-[var(--color-accent)]"
-                      />
-                      {category}
-                    </label>
-                  ))}
-                </div>
-              </div>
+              <FilterSection title="MEN" section="men" items={menCategories} />
 
-              {/* COLLECTION */}
-              <div className="mt-8 border-t border-[var(--color-border)] pt-5">
-                <p className="text-xs font-semibold text-[var(--color-text-primary)]">
-                  COLLECTION
-                </p>
-
-                <div className="mt-4 space-y-3 text-xs text-[var(--color-text-muted)]">
-                  {["Featured", "Best Sellers", "New Arrivals"].map(
-                    (collection) => (
-                      <label
-                        key={collection}
-                        className="flex items-center gap-3"
-                      >
-                        <input
-                          type="checkbox"
-                          disabled
-                          className="h-3.5 w-3.5 accent-[var(--color-accent)]"
-                        />
-                        {collection}
-                      </label>
-                    ),
-                  )}
-                </div>
-              </div>
+              <FilterSection
+                title="COLLECTION"
+                section="collection"
+                items={collections}
+              />
             </div>
           </aside>
 
           {/* ================= PRODUCTS ================= */}
-          <div>
-            {/* DESKTOP PRODUCT COUNT */}
-            <div className="mb-6 hidden items-center justify-between md:flex">
-              <p className="text-[10px] tracking-[0.15em] text-[var(--color-text-muted)]">
+          <div className="min-w-0">
+            {/* PRODUCT COUNT */}
+            <div className="mb-4 hidden items-center justify-between md:flex">
+              <p className="text-[9px] tracking-[0.15em] text-[var(--color-text-muted)]">
                 {loading ? "LOADING..." : `${products.length} PRODUCTS`}
               </p>
             </div>
 
             {/* ================= LOADING ================= */}
             {loading && (
-              <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3">
-                {[1, 2, 3, 4, 5, 6].map((item) => (
+              <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 lg:grid-cols-4">
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
                   <div key={item}>
                     <div className="aspect-[4/5] animate-pulse bg-[var(--color-bg-tertiary)]" />
 
@@ -309,7 +287,7 @@ function ShopPage() {
                     </p>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-9 md:grid-cols-3 lg:grid-cols-4">
                     {products.map((product) => (
                       <Link
                         key={product.id}
@@ -340,7 +318,7 @@ function ShopPage() {
                         </div>
 
                         {/* PRODUCT INFO */}
-                        <div className="pt-4">
+                        <div className="pt-3.5">
                           <p className="mb-1 text-[8px] uppercase tracking-[0.12em] text-[var(--color-accent)]">
                             {product.category?.name || "Bags"}
                           </p>

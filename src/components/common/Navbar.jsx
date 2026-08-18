@@ -88,25 +88,19 @@ function Navbar() {
               Shop All
             </Link>
 
-            <a
-              href="/#featured"
+            <Link
+              to="/#new-arrivals"
               className="text-[11px] text-[var(--color-text-secondary)] transition hover:text-[var(--color-accent)]"
             >
               New Arrivals
-            </a>
+            </Link>
+
 
             <a
               href="/#featured"
               className="text-[11px] text-[var(--color-text-secondary)] transition hover:text-[var(--color-accent)]"
             >
               Bestsellers
-            </a>
-
-            <a
-              href="/#craftsmanship"
-              className="text-[11px] text-[var(--color-text-secondary)] transition hover:text-[var(--color-accent)]"
-            >
-              Our Story
             </a>
           </nav>
 
@@ -160,6 +154,12 @@ function Navbar() {
                   {wishlistCount}
                 </span>
               )}
+            </Link>
+            <Link
+              to="/sale"
+              className="text-[11px] uppercase tracking-[0.18em] text-[var(--color-accent)] transition hover:opacity-70"
+            >
+              Sale
             </Link>
 
             {/* CART */}
