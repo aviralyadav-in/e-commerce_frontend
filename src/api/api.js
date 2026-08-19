@@ -132,7 +132,7 @@ export async function getHeroBanners() {
       image:
         "/products/bags/minibags/WhatsApp Image 2026-08-17 at 5.40.08 PM (1).jpeg",
       buttonText: "Shop New Arrivals",
-      buttonLink: "/shop?filter=new",
+      buttonLink: "/shop?filter=new-arrivals",
     },
   ];
 }
