@@ -1,16 +1,37 @@
 import { useEffect, useState } from "react";
 import { FiArrowRight, FiHeart, FiShoppingBag, FiTrash2 } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 function WishlistPage() {
   const [wishlistItems, setWishlistItems] = useState([]);
 
-  useEffect(() => {
-    const savedWishlist = JSON.parse(
-      localStorage.getItem("niyaWishlist") || "[]",
-    );
+  const { cartItems, addToCart, removeFromCart } = useCart();
 
-    setWishlistItems(savedWishlist);
+  // ===============================
+  // LOAD WISHLIST
+  // ===============================
+  useEffect(() => {
+    function loadWishlist() {
+      try {
+        const savedWishlist = JSON.parse(
+          localStorage.getItem("niyaWishlist") || "[]",
+        );
+
+        setWishlistItems(Array.isArray(savedWishlist) ? savedWishlist : []);
+      } catch (error) {
+        console.error("Failed to load wishlist:", error);
+        setWishlistItems([]);
+      }
+    }
+
+    loadWishlist();
+
+    window.addEventListener("niyaWishlistUpdated", loadWishlist);
+
+    return () => {
+      window.removeEventListener("niyaWishlistUpdated", loadWishlist);
+    };
   }, []);
 
   // ===============================
@@ -18,44 +39,29 @@ function WishlistPage() {
   // ===============================
   function removeFromWishlist(productId) {
     const updatedWishlist = wishlistItems.filter(
-      (item) => item.id !== productId,
+      (item) => String(item.id) !== String(productId),
     );
 
     setWishlistItems(updatedWishlist);
 
     localStorage.setItem("niyaWishlist", JSON.stringify(updatedWishlist));
+
+    window.dispatchEvent(new Event("niyaWishlistUpdated"));
   }
 
   // ===============================
-  // ADD TO CART
+  // TOGGLE CART
   // ===============================
-  function addToCart(product) {
-    const existingCart = JSON.parse(localStorage.getItem("niyaCart") || "[]");
+  function handleCartToggle(product) {
+    const alreadyInCart = cartItems.some(
+      (item) => String(item.id) === String(product.id),
+    );
 
-    const existingItem = existingCart.find((item) => item.id === product.id);
-
-    let updatedCart;
-
-    if (existingItem) {
-      updatedCart = existingCart.map((item) =>
-        item.id === product.id
-          ? {
-              ...item,
-              quantity: item.quantity + 1,
-            }
-          : item,
-      );
+    if (alreadyInCart) {
+      removeFromCart(product.id);
     } else {
-      updatedCart = [
-        ...existingCart,
-        {
-          ...product,
-          quantity: 1,
-        },
-      ];
+      addToCart(product, 1);
     }
-
-    localStorage.setItem("niyaCart", JSON.stringify(updatedCart));
   }
 
   return (
@@ -101,58 +107,98 @@ function WishlistPage() {
             </Link>
           </div>
         ) : (
-          /* PRODUCTS */
           <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
-            {wishlistItems.map((item) => (
-              <article
-                key={item.id}
-                className="group border border-[var(--color-border-soft)] bg-[var(--color-bg-secondary)]"
-              >
-                {/* IMAGE */}
-                <div className="relative aspect-[4/5] overflow-hidden bg-[var(--color-bg-tertiary)]">
-                  <img
-                    src={item.thumbnail || item.images?.[0]}
-                    alt={item.title}
-                    className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
-                  />
+            {wishlistItems.map((item) => {
+              const image =
+                item.thumbnail ||
+                item.images?.[0] ||
+                item.image ||
+                item.image_link;
 
-                  {/* REMOVE */}
-                  <button
-                    type="button"
-                    onClick={() => removeFromWishlist(item.id)}
-                    className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-bg-secondary)]/90 text-[var(--color-text-primary)] transition hover:bg-[var(--color-bg-secondary)]"
-                    aria-label="Remove from wishlist"
+              const finalPrice = item.salePrice || item.price || 0;
+
+              const alreadyInCart = cartItems.some(
+                (cartItem) => String(cartItem.id) === String(item.id),
+              );
+
+              return (
+                <article
+                  key={item.id}
+                  className="group border border-[var(--color-border-soft)] bg-[var(--color-bg-secondary)]"
+                >
+                  {/* IMAGE */}
+                  <Link
+                    to={`/product/${item.id}`}
+                    className="relative block aspect-[4/5] overflow-hidden bg-[var(--color-bg-tertiary)]"
                   >
-                    <FiTrash2 size={13} strokeWidth={1.3} />
-                  </button>
-                </div>
+                    <img
+                      src={image}
+                      alt={item.title || item.name}
+                      className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                    />
 
-                {/* DETAILS */}
-                <div className="p-4">
-                  <p className="text-[9px] tracking-[0.12em] text-[var(--color-accent)]">
-                    {item.category?.name || "Bags"}
-                  </p>
+                    {/* REMOVE WISHLIST */}
+                    <button
+                      type="button"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        removeFromWishlist(item.id);
+                      }}
+                      className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-bg-secondary)]/90 text-[var(--color-text-primary)] transition hover:bg-[var(--color-bg-secondary)]"
+                      aria-label="Remove from wishlist"
+                    >
+                      <FiTrash2 size={13} strokeWidth={1.3} />
+                    </button>
+                  </Link>
 
-                  <h3 className="mt-1 font-serif text-base text-[var(--color-text-primary)]">
-                    {item.title}
-                  </h3>
+                  {/* DETAILS */}
+                  <div className="p-4">
+                    <p className="text-[9px] tracking-[0.12em] text-[var(--color-accent)]">
+                      {item.category?.name ||
+                        item.subcategory ||
+                        item.category ||
+                        "Bags"}
+                    </p>
 
-                  <p className="mt-2 text-[11px] font-medium text-[var(--color-text-secondary)]">
-                    ₹{Math.round(item.price * 83).toLocaleString("en-IN")}
-                  </p>
+                    <Link to={`/product/${item.id}`}>
+                      <h3 className="mt-1 font-serif text-base text-[var(--color-text-primary)] transition hover:text-[var(--color-accent)]">
+                        {item.title || item.name}
+                      </h3>
+                    </Link>
 
-                  {/* ADD TO BAG */}
-                  <button
-                    type="button"
-                    onClick={() => addToCart(item)}
-                    className="mt-5 flex h-9 w-full items-center justify-center gap-2 bg-[var(--color-button-primary)] text-[9px] font-semibold tracking-[0.1em] text-white transition hover:bg-[var(--color-button-primary-hover)]"
-                  >
-                    <FiShoppingBag size={13} />
-                    ADD TO BAG
-                  </button>
-                </div>
-              </article>
-            ))}
+                    <div className="mt-2 flex items-center gap-2">
+                      <p className="text-[11px] font-medium text-[var(--color-text-secondary)]">
+                        ₹{Number(finalPrice).toLocaleString("en-IN")}
+                      </p>
+
+                      {item.salePrice &&
+                        item.price &&
+                        item.salePrice !== item.price && (
+                          <p className="text-[10px] text-[var(--color-text-muted)] line-through">
+                            ₹{Number(item.price).toLocaleString("en-IN")}
+                          </p>
+                        )}
+                    </div>
+
+                    {/* ADD / REMOVE CART */}
+                    <button
+                      type="button"
+                      onClick={() => handleCartToggle(item)}
+                      className={`mt-5 flex h-10 w-full items-center justify-center gap-2 border text-[10px] font-semibold tracking-[0.1em] transition ${
+                        alreadyInCart
+                          ? "border-black bg-white text-black hover:bg-gray-100"
+                          : "border-black bg-black text-white hover:bg-gray-800"
+                      }`}
+                    >
+                      <FiShoppingBag size={13} />
+
+                      {alreadyInCart ? "REMOVE FROM BAG" : "ADD TO BAG"}
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
       </div>

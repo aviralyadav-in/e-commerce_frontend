@@ -66,22 +66,6 @@ The major frontend structure and core shopping experience have been implemented.
 
 * **React Redux 9.3.0**
 
-### Backend / API Integration
-
-The frontend is structured to consume REST APIs.
-
-Expected backend stack:
-
-* Node.js
-* Express.js
-* MongoDB
-* Mongoose
-* JWT Authentication
-
-The final backend API will provide products, categories, authentication, banners, announcements, campaigns and other dynamic content.
-
----
-
 ## Main Features
 
 ### 1. Premium Homepage
@@ -213,29 +197,67 @@ Tailwind CSS responsive utilities are used throughout the application.
 
 
 
+Haan. Tumhari **actual current `api.js` file** ke hisaab se README ka API section update hona chahiye. Abhi README mein `getAnnouncements()` tak hi likha hai, jabki file mein products ke saath **categories, hero banners, campaign, reels, craftsmanship, reviews, auth, users, footer pages aur sale** bhi hain.
+
+Aur ek important correction: abhi **products backend API se nahi aa rahe** — `enrichedProducts` se aa rahe hain. Sirf categories `api` ke through backend endpoint ko call kar rahi hain, aur authentication/users DummyJSON se hain. Isliye README mein "fully API-based products" nahi likhna chahiye.
+
+Use this section:
+
 ## API Integration
 
-The frontend uses Axios for API communication.
+Axios is used for API communication, while the current product data is managed through the project's local product data structure. The API layer is kept separate so it can be connected to the final backend later without changing the UI components.
 
-The API base URL is configured through an environment variable:
+### Current Product Functions
+
+* `getAllProducts()` — returns all products
+* `getFeaturedProducts()` — returns featured products
+* `getBestSellerProducts()` — returns best-selling products
+* `getNewArrivalProducts()` — returns new arrivals
+* `getProductById()` — returns a single product
+* `searchProducts()` — searches products by name, category, subcategory or description
+* `getSuggestedProducts()` — returns related product suggestions
+* `getSaleProducts()` — returns products currently marked for sale
+
+### Website Content
+
+The API layer also provides reusable content for:
+
+* `getCategories()`
+* `getHeroBanners()`
+* `getAnnouncements()`
+* `getCampaign()`
+* `getReels()`
+* `getCraftsmanship()`
+* `getReviews()`
+* `getNotFoundBags()`
+
+### Footer & Information Pages
+
+Common footer content and pages are handled through:
+
+* `getFooter()`
+* `getFooterPage()`
+
+This includes About, Our Story, Contact, Shipping & Returns, Size & Care, FAQ and Legal content.
+
+### Authentication
+
+Authentication is currently connected to DummyJSON for frontend development and testing.
+
+* `loginUser()`
+* `getUsers()`
+
+The final authentication system will be connected to the Niya backend using JWT.
+
+### Backend Integration
+
+The API base URL is configured using:
 
 ```env
-VITE_API_BASE_URL=your_api_base_url
+VITE_API_BASE_URL=******************************
 ```
 
-Current frontend API functions include:
-
-* `getAllProducts()`
-* `getFeaturedProducts()`
-* `getBestSellerProducts()`
-* `getNewArrivalProducts()`
-* `getProductById()`
-* `getSuggestedProducts()`
-* `getAnnouncements()`
-
-The frontend is intentionally separated from the API implementation so backend endpoints can be changed without affecting individual UI components.
-
----
+The current setup is prepared for the final backend, where products, categories, content, authentication, cart, wishlist and other dynamic data can be connected through real REST API endpoints.
 
 ## Product & Category Architecture
 
@@ -268,34 +290,6 @@ Slugs will be used for clean category-based navigation and filtering.
 
 ---
 
-## Future Backend Integration
-
-The following functionality will be connected once the final backend APIs are available:
-
-* Dynamic product categories
-* Men/Women/Unisex filtering
-* Backend product search
-* Pagination
-* Real featured products
-* Real best sellers
-* Real new arrivals
-* Discount and sale system
-* Sale campaigns
-* Dynamic banners
-* Dynamic announcements
-* Campaign content
-* Reels
-* Brand story/content
-* User authentication
-* JWT-based authorization
-* User account management
-* Orders
-* Order history
-* Backend wishlist
-* Backend cart
-* Stock management
-
----
 
 ## Discount & Sale System
 
@@ -310,9 +304,7 @@ The final backend can provide:
 * Sale start date
 * Sale end date
 
-For larger promotional campaigns, a dedicated promotion/sale system can be introduced in the backend.
 
----
 
 ## Authentication
 
@@ -322,7 +314,6 @@ Planned functionality:
 
 * User registration
 * User login
-* JWT authentication
 * Protected routes
 * User account
 * Logout

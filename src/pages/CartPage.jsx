@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   FiArrowRight,
   FiMinus,
@@ -7,71 +6,11 @@ import {
   FiTrash2,
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { useCart } from "../context/CartContext";
 
 function CartPage() {
-  const [cartItems, setCartItems] = useState([]);
-
-  // ===============================
-  // LOAD CART
-  // ===============================
-  useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem("niyaCart") || "[]");
-
-    setCartItems(savedCart);
-  }, []);
-
-  // ===============================
-  // UPDATE LOCAL STORAGE
-  // ===============================
-  function saveCart(updatedCart) {
-    setCartItems(updatedCart);
-    localStorage.setItem("niyaCart", JSON.stringify(updatedCart));
-
-    window.dispatchEvent(new Event("niyaCartUpdated"));
-  }
-
-  // ===============================
-  // INCREASE QUANTITY
-  // ===============================
-  function increaseQuantity(productId) {
-    const updatedCart = cartItems.map((item) =>
-      item.id === productId
-        ? {
-            ...item,
-            quantity: item.quantity + 1,
-          }
-        : item,
-    );
-
-    saveCart(updatedCart);
-  }
-
-  // ===============================
-  // DECREASE QUANTITY
-  // ===============================
-  function decreaseQuantity(productId) {
-    const updatedCart = cartItems
-      .map((item) =>
-        item.id === productId
-          ? {
-              ...item,
-              quantity: item.quantity - 1,
-            }
-          : item,
-      )
-      .filter((item) => item.quantity > 0);
-
-    saveCart(updatedCart);
-  }
-
-  // ===============================
-  // REMOVE FROM CART
-  // ===============================
-  function removeFromCart(productId) {
-    const updatedCart = cartItems.filter((item) => item.id !== productId);
-
-    saveCart(updatedCart);
-  }
+  const { cartItems, increaseQuantity, decreaseQuantity, removeFromCart } =
+    useCart();
 
   // ===============================
   // PRICE CALCULATIONS

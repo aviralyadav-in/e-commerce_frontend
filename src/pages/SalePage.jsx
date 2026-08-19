@@ -1,195 +1,188 @@
-import { useEffect, useState } from "react";
-import { FiArrowRight, FiHeart } from "react-icons/fi";
+import { FiHeart, FiShoppingBag } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { getSaleProducts } from "../api/api";
+
+import { enrichedProducts } from "../data/products";
+import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
 
 function SalePage() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  // ===============================
+  // CART
+  // ===============================
+  const { toggleCart, isInCart } = useCart();
 
-  useEffect(() => {
-    const loadSaleProducts = async () => {
-      try {
-        const data = await getSaleProducts();
-        setProducts(data);
-      } catch (error) {
-        console.error("Failed to load sale products:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  // ===============================
+  // WISHLIST
+  // ===============================
+  const { toggleWishlist, isInWishlist } = useWishlist();
 
-    loadSaleProducts();
-  }, []);
+  // ===============================
+  // GET ONLY SALE PRODUCTS
+  // ===============================
+  const saleProducts = enrichedProducts.filter((product) => product.isOnSale);
 
   return (
     <main className="min-h-screen bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]">
-      {/* =================================
-          SALE HERO
-      ================================= */}
-      <section className="relative overflow-hidden border-b border-[var(--color-border)] bg-[var(--color-bg-tertiary)]">
-        <div className="mx-auto max-w-7xl px-6 py-20 text-center sm:px-8 lg:px-12 lg:py-28">
-          <p className="mb-4 text-[10px] font-medium uppercase tracking-[0.3em] text-[var(--color-accent)]">
-            The Niya Edit
-          </p>
+      {/* ================= PAGE HEADER ================= */}
+      <section className="border-b border-[var(--color-border)]">
+        <div className="mx-auto max-w-[1440px] px-5 py-8 md:px-10 md:py-12">
+          <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
+            <div>
+              <p className="mb-2 text-[9px] font-semibold tracking-[0.24em] text-[var(--color-accent)]">
+                LIMITED OFFERS
+              </p>
 
-          <h1 className="font-serif text-4xl leading-tight tracking-[-0.02em] text-[var(--color-text-primary)] sm:text-5xl lg:text-6xl">
-            Sale
-          </h1>
+              <h1 className="font-serif text-3xl leading-none md:text-5xl">
+                Sale
+              </h1>
+            </div>
 
-          <p className="mx-auto mt-6 max-w-xl text-sm leading-7 text-[var(--color-text-secondary)] sm:text-base">
-            Discover selected Niya pieces at exclusive prices.
-            Timeless silhouettes, thoughtfully crafted and now made
-            available for less.
-          </p>
+            <p className="max-w-[420px] text-[10px] leading-5 text-[var(--color-text-muted)] md:text-right">
+              Discover selected Niya Bags at special prices.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* =================================
-          SALE PRODUCTS
-      ================================= */}
-      <section className="mx-auto max-w-7xl px-6 py-16 sm:px-8 lg:px-12 lg:py-20">
-        <div className="mb-10 flex items-end justify-between border-b border-[var(--color-border)] pb-5">
-          <div>
-            <p className="mb-2 text-[10px] uppercase tracking-[0.25em] text-[var(--color-text-muted)]">
-              Limited selection
-            </p>
-
-            <h2 className="font-serif text-2xl text-[var(--color-text-primary)] sm:text-3xl">
-              Pieces on Sale
-            </h2>
-          </div>
-
-          {!loading && (
-            <span className="text-xs text-[var(--color-text-muted)]">
-              {products.length} {products.length === 1 ? "piece" : "pieces"}
-            </span>
-          )}
+      {/* ================= PRODUCTS ================= */}
+      <section className="mx-auto max-w-[1440px] px-5 py-8 md:px-10 md:py-12">
+        <div className="mb-6 flex items-center justify-between">
+          <p className="text-[9px] tracking-[0.15em] text-[var(--color-text-muted)]">
+            {saleProducts.length} PRODUCTS ON SALE
+          </p>
         </div>
 
-        {loading ? (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <div key={index} className="animate-pulse">
-                <div className="aspect-[4/5] bg-[var(--color-bg-tertiary)]" />
-
-                <div className="mt-4 h-3 w-2/3 bg-[var(--color-bg-tertiary)]" />
-
-                <div className="mt-3 h-3 w-1/3 bg-[var(--color-bg-tertiary)]" />
-              </div>
-            ))}
-          </div>
-        ) : products.length === 0 ? (
-          <div className="py-24 text-center">
-            <p className="font-serif text-2xl text-[var(--color-text-primary)]">
-              No sale pieces available
+        {saleProducts.length === 0 ? (
+          <div className="py-20 text-center">
+            <p className="text-sm text-[var(--color-text-muted)]">
+              No sale products available right now.
             </p>
 
-            <p className="mt-3 text-sm text-[var(--color-text-muted)]">
-              Check back soon for our next edit.
-            </p>
+            <Link
+              to="/shop"
+              className="mt-6 inline-block border border-[var(--color-border)] px-6 py-3 text-[10px] font-semibold uppercase tracking-[0.16em] transition hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+            >
+              Continue Shopping
+            </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-x-4 gap-y-12 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6">
-            {products.map((product) => (
-              <article key={product.id} className="group">
-                {/* Image */}
+          <div className="grid grid-cols-2 gap-x-4 gap-y-9 md:grid-cols-3 lg:grid-cols-4">
+            {saleProducts.map((product) => {
+              const isWishlisted = isInWishlist(product.id);
+              const isAddedToCart = isInCart(product.id);
+
+              const productImage =
+                product.thumbnail || product.images?.[0] || product.image;
+
+              const finalPrice = product.salePrice || product.price || 0;
+
+              return (
                 <Link
+                  key={product.id}
                   to={`/product/${product.id}`}
-                  className="relative block overflow-hidden bg-[var(--color-bg-tertiary)]"
+                  className="group"
                 >
-                  <div className="aspect-[4/5] overflow-hidden">
+                  {/* ================= IMAGE ================= */}
+                  <div className="relative aspect-[4/5] overflow-hidden bg-[var(--color-bg-tertiary)]">
                     <img
-                      src={product.thumbnail}
+                      src={productImage}
                       alt={product.title}
-                      className="h-full w-full object-cover transition duration-700 ease-out group-hover:scale-[1.04]"
+                      loading="lazy"
+                      className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
                     />
+
+                    {/* SALE BADGE */}
+                    {product.isOnSale && (
+                      <span className="absolute left-3 top-3 bg-[var(--color-accent)] px-2.5 py-1 text-[8px] font-semibold tracking-[0.14em] text-white">
+                        SALE
+                      </span>
+                    )}
+
+                    {/* WISHLIST */}
+                    <button
+                      type="button"
+                      aria-label={
+                        isWishlisted
+                          ? `Remove ${product.title} from wishlist`
+                          : `Add ${product.title} to wishlist`
+                      }
+                      onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        toggleWishlist(product);
+                      }}
+                      className={`absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-bg-secondary)]/90 transition ${
+                        isWishlisted
+                          ? "text-[var(--color-accent)]"
+                          : "text-[var(--color-text-primary)] hover:text-[var(--color-accent)]"
+                      }`}
+                    >
+                      <FiHeart
+                        size={15}
+                        strokeWidth={1.4}
+                        fill={isWishlisted ? "currentColor" : "none"}
+                      />
+                    </button>
+
+                    {/* CART */}
+                    <button
+                      type="button"
+                      onClick={(event) => {
+                        event.preventDefault();
+                        event.stopPropagation();
+
+                        toggleCart(product, 1);
+                      }}
+                      className={`absolute bottom-3 left-3 right-3 flex h-9 items-center justify-center gap-2 text-[9px] font-semibold tracking-[0.12em] transition ${
+                        isAddedToCart
+                          ? "bg-[var(--color-accent)] text-white hover:opacity-90"
+                          : "bg-[var(--color-text-primary)] text-[var(--color-bg-primary)] hover:bg-[var(--color-accent)]"
+                      }`}
+                    >
+                      <FiShoppingBag size={13} strokeWidth={1.5} />
+
+                      {isAddedToCart ? "REMOVE FROM BAG" : "ADD TO BAG"}
+                    </button>
                   </div>
 
-                  {/* Sale Badge */}
-                  <span className="absolute left-3 top-3 bg-[var(--color-accent)] px-2.5 py-1 text-[9px] font-medium uppercase tracking-[0.15em] text-[var(--color-bg-secondary)]">
-                    Sale
-                  </span>
+                  {/* ================= PRODUCT INFO ================= */}
+                  <div className="pt-3.5">
+                    <p className="mb-1 text-[8px] uppercase tracking-[0.12em] text-[var(--color-accent)]">
+                      {product.subcategory || "Bags"}
+                    </p>
 
-                  {/* Discount */}
-                  <span className="absolute right-3 top-3 border border-[var(--color-accent)] bg-[var(--color-bg-primary)] px-2.5 py-1 text-[9px] font-medium tracking-[0.1em] text-[var(--color-accent)]">
-                    -{product.discount}%
-                  </span>
-
-                  {/* Wishlist */}
-                  <button
-                    type="button"
-                    aria-label={`Add ${product.title} to wishlist`}
-                    onClick={(event) => {
-                      event.preventDefault();
-                    }}
-                    className="absolute bottom-3 right-3 flex h-9 w-9 items-center justify-center rounded-full bg-[var(--color-bg-secondary)]/90 text-[var(--color-text-primary)] opacity-0 shadow-sm backdrop-blur-sm transition duration-300 group-hover:opacity-100 hover:text-[var(--color-accent)]"
-                  >
-                    <FiHeart size={15} strokeWidth={1.5} />
-                  </button>
-                </Link>
-
-                {/* Product Info */}
-                <div className="pt-4">
-                  <p className="mb-1 text-[9px] uppercase tracking-[0.2em] text-[var(--color-text-muted)]">
-                    {product.category}
-                  </p>
-
-                  <Link to={`/product/${product.id}`}>
-                    <h3 className="text-xs font-medium tracking-wide text-[var(--color-text-primary)] transition-colors hover:text-[var(--color-accent)] sm:text-sm">
+                    <h2 className="line-clamp-1 text-xs font-medium text-[var(--color-text-primary)]">
                       {product.title}
-                    </h3>
-                  </Link>
+                    </h2>
 
-                  <div className="mt-2 flex items-center gap-2">
-                    <span className="text-sm font-medium text-[var(--color-accent)]">
-                      ₹{product.salePrice.toLocaleString("en-IN")}
-                    </span>
+                    {/* PRICE */}
+                    <div className="mt-1 flex items-center gap-2">
+                      <p className="text-[11px] text-[var(--color-text-primary)]">
+                        ₹{Number(finalPrice).toLocaleString("en-IN")}
+                      </p>
 
-                    <span className="text-xs text-[var(--color-text-muted)] line-through">
-                      ₹{product.price.toLocaleString("en-IN")}
-                    </span>
+                      {product.salePrice &&
+                        product.price &&
+                        product.salePrice !== product.price && (
+                          <p className="text-[9px] text-[var(--color-text-muted)] line-through">
+                            ₹{Number(product.price).toLocaleString("en-IN")}
+                          </p>
+                        )}
+                    </div>
+
+                    {/* DISCOUNT */}
+                    {product.discountPercentage > 0 && (
+                      <p className="mt-1 text-[9px] font-semibold tracking-[0.08em] text-[var(--color-accent)]">
+                        {product.discountPercentage}% OFF
+                      </p>
+                    )}
                   </div>
-
-                  <p className="mt-1 text-[9px] uppercase tracking-[0.15em] text-[var(--color-text-muted)]">
-                    {product.discount}% off
-                  </p>
-                </div>
-              </article>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         )}
-      </section>
-
-      {/* =================================
-          BOTTOM CTA
-      ================================= */}
-      <section className="border-t border-[var(--color-border)] bg-[var(--color-dark-section)]">
-        <div className="mx-auto max-w-4xl px-6 py-16 text-center sm:px-8 lg:py-20">
-          <p className="mb-3 text-[10px] uppercase tracking-[0.3em] text-[var(--color-accent-bright)]">
-            Discover Niya
-          </p>
-
-          <h2 className="font-serif text-3xl text-white sm:text-4xl">
-            Find your everyday signature.
-          </h2>
-
-          <p className="mx-auto mt-4 max-w-lg text-sm leading-6 text-white/70">
-            Explore the complete Niya collection and discover silhouettes
-            designed to stay with you beyond the season.
-          </p>
-
-          <Link
-            to="/shop"
-            className="group mt-8 inline-flex items-center gap-3 border border-[var(--color-accent)] px-6 py-3 text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent-bright)] transition hover:bg-[var(--color-accent)] hover:text-[var(--color-dark-section)]"
-          >
-            Shop Collection
-            <FiArrowRight
-              size={14}
-              className="transition-transform duration-300 group-hover:translate-x-1"
-            />
-          </Link>
-        </div>
       </section>
     </main>
   );

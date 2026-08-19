@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { enrichedProducts as products } from "../data/products";
 // ===============================
 // PRODUCT / WEBSITE API
 // ===============================
@@ -23,71 +23,71 @@ const authApi = axios.create({
 // ===============================
 // PRODUCTS
 // ===============================
+
 export async function getFeaturedProducts() {
-  const response = await api.get("/products");
-  return response.data.slice(0, 4);
+  return products.filter((product) => product.isFeatured);
 }
-// ===============================
-// HOME PAGE PRODUCT SECTIONS
-// ===============================
 
 export async function getBestSellerProducts() {
-  const response = await api.get("/products");
-
-  return response.data.slice(0, 4);
+  return [...products].sort((a, b) => b.orderCount - a.orderCount).slice(0, 4);
 }
 
 export async function getNewArrivalProducts() {
-  const response = await api.get("/products");
-
-  return response.data.slice(0, 4);
+  return [...products]
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 4);
 }
+
 // ===============================
 // SINGLE PRODUCT
 // ===============================
+
 export async function getProductById(id) {
-  const response = await api.get(`/products/${id}`);
-  return response.data;
+  return products.find((product) => String(product.id) === String(id)) || null;
 }
+
 // ===============================
 // ALL PRODUCTS — SHOP PAGE
 // ===============================
+
 export async function getAllProducts() {
-  const response = await api.get("/products");
-  return response.data;
+  return products;
 }
+
 // ===============================
+// SEARCH PRODUCTS
+// ===============================
+
 export async function searchProducts(query) {
-  const products = await getAllProducts();
+  const allProducts = await getAllProducts();
 
   const normalizedQuery = query.trim().toLowerCase();
 
   if (!normalizedQuery) {
-    return products;
+    return allProducts;
   }
 
-  return products.filter((product) => {
+  return allProducts.filter((product) => {
     const title = product.title?.toLowerCase() || "";
-    const category =
-      typeof product.category === "string"
-        ? product.category.toLowerCase()
-        : product.category?.name?.toLowerCase() || "";
-
+    const category = product.category?.toLowerCase() || "";
+    const subcategory = product.subcategory?.toLowerCase() || "";
     const description = product.description?.toLowerCase() || "";
 
     return (
       title.includes(normalizedQuery) ||
       category.includes(normalizedQuery) ||
+      subcategory.includes(normalizedQuery) ||
       description.includes(normalizedQuery)
     );
   });
 }
+
+// ===============================
 // SUGGESTED PRODUCTS
 // ===============================
-export async function getSuggestedProducts(currentProductId) {
-  const response = await api.get("/products");
 
-  return response.data
+export async function getSuggestedProducts(currentProductId) {
+  return products
     .filter((product) => String(product.id) !== String(currentProductId))
     .slice(0, 6);
 }
@@ -110,9 +110,9 @@ export async function getHeroBanners() {
       subtitle:
         "Discover handcrafted luxury handbags designed for the modern woman. Premium materials, timeless silhouettes.",
       image:
-        "https://images.unsplash.com/photo-1594223274512-ad4803739b7c?auto=format&fit=crop&w=1800&q=85",
-      buttonText: "Shop the Collection",
-      buttonLink: "#featured",
+        "/products/bags/handbags/WhatsApp Image 2026-08-17 at 5.37.34 PM.jpeg",
+      buttonText: "Shop Handbags",
+      buttonLink: "/shop?subcategory=handbags",
     },
     {
       id: 2,
@@ -120,9 +120,9 @@ export async function getHeroBanners() {
       subtitle:
         "Refined silhouettes crafted for everyday elegance and effortless sophistication.",
       image:
-        "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=1800&q=85",
-      buttonText: "Discover New Arrivals",
-      buttonLink: "#featured",
+        "/products/bags/handbags/WhatsApp Image 2026-08-17 at 5.40.02 PM.jpeg",
+      buttonText: "Explore Collection",
+      buttonLink: "/shop",
     },
     {
       id: 3,
@@ -130,9 +130,9 @@ export async function getHeroBanners() {
       subtitle:
         "Thoughtful details, premium materials and craftsmanship designed to last.",
       image:
-        "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=1800&q=85",
-      buttonText: "Explore Collection",
-      buttonLink: "#featured",
+        "/products/bags/minibags/WhatsApp Image 2026-08-17 at 5.40.08 PM (1).jpeg",
+      buttonText: "Shop New Arrivals",
+      buttonLink: "/shop?filter=new",
     },
   ];
 }
@@ -606,75 +606,8 @@ export const getFooterPage = async (slug) => {
 // const response = await api.get("/products/sale");
 // return response.data;
 
-export async function getSaleProducts() {
-  return [
-    {
-      id: "sale-1",
-      title: "Niya Classic Tote",
-      price: 4999,
-      salePrice: 3999,
-      discount: 20,
-      category: "Totes",
-      thumbnail:
-        "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=900&q=85",
-      isOnSale: true,
-    },
-    {
-      id: "sale-2",
-      title: "Niya Luna Shoulder Bag",
-      price: 5999,
-      salePrice: 4499,
-      discount: 25,
-      category: "Shoulder Bags",
-      thumbnail:
-        "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=900&q=85",
-      isOnSale: true,
-    },
-    {
-      id: "sale-3",
-      title: "Niya Mini Crossbody",
-      price: 3999,
-      salePrice: 2999,
-      discount: 25,
-      category: "Crossbody Bags",
-      thumbnail:
-        "https://images.unsplash.com/photo-1566150905458-1bf1fc113f0d?auto=format&fit=crop&w=900&q=85",
-      isOnSale: true,
-    },
-    {
-      id: "sale-4",
-      title: "Niya Signature Handbag",
-      price: 6999,
-      salePrice: 4899,
-      discount: 30,
-      category: "Handbags",
-      thumbnail:
-        "https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=900&q=85",
-      isOnSale: true,
-    },
-    {
-      id: "sale-5",
-      title: "Niya Evening Clutch",
-      price: 4499,
-      salePrice: 3599,
-      discount: 20,
-      category: "Clutches",
-      thumbnail:
-        "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=900&q=85",
-      isOnSale: true,
-    },
-    {
-      id: "sale-6",
-      title: "Niya Everyday Shoulder Bag",
-      price: 5499,
-      salePrice: 3849,
-      discount: 30,
-      category: "Shoulder Bags",
-      thumbnail:
-        "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=900&q=85",
-      isOnSale: true,
-    },
-  ];
+export function getSaleProducts() {
+  return products.filter((product) => product.isOnSale === true);
 }
 // ===============================
 // 404 PAGE — FLYING BAGS

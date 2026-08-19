@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { getHeroBanners } from "../../api/api";
+import { Link } from "react-router-dom";
 
 function HeroBanner() {
   const [slides, setSlides] = useState([]);
@@ -89,13 +90,13 @@ function HeroBanner() {
             {slide.subtitle}
           </p>
 
-          <a
-            href={slide.buttonLink}
+          <Link
+            to={slide.buttonLink}
             className="mt-7 inline-flex items-center gap-4 rounded-full bg-[var(--color-accent-bright)] px-6 py-3 text-[10px] font-semibold text-[#073b4c] transition hover:opacity-90"
           >
             {slide.buttonText}
             <span>→</span>
-          </a>
+          </Link>
         </div>
       </div>
 

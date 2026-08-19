@@ -9,54 +9,31 @@ import {
   FiX,
 } from "react-icons/fi";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+
 import SearchOverlay from "./SearchOverlay";
 import { useTheme } from "../../context/ThemeContext";
+import { useCart } from "../../context/CartContext";
+import { useWishlist } from "../../context/WishlistContext";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
+  // ===============================
+  // THEME CONTEXT
+  // ===============================
   const { isDarkMode, toggleTheme } = useTheme();
 
-  const [wishlistCount, setWishlistCount] = useState(0);
-  const [cartCount, setCartCount] = useState(0);
+  // ===============================
+  // CART CONTEXT
+  // ===============================
+  const { cartCount } = useCart();
 
-  useEffect(() => {
-    function updateCounts() {
-      try {
-        const wishlist = JSON.parse(
-          localStorage.getItem("niyaWishlist") || "[]",
-        );
-
-        const cart = JSON.parse(localStorage.getItem("niyaCart") || "[]");
-
-        setWishlistCount(Array.isArray(wishlist) ? wishlist.length : 0);
-
-        setCartCount(
-          Array.isArray(cart)
-            ? cart.reduce(
-                (total, item) => total + Number(item.quantity || 1),
-                0,
-              )
-            : 0,
-        );
-      } catch {
-        setWishlistCount(0);
-        setCartCount(0);
-      }
-    }
-
-    updateCounts();
-
-    window.addEventListener("niyaWishlistUpdated", updateCounts);
-    window.addEventListener("niyaCartUpdated", updateCounts);
-
-    return () => {
-      window.removeEventListener("niyaWishlistUpdated", updateCounts);
-      window.removeEventListener("niyaCartUpdated", updateCounts);
-    };
-  }, []);
+  // ===============================
+  // WISHLIST CONTEXT
+  // ===============================
+  const { wishlistCount } = useWishlist();
 
   function handleSearchOpen() {
     setMenuOpen(false);
@@ -89,19 +66,18 @@ function Navbar() {
             </Link>
 
             <Link
-              to="/#new-arrivals"
+              to="/shop?filter=new-arrivals"
               className="text-[11px] text-[var(--color-text-secondary)] transition hover:text-[var(--color-accent)]"
             >
               New Arrivals
             </Link>
 
-
-            <a
-              href="/#featured"
+            <Link
+              to="/shop?filter=best-sellers"
               className="text-[11px] text-[var(--color-text-secondary)] transition hover:text-[var(--color-accent)]"
             >
               Bestsellers
-            </a>
+            </Link>
           </nav>
 
           {/* RIGHT SIDE */}
@@ -155,6 +131,8 @@ function Navbar() {
                 </span>
               )}
             </Link>
+
+            {/* SALE */}
             <Link
               to="/sale"
               className="text-[11px] uppercase tracking-[0.18em] text-[var(--color-accent)] transition hover:opacity-70"
@@ -202,21 +180,21 @@ function Navbar() {
                 Shop All
               </Link>
 
-              <a
-                href="/#featured"
+              <Link
+                to="/shop?filter=new-arrivals"
                 onClick={() => setMenuOpen(false)}
                 className="transition hover:text-[var(--color-accent)]"
               >
                 New Arrivals
-              </a>
+              </Link>
 
-              <a
-                href="/#featured"
+              <Link
+                to="/shop?filter=best-sellers"
                 onClick={() => setMenuOpen(false)}
                 className="transition hover:text-[var(--color-accent)]"
               >
                 Bestsellers
-              </a>
+              </Link>
 
               <Link
                 to="/craftsmanship"
@@ -230,11 +208,7 @@ function Navbar() {
         )}
       </header>
 
-      {/* SEARCH OVERLAY
-          IMPORTANT:
-          It is outside the header so it can safely cover
-          the complete viewport.
-      */}
+      {/* SEARCH OVERLAY */}
       <SearchOverlay isOpen={searchOpen} onClose={handleSearchClose} />
     </>
   );

@@ -1,24 +1,37 @@
 import { useEffect, useState } from "react";
 import { FiHeart, FiShoppingBag } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
+
 import {
   getFeaturedProducts,
   getBestSellerProducts,
   getNewArrivalProducts,
 } from "../../api/api";
 
+import { useCart } from "../../context/CartContext";
+import { useWishlist } from "../../context/WishlistContext";
+
 function FeaturedProducts() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [bestSellerProducts, setBestSellerProducts] = useState([]);
   const [newArrivalProducts, setNewArrivalProducts] = useState([]);
-
   const [loading, setLoading] = useState(true);
-
-  const [wishlistItems, setWishlistItems] = useState([]);
-  const [cartItems, setCartItems] = useState([]);
 
   const navigate = useNavigate();
 
+  // ===============================
+  // CART CONTEXT
+  // ===============================
+  const { toggleCart, isInCart } = useCart();
+
+  // ===============================
+  // WISHLIST CONTEXT
+  // ===============================
+  const { toggleWishlist, isInWishlist } = useWishlist();
+
+  // ===============================
+  // LOAD PRODUCTS
+  // ===============================
   useEffect(() => {
     let mounted = true;
 
@@ -46,69 +59,14 @@ function FeaturedProducts() {
 
     loadProducts();
 
-    try {
-      const savedWishlist = JSON.parse(
-        localStorage.getItem("niyaWishlist") || "[]",
-      );
-
-      const savedCart = JSON.parse(localStorage.getItem("niyaCart") || "[]");
-
-      setWishlistItems(Array.isArray(savedWishlist) ? savedWishlist : []);
-      setCartItems(Array.isArray(savedCart) ? savedCart : []);
-    } catch {
-      setWishlistItems([]);
-      setCartItems([]);
-    }
-
     return () => {
       mounted = false;
     };
   }, []);
 
-  function toggleWishlist(product) {
-    const existingWishlist = JSON.parse(
-      localStorage.getItem("niyaWishlist") || "[]",
-    );
-
-    const alreadyExists = existingWishlist.some(
-      (item) => item.id === product.id,
-    );
-
-    const updatedWishlist = alreadyExists
-      ? existingWishlist.filter((item) => item.id !== product.id)
-      : [...existingWishlist, product];
-
-    localStorage.setItem("niyaWishlist", JSON.stringify(updatedWishlist));
-
-    setWishlistItems(updatedWishlist);
-
-    window.dispatchEvent(new Event("niyaWishlistUpdated"));
-  }
-
-  function toggleCart(product) {
-    const existingCart = JSON.parse(localStorage.getItem("niyaCart") || "[]");
-
-    const alreadyExists = existingCart.some((item) => item.id === product.id);
-
-    const updatedCart = alreadyExists
-      ? existingCart.filter((item) => item.id !== product.id)
-      : [...existingCart, { ...product, quantity: 1 }];
-
-    localStorage.setItem("niyaCart", JSON.stringify(updatedCart));
-
-    setCartItems(updatedCart);
-
-    window.dispatchEvent(new Event("niyaCartUpdated"));
-  }
-
-  function isInWishlist(productId) {
-    return wishlistItems.some((item) => item.id === productId);
-  }
-
-  function isInCart(productId) {
-    return cartItems.some((item) => item.id === productId);
-  }
-
+  // ===============================
+  // PRODUCT CARD
+  // ===============================
   function renderProductCard(product, sectionType) {
     const wishlistActive = isInWishlist(product.id);
     const cartActive = isInCart(product.id);
@@ -159,7 +117,6 @@ function FeaturedProducts() {
               absolute right-3 top-3
               grid h-8 w-8 place-items-center
               rounded-full transition
-
               ${
                 wishlistActive
                   ? "bg-[var(--color-dark-section)] text-white dark:bg-white dark:text-slate-900"
@@ -198,7 +155,7 @@ function FeaturedProducts() {
             type="button"
             onClick={(event) => {
               event.stopPropagation();
-              toggleCart(product);
+              toggleCart(product, 1);
             }}
             className={`
               absolute bottom-2 left-2 right-2
@@ -216,6 +173,9 @@ function FeaturedProducts() {
                   : "bg-[var(--color-bg-secondary)]/95 text-[var(--color-text-primary)] opacity-0 group-hover:opacity-100 dark:bg-slate-900/95 dark:text-white"
               }
             `}
+            aria-label={
+              cartActive ? "Remove from shopping bag" : "Add to shopping bag"
+            }
           >
             <FiShoppingBag size={9} className="shrink-0" />
 
@@ -236,7 +196,7 @@ function FeaturedProducts() {
               dark:text-slate-400
             "
           >
-            {product.category?.name || "Bags"}
+            {product.subcategory || product.category?.name || "Bags"}
           </p>
 
           <h3
@@ -260,13 +220,16 @@ function FeaturedProducts() {
               dark:text-white
             "
           >
-            ₹{Math.round(product.price * 83).toLocaleString("en-IN")}
+            ₹{Number(product.price || 0).toLocaleString("en-IN")}
           </p>
         </div>
       </article>
     );
   }
 
+  // ===============================
+  // PRODUCT SECTION
+  // ===============================
   function renderSection({
     id,
     eyebrow,
@@ -275,6 +238,14 @@ function FeaturedProducts() {
     products,
     sectionType,
   }) {
+    const filterMap = {
+      featured: "featured",
+      bestSeller: "best-sellers",
+      newArrival: "new-arrivals",
+    };
+
+    const shopFilter = filterMap[sectionType];
+
     return (
       <section
         id={id}
@@ -282,9 +253,7 @@ function FeaturedProducts() {
           bg-[var(--color-bg-secondary)]
           px-5 py-12
           transition-colors duration-300
-
           md:px-10 md:py-16
-
           dark:bg-slate-950
         "
       >
@@ -333,7 +302,7 @@ function FeaturedProducts() {
 
             {/* VIEW ALL */}
             <Link
-              to="/shop"
+              to={`/shop?filter=${shopFilter}`}
               className="
                 hidden
                 border-b
@@ -344,9 +313,7 @@ function FeaturedProducts() {
                 text-[var(--color-text-primary)]
                 transition
                 hover:opacity-60
-
                 sm:block
-
                 dark:border-slate-500
                 dark:text-white
               "
@@ -380,7 +347,9 @@ function FeaturedProducts() {
     );
   }
 
-  /* LOADING */
+  // ===============================
+  // LOADING
+  // ===============================
   if (loading) {
     return (
       <section

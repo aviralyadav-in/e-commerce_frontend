@@ -1,26 +1,34 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const categories = {
   women: [
-    ["Totes", "14 styles", "1594223274512-ad4803739b7c"],
-    ["Crossbody Bags", "9 styles", "1584917865442-de89df76afd3"],
-    ["Shoulder Bags", "11 styles", "1591561954557-26941169b49e"],
-    ["Clutches", "7 styles", "1566150905458-1bf1fc113f0d"],
-    ["Mini Bags", "6 styles", "1553062407-98eeb64c6a62"],
-    ["Backpacks", "5 styles", "1548036328-c9fa89d128fa"],
+    [
+      "Handbags",
+      "Explore collection",
+      "1594223274512-ad4803739b7c",
+      "handbags",
+    ],
+    [
+      "Mini Bags",
+      "Explore collection",
+      "1584917865442-de89df76afd3",
+      "minibags",
+    ],
+    ["Sling Bags", "Explore collection", "1591561954557-26941169b49e", "sling"],
+    ["Tote Bags", "Explore collection", "1566150905458-1bf1fc113f0d", "tote"],
   ],
-  men: [
-    ["Briefcases", "8 styles", "1553062407-98eeb64c6a62"],
-    ["Backpacks", "7 styles", "1548036328-c9fa89d128fa"],
-    ["Crossbody Bags", "6 styles", "1584917865442-de89df76afd3"],
-    ["Totes", "5 styles", "1594223274512-ad4803739b7c"],
-    ["Travel Bags", "5 styles", "1590874103328-eac38a683ce7"],
-    ["Mini Bags", "4 styles", "1566150905458-1bf1fc113f0d"],
-  ],
+
+  men: [["Wallets", "Explore collection", "1553062407-98eeb64c6a62", "wallet"]],
 };
 
 function CategorySection() {
   const [gender, setGender] = useState("women");
+  const navigate = useNavigate();
+
+  const handleCategoryClick = (filter) => {
+    navigate(`/shop?filter=${filter}`);
+  };
 
   return (
     <section
@@ -67,11 +75,12 @@ function CategorySection() {
         </div>
 
         <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
-          {categories[gender].map(([name, count, image]) => (
-            <a
-              href="#featured"
+          {categories[gender].map(([name, count, image, filter]) => (
+            <button
+              type="button"
+              onClick={() => handleCategoryClick(filter)}
               key={name}
-              className="group relative h-[220px] overflow-hidden rounded-xl"
+              className="group relative h-[220px] overflow-hidden rounded-xl text-left"
             >
               <img
                 src={`https://images.unsplash.com/photo-${image}?auto=format&fit=crop&w=700&q=85`}
@@ -87,7 +96,7 @@ function CategorySection() {
 
                 <p className="mt-1 text-[8px] text-white/75">{count}</p>
               </div>
-            </a>
+            </button>
           ))}
         </div>
       </div>

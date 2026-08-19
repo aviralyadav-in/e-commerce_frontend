@@ -1,13 +1,37 @@
 import { useEffect, useState } from "react";
-import { FiHeart, FiSliders, FiX, FiChevronDown } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import {
+  FiHeart,
+  FiSliders,
+  FiX,
+  FiChevronDown,
+  FiShoppingBag,
+} from "react-icons/fi";
+import { Link, useSearchParams } from "react-router-dom";
 import { getAllProducts } from "../api/api";
+import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
 
 function ShopPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // ===============================
+  // CART CONTEXT
+  // ===============================
+  const { toggleCart, isInCart } = useCart();
+
+  // ===============================
+  // WISHLIST CONTEXT
+  // ===============================
+  const { toggleWishlist, isInWishlist } = useWishlist();
+
+  // ===============================
+  // LOCAL STATES
+  // ===============================
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState(null);
 
   const [openSections, setOpenSections] = useState({
     women: true,
@@ -21,6 +45,22 @@ function ShopPage() {
     collection: false,
   });
 
+  // ===============================
+  // URL FILTER
+  // ===============================
+  useEffect(() => {
+    const filterFromUrl = searchParams.get("filter");
+
+    if (filterFromUrl) {
+      setSelectedFilter(filterFromUrl);
+    } else {
+      setSelectedFilter(null);
+    }
+  }, [searchParams]);
+
+  // ===============================
+  // LOAD PRODUCTS
+  // ===============================
   useEffect(() => {
     async function loadProducts() {
       try {
@@ -41,6 +81,9 @@ function ShopPage() {
     loadProducts();
   }, []);
 
+  // ===============================
+  // TOGGLE DESKTOP FILTER SECTION
+  // ===============================
   const toggleSection = (section) => {
     setOpenSections((prev) => ({
       ...prev,
@@ -48,6 +91,9 @@ function ShopPage() {
     }));
   };
 
+  // ===============================
+  // TOGGLE MOBILE FILTER SECTION
+  // ===============================
   const toggleMobileSection = (section) => {
     setMobileOpenSections((prev) => ({
       ...prev,
@@ -55,17 +101,72 @@ function ShopPage() {
     }));
   };
 
+  // ===============================
+  // HANDLE FILTER CHANGE
+  // ===============================
+  const handleFilterChange = (filterValue) => {
+    const newFilter = selectedFilter === filterValue ? null : filterValue;
+
+    setSelectedFilter(newFilter);
+
+    if (newFilter) {
+      setSearchParams({
+        filter: newFilter,
+      });
+    } else {
+      setSearchParams({});
+    }
+  };
+
+  // ===============================
+  // FILTER DATA
+  // ===============================
   const womenCategories = [
-    "Tote Bags",
-    "Shoulder Bags",
-    "Clutches",
-    "Mini Bags",
+    { label: "Handbags", value: "handbags" },
+    { label: "Mini Bags", value: "minibags" },
+    { label: "Sling Bags", value: "sling" },
+    { label: "Tote Bags", value: "tote" },
   ];
 
-  const menCategories = ["Wallets", "Office Bags"];
+  const menCategories = [{ label: "Wallets", value: "wallet" }];
 
-  const collections = ["Featured", "Best Sellers", "New Arrivals"];
+  const collections = [
+    { label: "Featured", value: "featured" },
+    { label: "Best Sellers", value: "best-sellers" },
+    { label: "New Arrivals", value: "new-arrivals" },
+  ];
 
+  // ===============================
+  // FILTER PRODUCTS
+  // ===============================
+  const filteredProducts = (() => {
+    if (!selectedFilter) return products;
+
+    if (selectedFilter === "featured") {
+      return products.filter((product) => product.isFeatured);
+    }
+
+    if (selectedFilter === "best-sellers") {
+      return [...products]
+        .sort((a, b) => Number(b.orderCount || 0) - Number(a.orderCount || 0))
+        .slice(0, 8);
+    }
+
+    if (selectedFilter === "new-arrivals") {
+      return [...products]
+        .sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+        )
+        .slice(0, 8);
+    }
+
+    return products.filter((product) => product.subcategory === selectedFilter);
+  })();
+
+  // ===============================
+  // FILTER SECTION COMPONENT
+  // ===============================
   const FilterSection = ({ title, section, items, mobile = false }) => {
     const isOpen = mobile ? mobileOpenSections[section] : openSections[section];
 
@@ -99,19 +200,20 @@ function ShopPage() {
           }`}
         >
           <div className="overflow-hidden">
-            <div className="pb-5 space-y-3">
+            <div className="space-y-3 pb-5">
               {items.map((item) => (
                 <label
-                  key={item}
+                  key={item.value}
                   className="flex cursor-pointer items-center gap-3 text-[11px] text-[var(--color-text-muted)] transition hover:text-[var(--color-text-primary)]"
                 >
                   <input
                     type="checkbox"
-                    disabled
+                    checked={selectedFilter === item.value}
+                    onChange={() => handleFilterChange(item.value)}
                     className="h-3.5 w-3.5 accent-[var(--color-accent)]"
                   />
 
-                  <span>{item}</span>
+                  <span>{item.label}</span>
                 </label>
               ))}
             </div>
@@ -150,7 +252,7 @@ function ShopPage() {
         {/* ================= MOBILE TOOLBAR ================= */}
         <div className="mb-5 flex items-center justify-between md:hidden">
           <p className="text-[9px] tracking-[0.15em] text-[var(--color-text-muted)]">
-            {loading ? "LOADING..." : `${products.length} PRODUCTS`}
+            {loading ? "LOADING..." : `${filteredProducts.length} PRODUCTS`}
           </p>
 
           <button
@@ -166,7 +268,6 @@ function ShopPage() {
         {/* ================= MOBILE FILTER PANEL ================= */}
         {mobileFiltersOpen && (
           <div className="fixed inset-0 z-[100] md:hidden">
-            {/* BACKDROP */}
             <button
               type="button"
               aria-label="Close filters"
@@ -174,9 +275,7 @@ function ShopPage() {
               className="absolute inset-0 bg-black/35"
             />
 
-            {/* PANEL */}
             <aside className="absolute right-0 top-0 flex h-full w-[82%] max-w-[340px] flex-col bg-[var(--color-bg-primary)] shadow-xl">
-              {/* PANEL HEADER */}
               <div className="flex items-center justify-between border-b border-[var(--color-border)] px-5 py-5">
                 <p className="text-[10px] font-semibold tracking-[0.2em] text-[var(--color-text-primary)]">
                   FILTERS
@@ -192,7 +291,6 @@ function ShopPage() {
                 </button>
               </div>
 
-              {/* SCROLLABLE FILTERS */}
               <div className="flex-1 overflow-y-auto px-5 py-2">
                 <FilterSection
                   title="WOMEN"
@@ -248,10 +346,9 @@ function ShopPage() {
 
           {/* ================= PRODUCTS ================= */}
           <div className="min-w-0">
-            {/* PRODUCT COUNT */}
             <div className="mb-4 hidden items-center justify-between md:flex">
               <p className="text-[9px] tracking-[0.15em] text-[var(--color-text-muted)]">
-                {loading ? "LOADING..." : `${products.length} PRODUCTS`}
+                {loading ? "LOADING..." : `${filteredProducts.length} PRODUCTS`}
               </p>
             </div>
 
@@ -280,62 +377,102 @@ function ShopPage() {
             {/* ================= PRODUCTS ================= */}
             {!loading && !error && (
               <>
-                {products.length === 0 ? (
+                {filteredProducts.length === 0 ? (
                   <div className="py-16 text-center">
                     <p className="text-sm text-[var(--color-text-muted)]">
-                      No products available.
+                      No products found.
                     </p>
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 gap-x-4 gap-y-9 md:grid-cols-3 lg:grid-cols-4">
-                    {products.map((product) => (
-                      <Link
-                        key={product.id}
-                        to={`/product/${product.id}`}
-                        className="group"
-                      >
-                        {/* IMAGE */}
-                        <div className="relative aspect-[4/5] overflow-hidden bg-[var(--color-bg-tertiary)]">
-                          <img
-                            src={product.thumbnail || product.images?.[0]}
-                            alt={product.title}
-                            loading="lazy"
-                            className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
-                          />
+                    {filteredProducts.map((product) => {
+                      const isWishlisted = isInWishlist(product.id);
 
-                          {/* WISHLIST */}
-                          <button
-                            type="button"
-                            aria-label={`Add ${product.title} to wishlist`}
-                            onClick={(event) => {
-                              event.preventDefault();
-                              event.stopPropagation();
-                            }}
-                            className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-bg-secondary)]/90 text-[var(--color-text-primary)] transition hover:text-[var(--color-accent)]"
-                          >
-                            <FiHeart size={15} strokeWidth={1.4} />
-                          </button>
-                        </div>
+                      const isAddedToCart = isInCart(product.id);
 
-                        {/* PRODUCT INFO */}
-                        <div className="pt-3.5">
-                          <p className="mb-1 text-[8px] uppercase tracking-[0.12em] text-[var(--color-accent)]">
-                            {product.category?.name || "Bags"}
-                          </p>
+                      return (
+                        <Link
+                          key={product.id}
+                          to={`/product/${product.id}`}
+                          className="group"
+                        >
+                          {/* PRODUCT IMAGE */}
+                          <div className="relative aspect-[4/5] overflow-hidden bg-[var(--color-bg-tertiary)]">
+                            <img
+                              src={product.thumbnail || product.images?.[0]}
+                              alt={product.title}
+                              loading="lazy"
+                              className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+                            />
 
-                          <h2 className="line-clamp-1 text-xs font-medium text-[var(--color-text-primary)]">
-                            {product.title}
-                          </h2>
+                            {/* WISHLIST */}
+                            <button
+                              type="button"
+                              aria-label={
+                                isWishlisted
+                                  ? `Remove ${product.title} from wishlist`
+                                  : `Add ${product.title} to wishlist`
+                              }
+                              onClick={(event) => {
+                                event.preventDefault();
+                                event.stopPropagation();
 
-                          <p className="mt-1 text-[11px] text-[var(--color-text-muted)]">
-                            ₹
-                            {Math.round(product.price * 83).toLocaleString(
-                              "en-IN",
-                            )}
-                          </p>
-                        </div>
-                      </Link>
-                    ))}
+                                toggleWishlist(product);
+                              }}
+                              className={`absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-bg-secondary)]/90 transition ${
+                                isWishlisted
+                                  ? "text-[var(--color-accent)]"
+                                  : "text-[var(--color-text-primary)] hover:text-[var(--color-accent)]"
+                              }`}
+                            >
+                              <FiHeart
+                                size={15}
+                                strokeWidth={1.4}
+                                fill={isWishlisted ? "currentColor" : "none"}
+                              />
+                            </button>
+
+                            {/* CART TOGGLE */}
+                            <button
+                              type="button"
+                              onClick={(event) => {
+                                event.preventDefault();
+                                event.stopPropagation();
+
+                                toggleCart(product, 1);
+                              }}
+                              className={`absolute bottom-3 left-3 right-3 flex h-9 items-center justify-center gap-2 text-[9px] font-semibold tracking-[0.12em] transition ${
+                                isAddedToCart
+                                  ? "bg-[var(--color-accent)] text-white hover:opacity-90"
+                                  : "bg-[var(--color-text-primary)] text-[var(--color-bg-primary)] hover:bg-[var(--color-accent)]"
+                              }`}
+                            >
+                              <FiShoppingBag size={13} strokeWidth={1.5} />
+
+                              {isAddedToCart ? "REMOVE FROM BAG" : "ADD TO BAG"}
+                            </button>
+                          </div>
+
+                          {/* PRODUCT DETAILS */}
+                          <div className="pt-3.5">
+                            <p className="mb-1 text-[8px] uppercase tracking-[0.12em] text-[var(--color-accent)]">
+                              {product.subcategory || "Bags"}
+                            </p>
+
+                            <h2 className="line-clamp-1 text-xs font-medium text-[var(--color-text-primary)]">
+                              {product.title}
+                            </h2>
+
+                            <p className="mt-1 text-[11px] text-[var(--color-text-muted)]">
+                              ₹
+                              {Number(product.price || 0).toLocaleString(
+                                "en-IN",
+                              )}
+                            </p>
+                          </div>
+                        </Link>
+                      );
+                    })}
                   </div>
                 )}
               </>
