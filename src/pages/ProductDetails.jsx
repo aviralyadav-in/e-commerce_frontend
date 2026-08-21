@@ -35,7 +35,6 @@ function ProductDetails() {
 
   // ===============================
   // CART
-  // ===============================
   const { addToCart, removeFromCart, isInCart } = useCart();
 
   // ===============================
@@ -232,7 +231,7 @@ function ProductDetails() {
 
   return (
     <main className="min-h-screen bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]">
-      <div className="mx-auto max-w-7xl px-5 pb-16 pt-24 sm:px-8 lg:px-12">
+      <div className="mx-auto max-w-7xl px-5 pb-16 pt-8 sm:px-8 lg:px-12">
         {/* ===============================
             BACK
         =============================== */}
@@ -253,79 +252,127 @@ function ProductDetails() {
         =============================== */}
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
           {/* ===============================
-              IMAGE
-          =============================== */}
+    IMAGE GALLERY
+=============================== */}
           <div>
-            <div className="relative overflow-hidden bg-[var(--color-bg-secondary)]">
-              <img
-                src={currentImage}
-                alt={`${product.title}${selectedColor ? ` - ${selectedColor}` : ""}`}
-                className="aspect-[4/5] w-full object-cover"
-              />
-
-              {/* SALE */}
-              {product.isOnSale && (
-                <span className="absolute left-4 top-4 bg-[var(--color-accent)] px-3 py-1.5 text-[8px] font-semibold tracking-[0.14em] text-white">
-                  SALE
-                </span>
-              )}
-
-              {/* WISHLIST ICON */}
-              <button
-                type="button"
-                aria-label={
-                  wishlisted ? "Remove from wishlist" : "Add to wishlist"
-                }
-                onClick={() => toggleWishlist(product)}
-                className={`absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full border bg-[var(--color-bg-primary)]/90 backdrop-blur transition ${
-                  wishlisted
-                    ? "border-[var(--color-accent)] text-[var(--color-accent)]"
-                    : "border-[var(--color-border)] text-[var(--color-text-primary)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
-                }`}
-              >
-                <FiHeart
-                  size={16}
-                  fill={wishlisted ? "currentColor" : "none"}
-                />
-              </button>
-
-              {/* LEFT ARROW */}
+            <div className="flex flex-col gap-3 sm:gap-4 lg:flex-row">
+              {/* ===============================
+        THUMBNAILS
+    =============================== */}
               {productImages.length > 1 && (
-                <button
-                  type="button"
-                  aria-label="Previous image"
-                  onClick={previousImage}
-                  className="absolute left-4 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-[var(--color-bg-primary)]/90 text-[var(--color-text-primary)] shadow-sm transition hover:bg-[var(--color-accent)] hover:text-white"
-                >
-                  <FiChevronLeft size={17} />
-                </button>
-              )}
+                <div className="order-2 flex gap-2 overflow-x-auto lg:order-1 lg:w-[78px] lg:flex-col lg:overflow-y-auto">
+                  {productImages.map((image, index) => (
+                    <button
+                      key={`${image}-${index}`}
+                      type="button"
+                      aria-label={`View product image ${index + 1}`}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`relative flex-shrink-0 overflow-hidden border transition ${
+                        currentImageIndex === index
+                          ? "border-[var(--color-accent)]"
+                          : "border-[var(--color-border)] opacity-70 hover:border-[var(--color-accent)] hover:opacity-100"
+                      }`}
+                    >
+                      <img
+                        src={image}
+                        alt={`${product.title} thumbnail ${index + 1}`}
+                        className="h-20 w-16 object-cover sm:h-24 sm:w-20 lg:h-[92px] lg:w-[72px]"
+                      />
 
-              {/* RIGHT ARROW */}
-              {productImages.length > 1 && (
-                <button
-                  type="button"
-                  aria-label="Next image"
-                  onClick={nextImage}
-                  className="absolute right-4 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-[var(--color-bg-primary)]/90 text-[var(--color-text-primary)] shadow-sm transition hover:bg-[var(--color-accent)] hover:text-white"
-                >
-                  <FiChevronRight size={17} />
-                </button>
-              )}
-
-              {/* IMAGE COUNT */}
-              {productImages.length > 1 && (
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-[var(--color-bg-primary)]/90 px-3 py-1 text-[9px] tracking-[0.12em]">
-                  {currentImageIndex + 1} / {productImages.length}
+                      {/* ACTIVE THUMBNAIL INDICATOR */}
+                      {currentImageIndex === index && (
+                        <span className="absolute inset-x-0 bottom-0 h-0.5 bg-[var(--color-accent)]" />
+                      )}
+                    </button>
+                  ))}
                 </div>
               )}
+
+              {/* ===============================
+        MAIN IMAGE
+    =============================== */}
+              <div className="order-1 min-w-0 flex-1 lg:order-2">
+                <div className="relative overflow-hidden bg-[var(--color-bg-secondary)]">
+                  <img
+                    src={currentImage}
+                    alt={`${product.title}${selectedColor ? ` - ${selectedColor}` : ""}`}
+                    className="aspect-[4/5] w-full object-cover"
+                  />
+
+                  {/* SALE */}
+                  {product.isOnSale && (
+                    <span className="absolute left-4 top-4 bg-[var(--color-accent)] px-3 py-1.5 text-[8px] font-semibold tracking-[0.14em] text-white">
+                      SALE
+                    </span>
+                  )}
+
+                  {/* WISHLIST */}
+                  <button
+                    type="button"
+                    aria-label={
+                      wishlisted ? "Remove from wishlist" : "Add to wishlist"
+                    }
+                    onClick={() => toggleWishlist(product)}
+                    className={`absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full border bg-[var(--color-bg-primary)]/90 backdrop-blur transition ${
+                      wishlisted
+                        ? "border-[var(--color-accent)] text-[var(--color-accent)]"
+                        : "border-[var(--color-border)] text-[var(--color-text-primary)] hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
+                    }`}
+                  >
+                    <FiHeart
+                      size={16}
+                      fill={wishlisted ? "currentColor" : "none"}
+                    />
+                  </button>
+
+                  {/* ===============================
+            LEFT ARROW
+        =============================== */}
+                  {productImages.length > 1 && (
+                    <button
+                      type="button"
+                      aria-label="Previous image"
+                      onClick={previousImage}
+                      className="group absolute left-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-bg-primary)]/90 text-[var(--color-text-primary)] shadow-sm backdrop-blur transition hover:border-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-white sm:left-4"
+                    >
+                      <FiChevronLeft
+                        size={18}
+                        className="transition-transform duration-200 group-hover:-translate-x-0.5"
+                      />
+                    </button>
+                  )}
+
+                  {/* ===============================
+            RIGHT ARROW
+        =============================== */}
+                  {productImages.length > 1 && (
+                    <button
+                      type="button"
+                      aria-label="Next image"
+                      onClick={nextImage}
+                      className="group absolute right-3 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-[var(--color-border)] bg-[var(--color-bg-primary)]/90 text-[var(--color-text-primary)] shadow-sm backdrop-blur transition hover:border-[var(--color-accent)] hover:bg-[var(--color-accent)] hover:text-white sm:right-4"
+                    >
+                      <FiChevronRight
+                        size={18}
+                        className="transition-transform duration-200 group-hover:translate-x-0.5"
+                      />
+                    </button>
+                  )}
+
+                  {/* IMAGE COUNT */}
+                  {productImages.length > 1 && (
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-[var(--color-bg-primary)]/90 px-3 py-1 text-[9px] tracking-[0.12em] backdrop-blur">
+                      {currentImageIndex + 1} / {productImages.length}
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
-
           {/* ===============================
               PRODUCT INFO
           =============================== */}
-          <div className="flex flex-col justify-center">
+          <div className="flex flex-col justify-start lg:pt-0">
             {/* CATEGORY */}
             <p className="text-[10px] uppercase tracking-[0.3em] text-[var(--color-accent)]">
               {product.subcategory || product.category || "Niya Bags"}
@@ -366,9 +413,7 @@ function ProductDetails() {
               {product.description}
             </p>
 
-            {/* ===============================
-    COLORS
-=============================== */}
+            {/* ============COLORS========== */}
             {product.colors?.length > 0 && (
               <div className="mt-6">
                 <div className="flex items-center justify-between">

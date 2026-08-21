@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { FiHeart, FiShoppingBag } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { FiHeart, FiShoppingBag, FiLogOut } from "react-icons/fi";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 
 function AccountPage() {
   const [mode, setMode] = useState("signin");
-  const [user, setUser] = useState(null);
-
+  const { user: authUser, logout } = useAuth();
+  const [localUser, setLocalUser] = useState(null);
+  const navigate = useNavigate();
   const [wishlistCount, setWishlistCount] = useState(0);
   const [cartCount, setCartCount] = useState(0);
 
@@ -15,7 +17,11 @@ function AccountPage() {
     const savedUser = localStorage.getItem("niyaUser");
 
     if (savedUser) {
-      setUser(JSON.parse(savedUser));
+      try {
+        setLocalUser(JSON.parse(savedUser));
+      } catch (e) {
+        console.error("Failed to parse niyaUser from localStorage", e);
+      }
     }
 
     const wishlist = JSON.parse(localStorage.getItem("niyaWishlist") || "[]");
@@ -27,19 +33,38 @@ function AccountPage() {
     setCartCount(cart.reduce((total, item) => total + (item.quantity || 1), 0));
   }, []);
 
-  if (user) {
+  const currentUser = authUser || localUser;
+
+  const handleSignOut = async () => {
+    try {
+      await logout();
+    } catch (e) {
+      console.error("Logout error", e);
+    }
+
+    localStorage.removeItem("niyaUser");
+    setLocalUser(null);
+    setMode("signin");
+  };
+
+  if (currentUser) {
+    const displayName =
+      currentUser.firstName || currentUser.name || currentUser.email || "User";
+
+    const username =
+      currentUser.username || currentUser.email?.split("@")[0] || "user";
+
     return (
       <main className="min-h-[calc(100vh-70px)] bg-[var(--color-bg-primary)] px-5 py-8 text-[var(--color-text-primary)] md:px-10 md:py-10">
         <div className="mx-auto max-w-[900px]">
           {/* HEADER */}
-
           <div className="mb-12">
             <p className="mb-3 text-[10px] tracking-[0.25em] text-[var(--color-accent)]">
               MY ACCOUNT
             </p>
 
             <h1 className="font-serif text-[38px] font-medium text-[var(--color-text-primary)]">
-              Welcome, {user.firstName}
+              Welcome, {displayName}
             </h1>
 
             <p className="mt-3 text-[12px] text-[var(--color-text-secondary)]">
@@ -48,28 +73,45 @@ function AccountPage() {
           </div>
 
           {/* PROFILE */}
-
           <div className="border border-[var(--color-border-soft)] bg-[var(--color-bg-secondary)] p-6 md:p-10">
-            <div className="mb-8 flex items-center gap-5 border-b border-[var(--color-border-soft)] pb-8">
-              <img
-                src={user.image}
-                alt={user.firstName}
-                className="h-16 w-16 rounded-full object-cover"
-              />
+            <div className="mb-8 flex items-center justify-between border-b border-[var(--color-border-soft)] pb-8">
+              <div className="flex items-center gap-5">
+                {currentUser.image ? (
+                  <img
+                    src={currentUser.image}
+                    alt={displayName}
+                    className="h-16 w-16 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-accent)] text-xl font-medium text-white">
+                    {displayName.charAt(0).toUpperCase()}
+                  </div>
+                )}
 
-              <div>
-                <h2 className="font-serif text-[22px] text-[var(--color-text-primary)]">
-                  {user.firstName} {user.lastName}
-                </h2>
+                <div>
+                  <h2 className="font-serif text-[22px] text-[var(--color-text-primary)]">
+                    {currentUser.firstName
+                      ? `${currentUser.firstName} ${currentUser.lastName || ""}`
+                      : displayName}
+                  </h2>
 
-                <p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">
-                  @{user.username}
-                </p>
+                  <p className="mt-1 text-[11px] text-[var(--color-text-secondary)]">
+                    @{username}
+                  </p>
+                </div>
               </div>
+
+              <button
+                type="button"
+                onClick={handleSignOut}
+                className="flex items-center gap-2 border-b border-[var(--color-accent)] pb-1 text-[10px] font-medium tracking-[0.08em] text-[var(--color-accent)] transition hover:opacity-70"
+              >
+                SIGN OUT
+                <FiLogOut size={13} />
+              </button>
             </div>
 
             {/* USER DETAILS */}
-
             <div className="grid gap-6 sm:grid-cols-2">
               <div>
                 <p className="mb-2 text-[10px] tracking-[0.12em] text-[var(--color-accent)]">
@@ -77,7 +119,7 @@ function AccountPage() {
                 </p>
 
                 <p className="text-[12px] text-[var(--color-text-secondary)]">
-                  {user.email}
+                  {currentUser.email || "—"}
                 </p>
               </div>
 
@@ -87,7 +129,7 @@ function AccountPage() {
                 </p>
 
                 <p className="text-[12px] text-[var(--color-text-secondary)]">
-                  {user.phone}
+                  {currentUser.phone || "—"}
                 </p>
               </div>
 
@@ -97,7 +139,7 @@ function AccountPage() {
                 </p>
 
                 <p className="text-[12px] capitalize text-[var(--color-text-secondary)]">
-                  {user.gender}
+                  {currentUser.gender || "—"}
                 </p>
               </div>
 
@@ -107,13 +149,12 @@ function AccountPage() {
                 </p>
 
                 <p className="text-[12px] text-[var(--color-text-secondary)]">
-                  {user.username}
+                  {username}
                 </p>
               </div>
             </div>
 
             {/* WISHLIST + CART */}
-
             <div className="mt-10 grid gap-4 border-t border-[var(--color-border-soft)] pt-10 sm:grid-cols-2">
               <Link
                 to="/wishlist"
@@ -169,20 +210,6 @@ function AccountPage() {
                 </p>
               </Link>
             </div>
-
-            {/* SIGN OUT */}
-
-            <button
-              type="button"
-              onClick={() => {
-                localStorage.removeItem("niyaUser");
-                setUser(null);
-                setMode("signin");
-              }}
-              className="mt-10 h-11 border border-[var(--color-text-primary)] px-8 text-[10px] tracking-[0.12em] text-[var(--color-text-primary)] transition hover:bg-[var(--color-text-primary)] hover:text-[var(--color-bg-secondary)]"
-            >
-              SIGN OUT
-            </button>
           </div>
         </div>
       </main>

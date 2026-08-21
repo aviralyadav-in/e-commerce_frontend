@@ -92,7 +92,6 @@ function FeaturedProducts() {
           className="
             relative aspect-[4/5] overflow-hidden
             bg-[var(--color-bg-tertiary)]
-            dark:bg-slate-800
           "
         >
           <img
@@ -119,8 +118,8 @@ function FeaturedProducts() {
               rounded-full transition
               ${
                 wishlistActive
-                  ? "bg-[var(--color-dark-section)] text-white dark:bg-white dark:text-slate-900"
-                  : "bg-[var(--color-bg-secondary)]/90 text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)] dark:bg-slate-900/90 dark:text-white dark:hover:bg-slate-800"
+                  ? "bg-[var(--color-dark-section)] text-white"
+                  : "bg-[var(--color-bg-secondary)]/90 text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)]"
               }
             `}
             aria-label={
@@ -143,8 +142,6 @@ function FeaturedProducts() {
               text-[7px]
               tracking-wide
               text-white
-              dark:bg-white
-              dark:text-slate-900
             "
           >
             {badgeText}
@@ -161,16 +158,16 @@ function FeaturedProducts() {
               absolute bottom-2 left-2 right-2
               flex h-8 items-center justify-center
               gap-1 px-1
-              text-[6px] font-semibold tracking-0
+              text-[4px] font-semibold tracking-0
               transition
 
               sm:bottom-3 sm:left-3 sm:right-3
-              sm:h-9 sm:gap-2 sm:px-2 sm:text-[7px]
+              sm:h-9 sm:gap-2 sm:px-2 sm:text-[6px]
 
               ${
                 cartActive
-                  ? "bg-[var(--color-dark-section)] text-white opacity-100 dark:bg-white dark:text-slate-900"
-                  : "bg-[var(--color-bg-secondary)]/95 text-[var(--color-text-primary)] opacity-0 group-hover:opacity-100 dark:bg-slate-900/95 dark:text-white"
+                  ? "bg-[var(--color-dark-section)] text-white opacity-100"
+                  : "bg-[var(--color-bg-secondary)]/95 text-[var(--color-text-primary)] opacity-0 group-hover:opacity-100"
               }
             `}
             aria-label={
@@ -180,7 +177,7 @@ function FeaturedProducts() {
             <FiShoppingBag size={9} className="shrink-0" />
 
             <span className="whitespace-nowrap">
-              {cartActive ? "ADDED TO BAG ✓" : "ADD TO BAG"}
+              {cartActive ? "ADDED  ✓" : "ADD "}
             </span>
           </button>
         </div>
@@ -189,11 +186,10 @@ function FeaturedProducts() {
         <div className="pt-4">
           <p
             className="
-              text-[8px]
+              text-[10px]
               uppercase
               tracking-[0.12em]
               text-[var(--color-accent)]
-              dark:text-slate-400
             "
           >
             {product.subcategory || product.category?.name || "Bags"}
@@ -202,10 +198,9 @@ function FeaturedProducts() {
           <h3
             className="
               mt-1
-              text-[11px]
+              text-[15px]
               font-medium
               text-[var(--color-text-primary)]
-              dark:text-white
             "
           >
             {product.title}
@@ -214,10 +209,9 @@ function FeaturedProducts() {
           <p
             className="
               mt-2
-              text-[11px]
+              text-[15px]
               font-semibold
               text-[var(--color-text-primary)]
-              dark:text-white
             "
           >
             ₹{Number(product.price || 0).toLocaleString("en-IN")}
@@ -254,7 +248,6 @@ function FeaturedProducts() {
           px-5 py-12
           transition-colors duration-300
           md:px-10 md:py-16
-          dark:bg-slate-950
         "
       >
         <div className="mx-auto max-w-[1440px]">
@@ -264,11 +257,10 @@ function FeaturedProducts() {
               <p
                 className="
                   mb-2
-                  text-[9px]
+                  text-[10px]
                   font-semibold
                   tracking-[0.22em]
                   text-[var(--color-accent)]
-                  dark:text-slate-400
                 "
               >
                 {eyebrow}
@@ -280,7 +272,6 @@ function FeaturedProducts() {
                   text-[34px]
                   text-[var(--color-text-primary)]
                   md:text-[40px]
-                  dark:text-white
                 "
               >
                 {title}
@@ -293,7 +284,6 @@ function FeaturedProducts() {
                   text-[12px]
                   leading-5
                   text-[var(--color-text-muted)]
-                  dark:text-slate-400
                 "
               >
                 {description}
@@ -308,14 +298,12 @@ function FeaturedProducts() {
                 border-b
                 border-[var(--color-accent)]
                 pb-1
-                text-[9px]
+                text-[16px]
                 font-semibold
                 text-[var(--color-text-primary)]
                 transition
                 hover:opacity-60
                 sm:block
-                dark:border-slate-500
-                dark:text-white
               "
             >
               View All →
@@ -330,13 +318,12 @@ function FeaturedProducts() {
                 text-center
                 text-[11px]
                 text-[var(--color-text-muted)]
-                dark:text-slate-400
               "
             >
               No products available.
             </p>
           ) : (
-            <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+            <div className="grid grid-cols-3 gap-2 lg:grid-cols-4">
               {products.map((product) =>
                 renderProductCard(product, sectionType),
               )}
@@ -359,7 +346,6 @@ function FeaturedProducts() {
           px-5 py-12
           transition-colors duration-300
           md:px-10 md:py-16
-          dark:bg-slate-950
         "
       >
         <div className="mx-auto max-w-[1440px]">
@@ -369,7 +355,6 @@ function FeaturedProducts() {
               text-[11px]
               tracking-[0.15em]
               text-[var(--color-text-muted)]
-              dark:text-slate-400
             "
           >
             LOADING COLLECTION...

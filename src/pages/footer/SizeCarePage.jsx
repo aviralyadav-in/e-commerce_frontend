@@ -37,7 +37,7 @@ function SizeCarePage() {
 
   if (!data) {
     return (
-      <main className="min-h-screen bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+      <main className="min-h-screen bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]">
         <div className="mx-auto max-w-6xl px-5 py-10 sm:px-6 lg:px-8">
           Loading...
         </div>
@@ -46,19 +46,19 @@ function SizeCarePage() {
   }
 
   return (
-    <main className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+    <main className="min-h-screen bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] transition-colors duration-300">
       {/* ================= HERO ================= */}
-      <section className="border-b border-slate-200 dark:border-slate-800">
+      <section className="border-b border-[var(--color-border)]">
         <div className="mx-auto max-w-6xl px-5 py-7 sm:px-6 lg:px-8 lg:py-9">
-          <p className="text-xs font-medium uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+          <p className="text-xs font-medium uppercase tracking-[0.22em] text-[var(--color-accent)]">
             {data.eyebrow}
           </p>
 
-          <h1 className="mt-2 max-w-3xl font-serif text-4xl leading-[1.08] sm:text-5xl lg:text-6xl">
+          <h1 className="mt-2 max-w-3xl font-serif text-4xl leading-[1.08] text-[var(--color-text-primary)] sm:text-5xl lg:text-6xl">
             {data.title}
           </h1>
 
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400 sm:text-base">
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--color-text-secondary)] sm:text-base">
             {data.intro}
           </p>
         </div>
@@ -72,17 +72,17 @@ function SizeCarePage() {
               <article
                 key={section.id}
                 id={section.id}
-                className="scroll-mt-24 border border-slate-200 p-5 dark:border-slate-800 dark:bg-slate-900/40 sm:p-6"
+                className="scroll-mt-24 border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-5 sm:p-6"
               >
-                <span className="text-xs tracking-widest text-slate-400 dark:text-slate-500">
+                <span className="text-xs tracking-widest text-[var(--color-text-muted)]">
                   0{index + 1}
                 </span>
 
-                <h2 className="mt-2 font-serif text-2xl sm:text-3xl">
+                <h2 className="mt-2 font-serif text-2xl text-[var(--color-text-primary)] sm:text-3xl">
                   {section.title}
                 </h2>
 
-                <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-400 sm:text-base">
+                <p className="mt-2 text-sm leading-7 text-[var(--color-text-secondary)] sm:text-base">
                   {section.content}
                 </p>
               </article>

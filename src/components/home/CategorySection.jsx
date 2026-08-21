@@ -1,33 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-const categories = {
-  women: [
-    [
-      "Handbags",
-      "Explore collection",
-      "1594223274512-ad4803739b7c",
-      "handbags",
-    ],
-    [
-      "Mini Bags",
-      "Explore collection",
-      "1584917865442-de89df76afd3",
-      "minibags",
-    ],
-    ["Sling Bags", "Explore collection", "1591561954557-26941169b49e", "sling"],
-    ["Tote Bags", "Explore collection", "1566150905458-1bf1fc113f0d", "tote"],
-  ],
-
-  men: [["Wallets", "Explore collection", "1553062407-98eeb64c6a62", "wallet"]],
-};
+import { getCategories } from "../../api/api";
 
 function CategorySection() {
   const [gender, setGender] = useState("women");
+  const [categories, setCategories] = useState([]);
   const navigate = useNavigate();
 
-  const handleCategoryClick = (filter) => {
-    navigate(`/shop?filter=${filter}`);
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const data = await getCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error("Failed to load categories:", error);
+      }
+    }
+
+    loadCategories();
+  }, []);
+
+  const filteredCategories = categories.filter(
+    (category) => category.gender === gender,
+  );
+
+  const handleCategoryClick = (category) => {
+    navigate(`/shop?gender=${category.gender}&subcategory=${category.filter}`);
   };
 
   return (
@@ -74,27 +72,31 @@ function CategorySection() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
-          {categories[gender].map(([name, count, image, filter]) => (
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-4">
+          {filteredCategories.map((category) => (
             <button
               type="button"
-              onClick={() => handleCategoryClick(filter)}
-              key={name}
-              className="group relative h-[220px] overflow-hidden rounded-xl text-left"
+              onClick={() => handleCategoryClick(category)}
+              key={`${category.gender}-${category.filter}`}
+              className="group relative h-[280px] overflow-hidden rounded-xl text-left md:h-[320px] lg:h-[360px]"
             >
               <img
-                src={`https://images.unsplash.com/photo-${image}?auto=format&fit=crop&w=700&q=85`}
-                alt={name}
+                src={category.image}
+                alt={category.name}
                 loading="lazy"
                 className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
               />
 
               <div className="absolute inset-0 bg-gradient-to-t from-[#073b4c]/90 via-transparent to-transparent" />
 
-              <div className="absolute bottom-4 left-0 w-full text-center text-white">
-                <h3 className="font-serif text-[16px]">{name}</h3>
+              <div className="absolute bottom-6 left-0 w-full text-center text-white">
+                <h3 className="font-serif text-[20px] capitalize">
+                  {category.name}
+                </h3>
 
-                <p className="mt-1 text-[8px] text-white/75">{count}</p>
+                <p className="mt-1 text-[10px] text-white/75">
+                  {category.count} Products
+                </p>
               </div>
             </button>
           ))}

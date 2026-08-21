@@ -1,5 +1,8 @@
+// =====================================================
+// BASE PRODUCT
+// =====================================================
+
 const baseProduct = {
-  gender: "women",
   category: "bags",
   description: "",
   colors: [],
@@ -14,146 +17,172 @@ const baseProduct = {
 };
 
 export const products = [
-  // =========================
-  // HANDBAGS
-  // =========================
+  // =====================================================
+  // HANDBAGS - WOMEN
+  // =====================================================
+
   {
     ...baseProduct,
     id: "handbag-001",
     slug: "handbag-001",
     title: "Classic Everyday Handbag",
+    gender: "women",
     subcategory: "handbags",
     price: 2499,
     images: [
       "/products/bags/handbags/WhatsApp Image 2026-08-17 at 5.37.34 PM (1).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "handbag-002",
     slug: "handbag-002",
     title: "Elegant Structured Handbag",
+    gender: "women",
     subcategory: "handbags",
     price: 2799,
     images: [
       "/products/bags/handbags/WhatsApp Image 2026-08-17 at 5.37.34 PM.jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "handbag-003",
     slug: "handbag-003",
     title: "Premium City Handbag",
+    gender: "women",
     subcategory: "handbags",
     price: 3299,
     images: [
       "/products/bags/handbags/WhatsApp Image 2026-08-17 at 5.37.35 PM.jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "handbag-004",
     slug: "handbag-004",
     title: "Modern Shoulder Handbag",
+    gender: "women",
     subcategory: "handbags",
     price: 2199,
     images: [
       "/products/bags/handbags/WhatsApp Image 2026-08-17 at 5.37.36 PM (1).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "handbag-005",
     slug: "handbag-005",
     title: "Signature Office Handbag",
+    gender: "women",
     subcategory: "handbags",
     price: 3599,
     images: [
       "/products/bags/handbags/WhatsApp Image 2026-08-17 at 5.37.36 PM (2).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "handbag-006",
     slug: "handbag-006",
     title: "Minimal Daily Handbag",
+    gender: "women",
     subcategory: "handbags",
     price: 2399,
     images: [
       "/products/bags/handbags/WhatsApp Image 2026-08-17 at 5.37.37 PM.jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "handbag-007",
     slug: "handbag-007",
     title: "Classic Shoulder Bag",
+    gender: "women",
     subcategory: "handbags",
     price: 2699,
     images: [
       "/products/bags/handbags/WhatsApp Image 2026-08-17 at 5.40.00 PM.jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "handbag-008",
     slug: "handbag-008",
     title: "Urban Fashion Handbag",
+    gender: "women",
     subcategory: "handbags",
     price: 2899,
     images: [
       "/products/bags/handbags/WhatsApp Image 2026-08-17 at 5.40.01 PM (1).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "handbag-009",
     slug: "handbag-009",
     title: "Elegant Casual Handbag",
+    gender: "women",
     subcategory: "handbags",
     price: 2599,
     images: [
       "/products/bags/handbags/WhatsApp Image 2026-08-17 at 5.40.01 PM (2).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "handbag-010",
     slug: "handbag-010",
     title: "Premium Carry Handbag",
+    gender: "women",
     subcategory: "handbags",
     price: 3199,
     images: [
       "/products/bags/handbags/WhatsApp Image 2026-08-17 at 5.40.01 PM.jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "handbag-011",
     slug: "handbag-011",
     title: "Soft Finish Handbag",
+    gender: "women",
     subcategory: "handbags",
     price: 2499,
     images: [
       "/products/bags/handbags/WhatsApp Image 2026-08-17 at 5.40.02 PM (1).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "handbag-012",
     slug: "handbag-012",
     title: "Contemporary Handbag",
+    gender: "women",
     subcategory: "handbags",
     price: 2999,
     images: [
       "/products/bags/handbags/WhatsApp Image 2026-08-17 at 5.40.02 PM (2).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "handbag-013",
     slug: "handbag-013",
     title: "Statement Everyday Handbag",
+    gender: "women",
     subcategory: "handbags",
     price: 3399,
     images: [
@@ -161,157 +190,185 @@ export const products = [
     ],
   },
 
-  // =========================
-  // MINIBAGS
-  // =========================
+  // =====================================================
+  // MINIBAGS - WOMEN
+  // =====================================================
+
   {
     ...baseProduct,
     id: "minibag-001",
     slug: "minibag-001",
     title: "Chic Mini Bag",
+    gender: "women",
     subcategory: "minibags",
     price: 1499,
     images: [
       "/products/bags/minibags/WhatsApp Image 2026-08-17 at 5.40.06 PM.jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "minibag-002",
     slug: "minibag-002",
     title: "Compact Party Bag",
+    gender: "women",
     subcategory: "minibags",
     price: 1799,
     images: [
       "/products/bags/minibags/WhatsApp Image 2026-08-17 at 5.40.07 PM (1).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "minibag-003",
     slug: "minibag-003",
     title: "Everyday Mini Crossbody",
+    gender: "women",
     subcategory: "minibags",
     price: 1599,
     images: [
       "/products/bags/minibags/WhatsApp Image 2026-08-17 at 5.40.07 PM (2).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "minibag-004",
     slug: "minibag-004",
     title: "Mini Essential Bag",
+    gender: "women",
     subcategory: "minibags",
     price: 1699,
     images: [
       "/products/bags/minibags/WhatsApp Image 2026-08-17 at 5.40.07 PM (3).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "minibag-005",
     slug: "minibag-005",
     title: "Elegant Mini Bag",
+    gender: "women",
     subcategory: "minibags",
     price: 1899,
     images: [
       "/products/bags/minibags/WhatsApp Image 2026-08-17 at 5.40.07 PM.jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "minibag-006",
     slug: "minibag-006",
     title: "Minimal Mini Crossbody",
+    gender: "women",
     subcategory: "minibags",
     price: 1549,
     images: [
       "/products/bags/minibags/WhatsApp Image 2026-08-17 at 5.40.08 PM (1).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "minibag-007",
     slug: "minibag-007",
     title: "Modern Mini Bag",
+    gender: "women",
     subcategory: "minibags",
     price: 1749,
     images: [
       "/products/bags/minibags/WhatsApp Image 2026-08-17 at 5.40.08 PM (2).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "minibag-008",
     slug: "minibag-008",
     title: "Daily Mini Bag",
+    gender: "women",
     subcategory: "minibags",
     price: 1599,
     images: [
       "/products/bags/minibags/WhatsApp Image 2026-08-17 at 5.40.08 PM.jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "minibag-009",
     slug: "minibag-009",
     title: "Classic Mini Bag",
+    gender: "women",
     subcategory: "minibags",
     price: 1649,
     images: [
       "/products/bags/minibags/WhatsApp Image 2026-08-17 at 5.40.09 PM (1).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "minibag-010",
     slug: "minibag-010",
     title: "Premium Mini Bag",
+    gender: "women",
     subcategory: "minibags",
     price: 1949,
     images: [
       "/products/bags/minibags/WhatsApp Image 2026-08-17 at 5.40.09 PM.jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "minibag-011",
     slug: "minibag-011",
     title: "Stylish Mini Carry Bag",
+    gender: "women",
     subcategory: "minibags",
     price: 1699,
     images: [
       "/products/bags/minibags/WhatsApp Image 2026-08-17 at 5.40.10 PM (1).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "minibag-012",
     slug: "minibag-012",
     title: "Elegant Compact Bag",
+    gender: "women",
     subcategory: "minibags",
     price: 1799,
     images: [
       "/products/bags/minibags/WhatsApp Image 2026-08-17 at 5.40.10 PM (2).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "minibag-013",
     slug: "minibag-013",
     title: "Chic Everyday Mini Bag",
+    gender: "women",
     subcategory: "minibags",
     price: 1849,
     images: [
       "/products/bags/minibags/WhatsApp Image 2026-08-17 at 5.40.10 PM (3).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "minibag-014",
     slug: "minibag-014",
     title: "Signature Mini Bag",
+    gender: "women",
     subcategory: "minibags",
     price: 1999,
     images: [
@@ -319,102 +376,120 @@ export const products = [
     ],
   },
 
-  // =========================
-  // SLING
-  // =========================
+  // =====================================================
+  // SLING - WOMEN
+  // =====================================================
+
   {
     ...baseProduct,
     id: "sling-001",
     slug: "sling-001",
     title: "Classic Sling Bag",
+    gender: "women",
     subcategory: "sling",
     price: 1899,
     images: [
       "/products/bags/sling/WhatsApp Image 2026-08-17 at 5.40.13 PM.jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "sling-002",
     slug: "sling-002",
     title: "Urban Crossbody Sling",
+    gender: "women",
     subcategory: "sling",
     price: 2099,
     images: [
       "/products/bags/sling/WhatsApp Image 2026-08-17 at 5.40.14 PM (1).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "sling-003",
     slug: "sling-003",
     title: "Everyday Crossbody Bag",
+    gender: "women",
     subcategory: "sling",
     price: 1999,
     images: [
       "/products/bags/sling/WhatsApp Image 2026-08-17 at 5.40.14 PM (2).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "sling-004",
     slug: "sling-004",
     title: "Minimal Sling Bag",
+    gender: "women",
     subcategory: "sling",
     price: 1799,
     images: [
       "/products/bags/sling/WhatsApp Image 2026-08-17 at 5.40.14 PM.jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "sling-005",
     slug: "sling-005",
     title: "Casual Daily Sling",
+    gender: "women",
     subcategory: "sling",
     price: 1899,
     images: [
       "/products/bags/sling/WhatsApp Image 2026-08-17 at 5.40.15 PM (1).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "sling-006",
     slug: "sling-006",
     title: "Compact Shoulder Sling",
+    gender: "women",
     subcategory: "sling",
     price: 1949,
     images: [
       "/products/bags/sling/WhatsApp Image 2026-08-17 at 5.40.15 PM.jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "sling-007",
     slug: "sling-007",
     title: "Modern Crossbody Sling",
+    gender: "women",
     subcategory: "sling",
     price: 2149,
     images: [
       "/products/bags/sling/WhatsApp Image 2026-08-17 at 5.40.16 PM (1).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "sling-008",
     slug: "sling-008",
     title: "Premium Sling Bag",
+    gender: "women",
     subcategory: "sling",
     price: 2299,
     images: [
       "/products/bags/sling/WhatsApp Image 2026-08-17 at 5.40.16 PM (2).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "sling-009",
     slug: "sling-009",
     title: "Signature Sling Bag",
+    gender: "women",
     subcategory: "sling",
     price: 2199,
     images: [
@@ -422,80 +497,94 @@ export const products = [
     ],
   },
 
-  // =========================
-  // TOTE
-  // =========================
+  // =====================================================
+  // TOTE - WOMEN
+  // =====================================================
+
   {
     ...baseProduct,
     id: "tote-001",
     slug: "tote-001",
     title: "Everyday Carry Tote",
+    gender: "women",
     subcategory: "tote",
     price: 2899,
     images: [
       "/products/bags/tote/WhatsApp Image 2026-08-17 at 5.37.36 PM.jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "tote-002",
     slug: "tote-002",
     title: "Classic Work Tote",
+    gender: "women",
     subcategory: "tote",
     price: 3199,
     images: [
       "/products/bags/tote/WhatsApp Image 2026-08-17 at 5.37.39 PM.jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "tote-003",
     slug: "tote-003",
     title: "Premium Daily Tote",
+    gender: "women",
     subcategory: "tote",
     price: 3299,
     images: [
       "/products/bags/tote/WhatsApp Image 2026-08-17 at 5.37.40 PM (1).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "tote-004",
     slug: "tote-004",
     title: "Elegant Structured Tote",
+    gender: "women",
     subcategory: "tote",
     price: 3499,
     images: [
       "/products/bags/tote/WhatsApp Image 2026-08-17 at 5.37.40 PM (2).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "tote-005",
     slug: "tote-005",
     title: "Minimal Everyday Tote",
+    gender: "women",
     subcategory: "tote",
     price: 2999,
     images: [
       "/products/bags/tote/WhatsApp Image 2026-08-17 at 5.37.40 PM.jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "tote-006",
     slug: "tote-006",
     title: "Modern Office Tote",
+    gender: "women",
     subcategory: "tote",
     price: 3399,
     images: [
       "/products/bags/tote/WhatsApp Image 2026-08-17 at 5.40.15 PM (2).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "tote-007",
     slug: "tote-007",
     title: "Signature Carry Tote",
+    gender: "women",
     subcategory: "tote",
     price: 3599,
     images: [
@@ -503,36 +592,42 @@ export const products = [
     ],
   },
 
-  // =========================
-  // WALLETS
-  // =========================
+  // =====================================================
+  // WALLETS - MEN
+  // =====================================================
+
   {
     ...baseProduct,
     id: "wallet-001",
     slug: "wallet-001",
     title: "Classic Leather Wallet",
+    gender: "men",
     subcategory: "wallet",
     price: 999,
     images: [
       "/products/bags/wallet/WhatsApp Image 2026-08-17 at 5.37.31 PM(1).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "wallet-002",
     slug: "wallet-002",
     title: "Slim Everyday Wallet",
+    gender: "men",
     subcategory: "wallet",
     price: 1199,
     images: [
       "/products/bags/wallet/WhatsApp Image 2026-08-17 at 5.37.31 PM(2).jpeg",
     ],
   },
+
   {
     ...baseProduct,
     id: "wallet-003",
     slug: "wallet-003",
     title: "Premium Compact Wallet",
+    gender: "men",
     subcategory: "wallet",
     price: 1399,
     images: [
@@ -546,16 +641,15 @@ export const products = [
 // =====================================================
 
 const productDetails = {
-  // =========================
+  // =====================================================
   // HANDBAG 001
-  // COLOR + IMAGE CONNECTED
-  // =========================
+  // =====================================================
+
   "handbag-001": {
     title: "Classic Everyday Handbag",
     description:
       "A stylish everyday handbag designed for work, casual outings and daily essentials.",
     price: 2499,
-
     colors: [
       {
         name: "Black",
@@ -576,7 +670,6 @@ const productDetails = {
         ],
       },
     ],
-
     isOnSale: true,
     salePrice: 1999,
     discountPercentage: 20,
@@ -592,7 +685,6 @@ const productDetails = {
     description:
       "A structured handbag with a clean silhouette and spacious interior for everyday use.",
     price: 2799,
-
     colors: [
       {
         name: "Tan",
@@ -607,7 +699,6 @@ const productDetails = {
         ],
       },
     ],
-
     isOnSale: false,
     salePrice: null,
     discountPercentage: 0,
@@ -623,7 +714,6 @@ const productDetails = {
     description:
       "A versatile handbag with a refined design that complements both casual and formal looks.",
     price: 3299,
-
     colors: [
       {
         name: "Brown",
@@ -644,7 +734,6 @@ const productDetails = {
         ],
       },
     ],
-
     isOnSale: true,
     salePrice: 2699,
     discountPercentage: 18,
@@ -660,7 +749,6 @@ const productDetails = {
     description:
       "A modern handbag created for comfortable daily carrying with a timeless finish.",
     price: 2199,
-
     colors: [
       {
         name: "Black",
@@ -675,7 +763,6 @@ const productDetails = {
         ],
       },
     ],
-
     isOnSale: false,
     salePrice: null,
     discountPercentage: 0,
@@ -691,7 +778,6 @@ const productDetails = {
     description:
       "A spacious handbag perfect for office essentials, everyday accessories and organized storage.",
     price: 3599,
-
     colors: [
       {
         name: "Tan",
@@ -706,7 +792,6 @@ const productDetails = {
         ],
       },
     ],
-
     isOnSale: true,
     salePrice: 2999,
     discountPercentage: 17,
@@ -722,7 +807,6 @@ const productDetails = {
     description:
       "A refined everyday handbag designed for effortless styling and practical daily use.",
     price: 2399,
-
     colors: [
       {
         name: "Black",
@@ -737,7 +821,6 @@ const productDetails = {
         ],
       },
     ],
-
     isOnSale: false,
     salePrice: null,
     discountPercentage: 0,
@@ -753,7 +836,6 @@ const productDetails = {
     description:
       "A timeless shoulder bag designed for everyday comfort and sophisticated styling.",
     price: 2699,
-
     colors: [
       {
         name: "Black",
@@ -768,7 +850,6 @@ const productDetails = {
         ],
       },
     ],
-
     isOnSale: false,
     salePrice: null,
     discountPercentage: 0,
@@ -784,7 +865,6 @@ const productDetails = {
     description:
       "A contemporary handbag with a clean silhouette made for modern everyday looks.",
     price: 2899,
-
     colors: [
       {
         name: "Black",
@@ -799,7 +879,6 @@ const productDetails = {
         ],
       },
     ],
-
     isOnSale: false,
     salePrice: null,
     discountPercentage: 0,
@@ -815,7 +894,6 @@ const productDetails = {
     description:
       "A versatile handbag created to complement relaxed and polished everyday outfits.",
     price: 2599,
-
     colors: [
       {
         name: "Brown",
@@ -830,7 +908,6 @@ const productDetails = {
         ],
       },
     ],
-
     isOnSale: false,
     salePrice: null,
     discountPercentage: 0,
@@ -846,7 +923,6 @@ const productDetails = {
     description:
       "A premium carry handbag combining practical storage with an elegant everyday appearance.",
     price: 3199,
-
     colors: [
       {
         name: "Black",
@@ -861,7 +937,6 @@ const productDetails = {
         ],
       },
     ],
-
     isOnSale: false,
     salePrice: null,
     discountPercentage: 0,
@@ -877,7 +952,6 @@ const productDetails = {
     description:
       "A softly structured handbag designed for comfortable everyday carrying.",
     price: 2499,
-
     colors: [
       {
         name: "Black",
@@ -892,7 +966,6 @@ const productDetails = {
         ],
       },
     ],
-
     isOnSale: false,
     salePrice: null,
     discountPercentage: 0,
@@ -908,7 +981,6 @@ const productDetails = {
     description:
       "A contemporary handbag featuring a versatile silhouette for modern daily styling.",
     price: 2999,
-
     colors: [
       {
         name: "Beige",
@@ -923,7 +995,6 @@ const productDetails = {
         ],
       },
     ],
-
     isOnSale: false,
     salePrice: null,
     discountPercentage: 0,
@@ -939,7 +1010,6 @@ const productDetails = {
     description:
       "A stylish statement handbag designed to elevate everyday outfits.",
     price: 3399,
-
     colors: [
       {
         name: "Brown",
@@ -954,7 +1024,6 @@ const productDetails = {
         ],
       },
     ],
-
     isOnSale: false,
     salePrice: null,
     discountPercentage: 0,
@@ -965,9 +1034,9 @@ const productDetails = {
     reviewCount: 53,
   },
 
-  // =========================
+  // =====================================================
   // MINIBAGS
-  // =========================
+  // =====================================================
 
   "minibag-001": {
     title: "Chic Mini Bag",
@@ -1373,9 +1442,9 @@ const productDetails = {
     reviewCount: 47,
   },
 
-  // =========================
+  // =====================================================
   // SLING
-  // =========================
+  // =====================================================
 
   "sling-001": {
     title: "Classic Sling Bag",
@@ -1637,9 +1706,9 @@ const productDetails = {
     reviewCount: 49,
   },
 
-  // =========================
+  // =====================================================
   // TOTE
-  // =========================
+  // =====================================================
 
   "tote-001": {
     title: "Everyday Carry Tote",
@@ -1709,6 +1778,7 @@ const productDetails = {
         name: "Brown",
         images: [
           "/products/bags/tote/WhatsApp Image 2026-08-17 at 5.37.40 PM (1).jpeg",
+          "/products/bags/tote/WhatsApp Image 2026-08-17 at 5.37.40 PM (1).jpeg",
         ],
       },
       {
@@ -1737,6 +1807,8 @@ const productDetails = {
       {
         name: "Black",
         images: [
+          "/products/bags/tote/WhatsApp Image 2026-08-17 at 5.37.40 PM (2).jpeg",
+          "/products/bags/tote/WhatsApp Image 2026-08-17 at 5.37.40 PM (2).jpeg",
           "/products/bags/tote/WhatsApp Image 2026-08-17 at 5.37.40 PM (2).jpeg",
         ],
       },
@@ -1843,9 +1915,9 @@ const productDetails = {
     reviewCount: 67,
   },
 
-  // =========================
-  // WALLETS
-  // =========================
+  // =====================================================
+  // WALLETS - MEN
+  // =====================================================
 
   "wallet-001": {
     title: "Classic Leather Wallet",

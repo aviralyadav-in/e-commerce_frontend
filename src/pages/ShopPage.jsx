@@ -49,7 +49,8 @@ function ShopPage() {
   // URL FILTER
   // ===============================
   useEffect(() => {
-    const filterFromUrl = searchParams.get("filter");
+    const filterFromUrl =
+      searchParams.get("subcategory") || searchParams.get("filter");
 
     if (filterFromUrl) {
       setSelectedFilter(filterFromUrl);
@@ -111,7 +112,7 @@ function ShopPage() {
 
     if (newFilter) {
       setSearchParams({
-        filter: newFilter,
+        subcategory: newFilter,
       });
     } else {
       setSearchParams({});
@@ -449,7 +450,7 @@ function ShopPage() {
                             >
                               <FiShoppingBag size={13} strokeWidth={1.5} />
 
-                              {isAddedToCart ? "REMOVE FROM BAG" : "ADD TO BAG"}
+                              {isAddedToCart ? "REMOVE " : "ADD TO BAG"}
                             </button>
                           </div>
 

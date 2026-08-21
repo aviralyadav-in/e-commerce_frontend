@@ -37,7 +37,7 @@ function ShippingReturnsPage() {
 
   if (!data) {
     return (
-      <main className="min-h-screen bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+      <main className="min-h-screen bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]">
         <div className="mx-auto max-w-6xl px-5 py-10 sm:px-6 lg:px-8">
           Loading...
         </div>
@@ -46,19 +46,19 @@ function ShippingReturnsPage() {
   }
 
   return (
-    <main className="bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-100">
+    <main className="min-h-screen bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] transition-colors duration-300">
       {/* ================= HERO ================= */}
-      <section className="border-b border-slate-200 dark:border-slate-800">
+      <section className="border-b border-[var(--color-border)]">
         <div className="mx-auto max-w-6xl px-5 py-7 sm:px-6 lg:px-8 lg:py-9">
-          <p className="text-xs font-medium uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+          <p className="text-xs font-medium uppercase tracking-[0.22em] text-[var(--color-accent)]">
             {data.eyebrow}
           </p>
 
-          <h1 className="mt-2 max-w-4xl font-serif text-4xl leading-[1.08] sm:text-5xl lg:text-6xl">
+          <h1 className="mt-2 max-w-4xl font-serif text-4xl leading-[1.08] text-[var(--color-text-primary)] sm:text-5xl lg:text-6xl">
             {data.title}
           </h1>
 
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-400 sm:text-base">
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--color-text-secondary)] sm:text-base">
             {data.intro}
           </p>
         </div>
@@ -72,19 +72,19 @@ function ShippingReturnsPage() {
               <article
                 key={section.id}
                 id={section.id}
-                className="scroll-mt-24 border-b border-slate-200 py-7 first:pt-0 last:border-b-0 last:pb-0 dark:border-slate-800"
+                className="scroll-mt-24 border-b border-[var(--color-border)] py-7 first:pt-0 last:border-b-0 last:pb-0"
               >
                 <div className="grid gap-4 md:grid-cols-[140px_1fr]">
-                  <span className="text-xs uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
+                  <span className="text-xs uppercase tracking-[0.18em] text-[var(--color-text-muted)]">
                     0{index + 1}
                   </span>
 
                   <div>
-                    <h2 className="font-serif text-2xl sm:text-3xl">
+                    <h2 className="font-serif text-2xl sm:text-3xl text-[var(--color-text-primary)]">
                       {section.title}
                     </h2>
 
-                    <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-600 dark:text-slate-400 sm:text-base">
+                    <p className="mt-2 max-w-3xl text-sm leading-7 text-[var(--color-text-secondary)] sm:text-base">
                       {section.content}
                     </p>
                   </div>
