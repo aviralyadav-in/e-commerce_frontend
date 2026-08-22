@@ -77,7 +77,7 @@ function HeroBanner() {
       {/* ===============================
           HERO CAROUSEL
       =============================== */}
-      <section className="relative min-h-[620px] overflow-hidden bg-[var(--color-dark-section)] md:min-h-[680px]">
+      <section className="relative min-h-[calc(100vh-70px)] w-full overflow-hidden bg-dark-section">
         {/* SLIDES */}
         {slides.map((item, index) => (
           <div
@@ -96,16 +96,16 @@ function HeroBanner() {
         ))}
 
         {/* OVERLAY */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#073b4c]/95 via-[#073b4c]/65 to-[#073b4c]/10" />
+        <div className="absolute inset-0 bg-gradient-to-r from-dark-section/95 via-dark-section/65 to-dark-section/10" />
 
-        {/* CONTENT */}
-        <div className="relative mx-auto flex min-h-[620px] max-w-[1440px] items-center px-6 md:min-h-[680px] md:px-14">
-          <div className="max-w-[560px] text-white">
-            <p className="mb-4 text-[9px] font-semibold tracking-[0.28em] text-[var(--color-accent-bright)]">
+        {/* CONTENT (POSITIONED SLIGHTLY LOWER) */}
+        <div className="relative mx-auto flex min-h-[calc(100vh-70px)] max-w-[1440px] items-end pb-16 pt-32 px-6 md:pb-24 md:px-14">
+          <div className="max-w-[620px] text-white">
+            <p className="mb-4 text-[11px] font-semibold tracking-widest text-accent-bright uppercase">
               THE NIYA EDIT
             </p>
 
-            <h1 className="font-serif text-[48px] font-medium leading-[0.98] tracking-[-0.02em] sm:text-[58px] md:text-[72px]">
+            <h1 className="font-serif text-5xl font-medium leading-[0.98] tracking-tight sm:text-6xl md:text-7xl">
               {slide.title.split("\n").map((line, index) => (
                 <span key={`${line}-${index}`}>
                   {line}
@@ -114,13 +114,14 @@ function HeroBanner() {
               ))}
             </h1>
 
-            <p className="mt-6 max-w-[420px] text-[12px] leading-6 text-white/80">
+            {/* LARGER DESCRIPTION FONT SIZE */}
+            <p className="mt-5 max-w-[480px] text-sm sm:text-base md:text-lg leading-relaxed text-white/90 font-normal">
               {slide.subtitle}
             </p>
 
             <Link
               to={slide.buttonLink}
-              className="mt-7 inline-flex items-center gap-4 rounded-full bg-[var(--color-accent-bright)] px-6 py-3 text-[10px] font-semibold text-[#073b4c] transition hover:opacity-90"
+              className="mt-7 inline-flex items-center gap-4 rounded-full bg-accent-bright px-7 py-3.5 text-xs font-semibold text-dark-section transition hover:opacity-90 shadow-lg"
             >
               {slide.buttonText}
               <span>→</span>
@@ -130,7 +131,7 @@ function HeroBanner() {
 
         {/* DOTS */}
         {slides.length > 1 && (
-          <div className="absolute bottom-5 left-1/2 flex -translate-x-1/2 gap-1.5">
+          <div className="absolute bottom-6 left-1/2 flex -translate-x-1/2 gap-2">
             {slides.map((item, index) => (
               <button
                 key={item.id}
@@ -138,8 +139,8 @@ function HeroBanner() {
                 onClick={() => setCurrent(index)}
                 className={`h-1.5 rounded-full transition-all ${
                   index === current
-                    ? "w-6 bg-[var(--color-accent-bright)]"
-                    : "w-1.5 bg-white/50"
+                    ? "w-8 bg-accent-bright"
+                    : "w-2 bg-white/50"
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
                 aria-current={index === current ? "true" : undefined}
@@ -150,14 +151,14 @@ function HeroBanner() {
       </section>
 
       {/* ===============================
-          POSTER
+          POSTER (FULL-WIDTH EDGE-TO-EDGE, HALF-HEIGHT BANNER)
       =============================== */}
-      <section className="w-full bg-[var(--color-bg-primary)] px-4 py-8 md:px-8 md:py-12">
-        <div className="mx-auto max-w-[1440px] overflow-hidden">
+      <section className="w-full bg-bg-primary py-3">
+        <div className="w-full overflow-hidden">
           <img
             src="/products/bags/image.png"
-            alt="Niya Collection"
-            className="h-auto w-full object-cover"
+            alt="Niya Collection Promo Banner"
+            className="h-[130px] sm:h-[150px] md:h-[170px] lg:h-[190px] w-full object-cover aspect-[16/3]"
           />
         </div>
       </section>

@@ -31,14 +31,14 @@ function AnnouncementBar() {
   }
 
   return (
-    <div className="h-7 overflow-hidden bg-[var(--color-dark-section)] text-white">
-      <div className="mx-auto flex h-full max-w-[1440px] items-center justify-around gap-8 px-5 text-[9px] tracking-wide">
+    <div className="h-7 overflow-hidden bg-dark-section text-white">
+      <div className="mx-auto flex h-full max-w-[1440px] items-center justify-around gap-8 px-5 text-[10px] font-medium tracking-wider">
         {announcements.map((item) => (
           <span
             key={item.id}
             className="hidden items-center gap-2 whitespace-nowrap first:flex sm:flex"
           >
-            <span className="text-[var(--color-accent-bright)]">✦</span>
+            <span className="text-accent-bright">✦</span>
             {item.text}
           </span>
         ))}

@@ -31,7 +31,7 @@ function CategorySection() {
   return (
     <section
       id="categories"
-      className="bg-[var(--color-bg-primary)] px-5 py-16 md:px-10 md:py-20"
+      className="bg-bg-primary px-5 pt-6 pb-14 md:px-10 md:pt-8 md:pb-16"
     >
       <div className="mx-auto max-w-[1440px]">
         <div className="mb-7 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">

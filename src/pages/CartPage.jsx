@@ -1,13 +1,15 @@
+import { useState } from "react";
 import {
   FiArrowRight,
   FiMinus,
   FiPlus,
   FiShoppingBag,
   FiTrash2,
+  FiTag,
+  FiTruck,
+  FiCheckCircle,
 } from "react-icons/fi";
-
 import { Link } from "react-router-dom";
-
 import { useCart } from "../context/CartContext";
 
 function CartPage() {
@@ -21,201 +23,277 @@ function CartPage() {
     removeFromCart,
   } = useCart();
 
+  const [promoCode, setPromoCode] = useState("");
+  const [appliedCode, setAppliedCode] = useState(null);
+  const [promoError, setPromoError] = useState("");
+
+  const totalUnits = cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
   const shipping = cartItems.length > 0 ? 0 : 0;
 
-  return (
-    <main className="min-h-[70vh] bg-[var(--color-bg-primary)] px-5 py-6 md:px-10 md:py-10">
-      <div className="mx-auto max-w-[1100px]">
-        {/* HEADER */}
+  const handleApplyPromo = (e) => {
+    e.preventDefault();
+    setPromoError("");
+    const cleanCode = promoCode.trim().toUpperCase();
 
-        <div className="mb-12 text-center">
-          <p className="mb-3 text-[10px] tracking-[0.25em] text-[var(--color-accent)]">
+    if (cleanCode === "NIYA10" || cleanCode === "FIRST10" || cleanCode === "WELCOME") {
+      setAppliedCode(cleanCode);
+      setPromoCode("");
+    } else if (cleanCode === "") {
+      setPromoError("Please enter a valid coupon code.");
+    } else {
+      setPromoError("Invalid promo code. Try 'NIYA10'");
+    }
+  };
+
+  return (
+    <main className="min-h-[70vh] bg-bg-primary px-5 py-8 md:px-10 md:py-12">
+      <div className="mx-auto max-w-[1150px]">
+        {/* HEADER */}
+        <div className="mb-10 text-center">
+          <p className="mb-2 text-[10px] font-semibold tracking-widest text-accent uppercase">
             YOUR SELECTION
           </p>
 
-          <h1 className="font-serif text-[34px] font-medium text-[var(--color-text-primary)] md:text-[40px]">
+          <h1 className="font-serif text-3xl font-medium text-text-primary md:text-4xl">
             Shopping Bag
           </h1>
 
-          <p className="mx-auto mt-3 max-w-[420px] text-[12px] leading-6 text-[var(--color-text-secondary)]">
-            Pieces chosen to become part of your story.
+          <p className="mx-auto mt-2 max-w-[420px] text-xs leading-relaxed text-text-secondary">
+            Handcrafted luxury pieces chosen to become part of your story.
           </p>
         </div>
 
         {/* EMPTY CART */}
-
         {cartItems.length === 0 ? (
-          <div className="mx-auto flex max-w-[600px] flex-col items-center border border-[var(--color-border-soft)] bg-[var(--color-bg-secondary)] px-6 py-16 text-center">
-            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-accent-soft)] text-[var(--color-accent)]">
-              <FiShoppingBag size={25} strokeWidth={1.2} />
+          <div className="mx-auto flex max-w-[580px] flex-col items-center border border-border-soft bg-bg-secondary px-6 py-16 text-center rounded-sm shadow-sm">
+            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-accent-soft text-accent">
+              <FiShoppingBag size={26} strokeWidth={1.2} />
             </div>
 
-            <h2 className="font-serif text-2xl text-[var(--color-text-primary)]">
-              Your bag is waiting
+            <h2 className="font-serif text-2xl text-text-primary">
+              Your shopping bag is empty
             </h2>
 
-            <p className="mt-3 max-w-[360px] text-[11px] leading-6 text-[var(--color-text-secondary)]">
-              Discover a piece that feels unmistakably yours and add it to your
-              collection.
+            <p className="mt-3 max-w-[360px] text-xs leading-relaxed text-text-secondary">
+              Discover a piece that feels unmistakably yours and add it to your collection.
             </p>
 
             <Link
-              to="/"
-              className="mt-8 flex h-11 items-center gap-2 bg-[var(--color-text-primary)] px-7 text-[10px] font-semibold tracking-[0.12em] text-[var(--color-bg-primary)] transition hover:bg-[var(--color-accent)]"
+              to="/shop"
+              className="mt-8 flex h-11 items-center gap-2 bg-text-primary px-7 text-xs font-semibold tracking-widest text-bg-primary transition hover:bg-accent rounded-xs"
             >
               EXPLORE COLLECTION
               <FiArrowRight size={14} />
             </Link>
           </div>
         ) : (
-          <div className="grid gap-8 lg:grid-cols-[1fr_340px]">
-            {/* CART ITEMS */}
-
-            <div className="border border-[var(--color-border-soft)] bg-[var(--color-bg-secondary)]">
-              <div className="border-b border-[var(--color-border-soft)] px-5 py-4">
-                <p className="text-[9px] font-semibold tracking-[0.18em] text-[var(--color-accent)]">
-                  {cartItems.length}{" "}
-                  {cartItems.length === 1 ? "PIECE" : "PIECES"}
-                </p>
-              </div>
-
-              {cartItems.map((item) => {
-                const product = item.product;
-
-                return (
-                  <div
-                    key={item._id || product?._id}
-                    className="flex gap-4 border-b border-[var(--color-border-soft)] p-5 last:border-b-0 md:gap-6"
-                  >
-                    {/* IMAGE */}
-
-                    <div className="h-28 w-24 shrink-0 overflow-hidden bg-[var(--color-bg-tertiary)] md:h-32 md:w-28">
-                      <img
-                        src={product?.images?.[0]}
-                        alt={product?.name || "Product"}
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-
-                    {/* DETAILS */}
-
-                    <div className="flex min-w-0 flex-1 flex-col justify-between">
-                      <div>
-                        <p className="text-[8px] uppercase tracking-[0.14em] text-[var(--color-accent)]">
-                          Bags
-                        </p>
-
-                        <h3 className="mt-1 font-serif text-lg text-[var(--color-text-primary)]">
-                          {product?.name}
-                        </h3>
-
-                        <p className="mt-2 text-[11px] font-medium text-[var(--color-text-secondary)]">
-                          ₹{Number(product?.price || 0).toLocaleString("en-IN")}
-                        </p>
-                      </div>
-
-                      {/* CONTROLS */}
-
-                      <div className="mt-4 flex items-center justify-between">
-                        <div className="flex h-8 items-center border border-[var(--color-border-soft)]">
-                          <button
-                            type="button"
-                            onClick={() => decreaseQuantity(product?._id)}
-                            className="flex h-full w-8 items-center justify-center text-[var(--color-text-secondary)] transition hover:bg-[var(--color-accent-soft)]"
-                            aria-label="Decrease quantity"
-                          >
-                            <FiMinus size={11} />
-                          </button>
-
-                          <span className="w-8 text-center text-[11px] text-[var(--color-text-primary)]">
-                            {item.quantity}
-                          </span>
-
-                          <button
-                            type="button"
-                            onClick={() => increaseQuantity(product?._id)}
-                            className="flex h-full w-8 items-center justify-center text-[var(--color-text-secondary)] transition hover:bg-[var(--color-accent-soft)]"
-                            aria-label="Increase quantity"
-                          >
-                            <FiPlus size={11} />
-                          </button>
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => removeFromCart(product?._id)}
-                          className="text-[#9a7777] transition hover:text-[var(--color-text-primary)]"
-                          aria-label="Remove item"
-                        >
-                          <FiTrash2 size={15} strokeWidth={1.3} />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* ORDER SUMMARY */}
-
-            <div className="h-fit border border-[var(--color-border-soft)] bg-[var(--color-bg-secondary)] p-6">
-              <p className="mb-5 text-[10px] font-semibold tracking-[0.2em] text-[var(--color-accent)]">
-                ORDER SUMMARY
-              </p>
-
-              <div className="space-y-4 border-b border-[var(--color-border-soft)] pb-5 text-[11px]">
-                <div className="flex justify-between text-[var(--color-text-secondary)]">
-                  <span>Subtotal</span>
-
-                  <span className="text-[var(--color-text-primary)]">
-                    ₹{Number(totalPrice || 0).toLocaleString("en-IN")}
+          <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
+            {/* CART ITEMS LIST */}
+            <div className="space-y-6">
+              {/* SHIPPING ANNOUNCEMENT BANNER */}
+              <div className="flex items-center justify-between border border-border-soft bg-accent-soft/60 px-5 py-3.5 rounded-sm text-xs text-text-primary">
+                <div className="flex items-center gap-3">
+                  <FiTruck className="text-accent text-base shrink-0" />
+                  <span>
+                    <strong>Free Domestic Shipping</strong> unlocked on your selection!
                   </span>
                 </div>
-
-                {Number(discountAmount || 0) > 0 && (
-                  <div className="flex justify-between text-[var(--color-text-secondary)]">
-                    <span>Discount</span>
-
-                    <span className="text-[var(--color-accent)]">
-                      -₹
-                      {Number(discountAmount || 0).toLocaleString("en-IN")}
-                    </span>
-                  </div>
-                )}
-
-                <div className="flex justify-between text-[var(--color-text-secondary)]">
-                  <span>Shipping</span>
-
-                  <span className="text-[var(--color-text-primary)]">
-                    {shipping === 0
-                      ? "Free"
-                      : `₹${shipping.toLocaleString("en-IN")}`}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex justify-between py-5 font-medium text-[var(--color-text-primary)]">
-                <span className="font-serif text-lg">Total</span>
-
-                <span>
-                  ₹
-                  {Number(totalAmountAfterDiscount || 0).toLocaleString(
-                    "en-IN",
-                  )}
+                <span className="text-[10px] font-semibold text-accent uppercase tracking-wider hidden sm:inline">
+                  3-5 DAYS DELIVERY
                 </span>
               </div>
 
-              <Link
-                to="/order"
-                className="flex h-12 w-full items-center justify-center gap-2 bg-[var(--color-text-primary)] text-[10px] font-semibold tracking-[0.12em] text-[var(--color-bg-primary)] transition hover:bg-[var(--color-accent)]"
-              >
-                PROCEED TO ORDER
-                <FiArrowRight size={14} />
-              </Link>
+              {/* CART TABLE CONTAINER */}
+              <div className="border border-border-soft bg-bg-secondary rounded-sm overflow-hidden shadow-sm">
+                <div className="border-b border-border-soft px-5 py-4 flex items-center justify-between bg-bg-primary/50">
+                  <p className="text-[10px] font-semibold tracking-widest text-accent uppercase">
+                    BAG ITEMS ({cartItems.length} {cartItems.length === 1 ? "PRODUCT" : "PRODUCTS"} / {totalUnits} {totalUnits === 1 ? "UNIT" : "UNITS"})
+                  </p>
+                  <Link to="/shop" className="text-xs font-semibold text-accent hover:underline">
+                    + Add More
+                  </Link>
+                </div>
 
-              <p className="mt-4 text-center text-[9px] leading-5 text-[var(--color-text-muted)]">
-                Complimentary shipping on your Niya selection.
-              </p>
+                {cartItems.map((item) => {
+                  const product = item.product;
+                  const itemPrice = Number(product?.price || 0);
+
+                  return (
+                    <div
+                      key={item._id || product?._id || product?.id}
+                      className="flex gap-4 border-b border-border-soft p-5 last:border-b-0 md:gap-6"
+                    >
+                      {/* IMAGE */}
+                      <div className="h-28 w-24 shrink-0 overflow-hidden bg-bg-tertiary rounded-xs md:h-32 md:w-28 border border-border-soft">
+                        <img
+                          src={product?.images?.[0] || product?.thumbnail || "/products/bags/handbags/WhatsApp Image 2026-08-17 at 5.37.34 PM.jpeg"}
+                          alt={product?.name || product?.title || "Product"}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+
+                      {/* DETAILS */}
+                      <div className="flex min-w-0 flex-1 flex-col justify-between">
+                        <div>
+                          <div className="flex items-start justify-between gap-2">
+                            <p className="text-[9px] font-semibold uppercase tracking-widest text-accent">
+                              {product?.category || product?.subcategory || "HANDBAG"}
+                            </p>
+                            <span className="text-xs font-semibold text-text-primary">
+                              ₹{(itemPrice * item.quantity).toLocaleString("en-IN")}
+                            </span>
+                          </div>
+
+                          <h3 className="mt-1 font-serif text-lg text-text-primary line-clamp-1">
+                            {product?.name || product?.title}
+                          </h3>
+
+                          <p className="mt-1 text-xs text-text-secondary">
+                            ₹{itemPrice.toLocaleString("en-IN")} each
+                          </p>
+                        </div>
+
+                        {/* QUANTITY & REMOVE CONTROLS */}
+                        <div className="mt-4 flex items-center justify-between">
+                          <div className="flex h-8 items-center border border-border-soft rounded-xs bg-bg-primary">
+                            <button
+                              type="button"
+                              onClick={() => decreaseQuantity(product?._id || product?.id)}
+                              className="flex h-full w-8 items-center justify-center text-text-secondary transition hover:bg-accent-soft hover:text-accent"
+                              aria-label="Decrease quantity"
+                            >
+                              <FiMinus size={11} />
+                            </button>
+
+                            <span className="w-8 text-center text-xs font-semibold text-text-primary">
+                              {item.quantity}
+                            </span>
+
+                            <button
+                              type="button"
+                              onClick={() => increaseQuantity(product?._id || product?.id)}
+                              className="flex h-full w-8 items-center justify-center text-text-secondary transition hover:bg-accent-soft hover:text-accent"
+                              aria-label="Increase quantity"
+                            >
+                              <FiPlus size={11} />
+                            </button>
+                          </div>
+
+                          <button
+                            type="button"
+                            onClick={() => removeFromCart(product?._id || product?.id)}
+                            className="flex items-center gap-1 text-xs text-red-500 hover:text-red-700 transition"
+                            aria-label="Remove item"
+                          >
+                            <FiTrash2 size={14} />
+                            <span className="hidden sm:inline text-[11px]">Remove</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* ORDER SUMMARY SIDEBAR */}
+            <div className="space-y-5">
+              <div className="border border-border-soft bg-bg-secondary p-6 rounded-sm shadow-sm">
+                <p className="mb-4 text-[10px] font-semibold tracking-widest text-accent uppercase">
+                  ORDER BREAKDOWN
+                </p>
+
+                <div className="space-y-3.5 border-b border-border-soft pb-5 text-xs">
+                  <div className="flex justify-between text-text-secondary">
+                    <span>Total Products</span>
+                    <span className="font-semibold text-text-primary">{cartItems.length} Items</span>
+                  </div>
+
+                  <div className="flex justify-between text-text-secondary">
+                    <span>Total Units</span>
+                    <span className="font-semibold text-text-primary">{totalUnits} Pieces</span>
+                  </div>
+
+                  <div className="flex justify-between text-text-secondary">
+                    <span>Subtotal</span>
+                    <span className="font-semibold text-text-primary">
+                      ₹{Number(totalPrice || 0).toLocaleString("en-IN")}
+                    </span>
+                  </div>
+
+                  {appliedCode && (
+                    <div className="flex justify-between text-emerald-600 font-medium">
+                      <span className="flex items-center gap-1">
+                        <FiCheckCircle size={12} /> Promo ({appliedCode})
+                      </span>
+                      <span>-10% Applied</span>
+                    </div>
+                  )}
+
+                  {Number(discountAmount || 0) > 0 && (
+                    <div className="flex justify-between text-accent font-medium">
+                      <span>Discount</span>
+                      <span>-₹{Number(discountAmount || 0).toLocaleString("en-IN")}</span>
+                    </div>
+                  )}
+
+                  <div className="flex justify-between text-text-secondary">
+                    <span>Estimated Shipping</span>
+                    <span className="font-semibold text-emerald-600">FREE</span>
+                  </div>
+                </div>
+
+                {/* TOTAL */}
+                <div className="flex justify-between py-5 text-text-primary">
+                  <div>
+                    <span className="font-serif text-xl font-semibold">Grand Total</span>
+                    <p className="text-[10px] text-text-muted">Includes all taxes</p>
+                  </div>
+
+                  <span className="font-serif text-xl font-semibold text-accent">
+                    ₹{Number(totalAmountAfterDiscount || totalPrice || 0).toLocaleString("en-IN")}
+                  </span>
+                </div>
+
+                {/* PROMO COUPON FORM */}
+                <form onSubmit={handleApplyPromo} className="mb-5">
+                  <label className="mb-1.5 block text-[10px] font-semibold tracking-wider text-text-secondary uppercase">
+                    PROMO / GIFT CODE
+                  </label>
+                  <div className="flex gap-2">
+                    <div className="relative flex-1">
+                      <FiTag className="absolute left-3 top-3 text-text-muted" size={14} />
+                      <input
+                        type="text"
+                        value={promoCode}
+                        onChange={(e) => setPromoCode(e.target.value)}
+                        placeholder="Try 'NIYA10'"
+                        className="h-10 w-full border border-border-soft bg-bg-primary pl-9 pr-3 text-xs text-text-primary uppercase outline-none focus:border-text-primary rounded-xs"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className="h-10 bg-bg-tertiary px-4 text-xs font-semibold text-text-primary border border-border-soft hover:bg-accent-soft transition rounded-xs"
+                    >
+                      APPLY
+                    </button>
+                  </div>
+                  {promoError && <p className="mt-1.5 text-[10px] text-red-500 font-medium">{promoError}</p>}
+                  {appliedCode && <p className="mt-1.5 text-[10px] text-emerald-600 font-medium">Coupon '{appliedCode}' applied successfully!</p>}
+                </form>
+
+                <Link
+                  to="/order"
+                  className="flex h-12 w-full items-center justify-center gap-2 bg-text-primary text-xs font-semibold tracking-widest text-bg-primary transition hover:bg-accent rounded-xs shadow-sm"
+                >
+                  PROCEED TO ORDER
+                  <FiArrowRight size={14} />
+                </Link>
+
+                <p className="mt-4 text-center text-[10px] leading-relaxed text-text-muted">
+                  🔒 Safe & Encrypted Checkout • Complimentary Shipping
+                </p>
+              </div>
             </div>
           </div>
         )}

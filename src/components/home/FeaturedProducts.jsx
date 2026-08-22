@@ -90,8 +90,8 @@ function FeaturedProducts() {
         {/* PRODUCT IMAGE */}
         <div
           className="
-            relative aspect-[4/5] overflow-hidden
-            bg-[var(--color-bg-tertiary)]
+            relative aspect-[4/5] overflow-hidden rounded-sm
+            bg-bg-tertiary
           "
         >
           <img
@@ -101,7 +101,7 @@ function FeaturedProducts() {
             className="
               h-full w-full object-cover
               transition duration-500
-              group-hover:scale-[1.03]
+              group-hover:scale-105
             "
           />
 
@@ -115,11 +115,11 @@ function FeaturedProducts() {
             className={`
               absolute right-3 top-3
               grid h-8 w-8 place-items-center
-              rounded-full transition
+              rounded-full transition shadow-sm
               ${
                 wishlistActive
-                  ? "bg-[var(--color-dark-section)] text-white"
-                  : "bg-[var(--color-bg-secondary)]/90 text-[var(--color-text-primary)] hover:bg-[var(--color-bg-secondary)]"
+                  ? "bg-dark-section text-white"
+                  : "bg-bg-secondary/90 text-text-primary hover:bg-bg-secondary"
               }
             `}
             aria-label={
@@ -137,17 +137,17 @@ function FeaturedProducts() {
           <span
             className="
               absolute left-3 top-3
-              bg-[var(--color-dark-section)]
+              bg-dark-section
               px-2 py-1
-              text-[7px]
-              tracking-wide
-              text-white
+              text-[9px] font-semibold
+              tracking-wider uppercase
+              text-white rounded-xs
             "
           >
             {badgeText}
           </span>
 
-          {/* CART */}
+          {/* CART BUTTON */}
           <button
             type="button"
             onClick={(event) => {
@@ -155,52 +155,50 @@ function FeaturedProducts() {
               toggleCart(product, 1);
             }}
             className={`
-              absolute bottom-2 left-2 right-2
-              flex h-8 items-center justify-center
-              gap-1 px-1
-              text-[4px] font-semibold tracking-0
-              transition
-
-              sm:bottom-3 sm:left-3 sm:right-3
-              sm:h-9 sm:gap-2 sm:px-2 sm:text-[6px]
+              absolute bottom-3 left-3 right-3
+              flex h-9 items-center justify-center
+              gap-2 px-3 text-xs font-medium tracking-wider
+              transition rounded-xs shadow-sm
 
               ${
                 cartActive
-                  ? "bg-[var(--color-dark-section)] text-white opacity-100"
-                  : "bg-[var(--color-bg-secondary)]/95 text-[var(--color-text-primary)] opacity-0 group-hover:opacity-100"
+                  ? "bg-dark-section text-white opacity-100"
+                  : "bg-bg-secondary/95 text-text-primary opacity-0 group-hover:opacity-100"
               }
             `}
             aria-label={
               cartActive ? "Remove from shopping bag" : "Add to shopping bag"
             }
           >
-            <FiShoppingBag size={9} className="shrink-0" />
+            <FiShoppingBag size={14} className="shrink-0" />
 
-            <span className="whitespace-nowrap">
-              {cartActive ? "ADDED  ✓" : "ADD "}
+            <span className="whitespace-nowrap uppercase">
+              {cartActive ? "In Bag ✓" : "Add to Bag"}
             </span>
           </button>
         </div>
 
         {/* PRODUCT INFO */}
-        <div className="pt-4">
+        <div className="pt-3">
           <p
             className="
               text-[10px]
+              font-semibold
               uppercase
-              tracking-[0.12em]
-              text-[var(--color-accent)]
+              tracking-widest
+              text-accent
             "
           >
-            {product.subcategory || product.category?.name || "Bags"}
+            {product.subcategory || product.category?.name || "Handbags"}
           </p>
 
           <h3
             className="
               mt-1
-              text-[15px]
+              text-sm
               font-medium
-              text-[var(--color-text-primary)]
+              text-text-primary
+              truncate
             "
           >
             {product.title}
@@ -208,10 +206,10 @@ function FeaturedProducts() {
 
           <p
             className="
-              mt-2
-              text-[15px]
+              mt-1.5
+              text-sm
               font-semibold
-              text-[var(--color-text-primary)]
+              text-text-primary
             "
           >
             ₹{Number(product.price || 0).toLocaleString("en-IN")}
@@ -244,7 +242,7 @@ function FeaturedProducts() {
       <section
         id={id}
         className="
-          bg-[var(--color-bg-secondary)]
+          bg-bg-secondary
           px-5 py-12
           transition-colors duration-300
           md:px-10 md:py-16
@@ -259,8 +257,8 @@ function FeaturedProducts() {
                   mb-2
                   text-[10px]
                   font-semibold
-                  tracking-[0.22em]
-                  text-[var(--color-accent)]
+                  tracking-widest
+                  text-accent
                 "
               >
                 {eyebrow}
@@ -269,9 +267,10 @@ function FeaturedProducts() {
               <h2
                 className="
                   font-serif
-                  text-[34px]
-                  text-[var(--color-text-primary)]
-                  md:text-[40px]
+                  text-3xl
+                  font-medium
+                  text-text-primary
+                  md:text-4xl
                 "
               >
                 {title}
@@ -281,9 +280,9 @@ function FeaturedProducts() {
                 className="
                   mt-2
                   max-w-[560px]
-                  text-[12px]
-                  leading-5
-                  text-[var(--color-text-muted)]
+                  text-xs
+                  leading-relaxed
+                  text-text-muted
                 "
               >
                 {description}
@@ -296,13 +295,13 @@ function FeaturedProducts() {
               className="
                 hidden
                 border-b
-                border-[var(--color-accent)]
+                border-accent
                 pb-1
-                text-[16px]
+                text-sm
                 font-semibold
-                text-[var(--color-text-primary)]
+                text-text-primary
                 transition
-                hover:opacity-60
+                hover:opacity-70
                 sm:block
               "
             >
@@ -316,14 +315,14 @@ function FeaturedProducts() {
               className="
                 py-10
                 text-center
-                text-[11px]
-                text-[var(--color-text-muted)]
+                text-xs
+                text-text-muted
               "
             >
               No products available.
             </p>
           ) : (
-            <div className="grid grid-cols-3 gap-2 lg:grid-cols-4">
+            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
               {products.map((product) =>
                 renderProductCard(product, sectionType),
               )}
