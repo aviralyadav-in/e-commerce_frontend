@@ -162,11 +162,52 @@ function AccountPage() {
                   USERNAME
                 </p>
 
-                <p className="text-xs text-text-secondary">
-                  {username}
-                </p>
+                <p className="text-xs text-text-secondary">{username}</p>
               </div>
             </div>
+            <div>
+              <p className="mb-2 text-[10px] tracking-[0.12em] text-accent font-medium">
+                DATE OF BIRTH
+              </p>
+              <p className="text-xs text-text-secondary">
+                {currentUser.dateOfBirth || "—"}
+              </p>
+            </div>
+
+            <div>
+  <p className="mb-2 text-[10px] tracking-[0.12em] text-accent font-medium">
+    ADDRESS
+  </p>
+  <p className="text-xs text-text-secondary">
+    {currentUser.address || "—"}
+  </p>
+</div>
+
+<div>
+  <p className="mb-2 text-[10px] tracking-[0.12em] text-accent font-medium">
+    ADDRESS
+  </p>
+  <p className="text-xs text-text-secondary">
+    {currentUser.address || "—"}
+  </p>
+</div>
+
+<div>
+  <p className="mb-2 text-[10px] tracking-[0.12em] text-accent font-medium">
+    STATE
+  </p>
+  <p className="text-xs text-text-secondary">
+    {currentUser.state || "—"}
+  </p>
+</div>
+<div>
+  <p className="mb-2 text-[10px] tracking-[0.12em] text-accent font-medium">
+    PINCODE
+  </p>
+  <p className="text-xs text-text-secondary">
+    {currentUser.pincode || "—"}
+  </p>
+</div>
 
             {/* WISHLIST + CART LINKS */}
             <div className="mt-10 grid gap-4 border-t border-border-soft pt-10 sm:grid-cols-2">

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import {
   FiHeart,
   FiSliders,
@@ -6,8 +7,11 @@ import {
   FiChevronDown,
   FiShoppingBag,
 } from "react-icons/fi";
+
 import { Link, useSearchParams } from "react-router-dom";
+
 import { getAllProducts } from "../api/api";
+
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 
@@ -17,20 +21,25 @@ function ShopPage() {
   // ===============================
   // CART CONTEXT
   // ===============================
+
   const { toggleCart, isInCart } = useCart();
 
   // ===============================
   // WISHLIST CONTEXT
   // ===============================
+
   const { toggleWishlist, isInWishlist } = useWishlist();
 
   // ===============================
   // LOCAL STATES
   // ===============================
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
   const [selectedFilter, setSelectedFilter] = useState(null);
 
   const [openSections, setOpenSections] = useState({
@@ -48,6 +57,7 @@ function ShopPage() {
   // ===============================
   // URL FILTER
   // ===============================
+
   useEffect(() => {
     const filterFromUrl =
       searchParams.get("subcategory") || searchParams.get("filter");
@@ -62,6 +72,7 @@ function ShopPage() {
   // ===============================
   // LOAD PRODUCTS
   // ===============================
+
   useEffect(() => {
     async function loadProducts() {
       try {
@@ -73,6 +84,7 @@ function ShopPage() {
         setProducts(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error("Failed to load products:", err);
+
         setError("Unable to load products. Please try again.");
       } finally {
         setLoading(false);
@@ -85,6 +97,7 @@ function ShopPage() {
   // ===============================
   // TOGGLE DESKTOP FILTER SECTION
   // ===============================
+
   const toggleSection = (section) => {
     setOpenSections((prev) => ({
       ...prev,
@@ -95,6 +108,7 @@ function ShopPage() {
   // ===============================
   // TOGGLE MOBILE FILTER SECTION
   // ===============================
+
   const toggleMobileSection = (section) => {
     setMobileOpenSections((prev) => ({
       ...prev,
@@ -105,6 +119,7 @@ function ShopPage() {
   // ===============================
   // HANDLE FILTER CHANGE
   // ===============================
+
   const handleFilterChange = (filterValue) => {
     const newFilter = selectedFilter === filterValue ? null : filterValue;
 
@@ -122,24 +137,52 @@ function ShopPage() {
   // ===============================
   // FILTER DATA
   // ===============================
+
   const womenCategories = [
-    { label: "Handbags", value: "handbags" },
-    { label: "Mini Bags", value: "minibags" },
-    { label: "Sling Bags", value: "sling" },
-    { label: "Tote Bags", value: "tote" },
+    {
+      label: "Handbags",
+      value: "handbags",
+    },
+    {
+      label: "Mini Bags",
+      value: "minibags",
+    },
+    {
+      label: "Sling Bags",
+      value: "sling",
+    },
+    {
+      label: "Tote Bags",
+      value: "tote",
+    },
   ];
 
-  const menCategories = [{ label: "Wallets", value: "wallet" }];
+  const menCategories = [
+    {
+      label: "Wallets",
+      value: "wallet",
+    },
+  ];
 
   const collections = [
-    { label: "Featured", value: "featured" },
-    { label: "Best Sellers", value: "best-sellers" },
-    { label: "New Arrivals", value: "new-arrivals" },
+    {
+      label: "Featured",
+      value: "featured",
+    },
+    {
+      label: "Best Sellers",
+      value: "best-sellers",
+    },
+    {
+      label: "New Arrivals",
+      value: "new-arrivals",
+    },
   ];
 
   // ===============================
   // FILTER PRODUCTS
   // ===============================
+
   const filteredProducts = (() => {
     if (!selectedFilter) return products;
 
@@ -168,6 +211,7 @@ function ShopPage() {
   // ===============================
   // FILTER SECTION COMPONENT
   // ===============================
+
   const FilterSection = ({ title, section, items, mobile = false }) => {
     const isOpen = mobile ? mobileOpenSections[section] : openSections[section];
 
@@ -227,6 +271,7 @@ function ShopPage() {
   return (
     <main className="min-h-screen bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]">
       {/* ================= PAGE HEADER ================= */}
+
       <section className="border-b border-[var(--color-border)]">
         <div className="mx-auto max-w-[1440px] px-5 py-4 md:px-10 md:py-8">
           <div className="flex flex-col justify-between gap-3 md:flex-row md:items-end">
@@ -249,8 +294,10 @@ function ShopPage() {
       </section>
 
       {/* ================= SHOP CONTENT ================= */}
+
       <section className="mx-auto max-w-[1440px] px-5 py-5 md:px-10 md:py-8">
         {/* ================= MOBILE TOOLBAR ================= */}
+
         <div className="mb-5 flex items-center justify-between md:hidden">
           <p className="text-[9px] tracking-[0.15em] text-[var(--color-text-muted)]">
             {loading ? "LOADING..." : `${filteredProducts.length} PRODUCTS`}
@@ -267,6 +314,7 @@ function ShopPage() {
         </div>
 
         {/* ================= MOBILE FILTER PANEL ================= */}
+
         {mobileFiltersOpen && (
           <div className="fixed inset-0 z-[100] md:hidden">
             <button
@@ -319,8 +367,10 @@ function ShopPage() {
         )}
 
         {/* ================= MAIN SHOP LAYOUT ================= */}
+
         <div className="grid grid-cols-1 gap-7 md:grid-cols-[190px_1fr] lg:grid-cols-[210px_1fr]">
           {/* ================= DESKTOP SIDEBAR ================= */}
+
           <aside className="hidden md:block">
             <div className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto pr-3">
               <div className="mb-2">
@@ -346,6 +396,7 @@ function ShopPage() {
           </aside>
 
           {/* ================= PRODUCTS ================= */}
+
           <div className="min-w-0">
             <div className="mb-4 hidden items-center justify-between md:flex">
               <p className="text-[9px] tracking-[0.15em] text-[var(--color-text-muted)]">
@@ -354,6 +405,7 @@ function ShopPage() {
             </div>
 
             {/* ================= LOADING ================= */}
+
             {loading && (
               <div className="grid grid-cols-2 gap-x-4 gap-y-8 md:grid-cols-3 lg:grid-cols-4">
                 {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
@@ -369,6 +421,7 @@ function ShopPage() {
             )}
 
             {/* ================= ERROR ================= */}
+
             {error && (
               <div className="py-16 text-center">
                 <p className="text-sm text-red-500">{error}</p>
@@ -376,6 +429,7 @@ function ShopPage() {
             )}
 
             {/* ================= PRODUCTS ================= */}
+
             {!loading && !error && (
               <>
                 {filteredProducts.length === 0 ? (
@@ -387,22 +441,28 @@ function ShopPage() {
                 ) : (
                   <div className="grid grid-cols-2 gap-x-4 gap-y-9 md:grid-cols-3 lg:grid-cols-4">
                     {filteredProducts.map((product) => {
-                      const isWishlisted = isInWishlist(product._id);
+                      const productId = product?._id || product?.id;
 
-                      const isAddedToCart = isInCart(product._id);
+                      const isWishlisted = isInWishlist(productId);
+
+                      const isAddedToCart = isInCart(productId);
 
                       return (
                         <Link
-                          key={product._id}
-                          to={`/product/${product._id}`}
+                          key={productId}
+                          to={`/product/${productId}`}
                           className="group"
                         >
                           {/* PRODUCT IMAGE */}
+
                           <div className="relative aspect-[4/5] overflow-hidden bg-[var(--color-bg-tertiary)]">
                             <img
                               src={
                                 product.images?.desktop?.[0]
-                                  ? `${import.meta.env.VITE_API_BASE_URL.replace("/api", "")}${product.images.desktop[0]}`
+                                  ? `${import.meta.env.VITE_API_BASE_URL.replace(
+                                      "/api",
+                                      "",
+                                    )}${product.images.desktop[0]}`
                                   : ""
                               }
                               alt={product.name}
@@ -411,6 +471,7 @@ function ShopPage() {
                             />
 
                             {/* WISHLIST */}
+
                             <button
                               type="button"
                               aria-label={
@@ -438,6 +499,7 @@ function ShopPage() {
                             </button>
 
                             {/* CART TOGGLE */}
+
                             <button
                               type="button"
                               onClick={(event) => {
@@ -454,11 +516,12 @@ function ShopPage() {
                             >
                               <FiShoppingBag size={13} strokeWidth={1.5} />
 
-                              {isAddedToCart ? "REMOVE " : "ADD TO BAG"}
+                              {isAddedToCart ? "REMOVE" : "ADD TO BAG"}
                             </button>
                           </div>
 
                           {/* PRODUCT DETAILS */}
+
                           <div className="pt-3.5">
                             <p className="mb-1 text-[8px] uppercase tracking-[0.12em] text-[var(--color-accent)]">
                               {product.subcategory || "Bags"}
