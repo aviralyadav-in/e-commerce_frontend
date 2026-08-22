@@ -14,6 +14,9 @@ import ShopPage from "../pages/ShopPage";
 import CraftsmanshipPage from "../pages/CraftsmanshipPage";
 
 import AccountPage from "../pages/account/AccountPage";
+import EditProfile from "../pages/account/EditProfile";
+
+
 
 // FOOTER PAGES
 import AboutPage from "../pages/footer/AboutPage";
@@ -90,6 +93,7 @@ export default function AppRoutes() {
         {/* ================================================== */}
 
         <Route path="/account" element={<AccountPage />} />
+        <Route path="/profile" element={<EditProfile />} />
 
         {/* ================================================== */}
         {/* SHOPPING */}

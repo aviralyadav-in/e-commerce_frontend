@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { enrichedProducts as products } from "../data/products.js";
+//import { enrichedProducts as products } from "../data/products.js";
 
 // ============================================================
 // PRODUCT / WEBSITE API
@@ -48,7 +48,6 @@ export async function getCart() {
   return response.data;
 }
 
-
 export async function addCartItem(productId, quantity = 1) {
   const response = await cartApi.post("/add", {
     product: productId,
@@ -86,21 +85,39 @@ export async function getNewArrivalProducts() {
 
 // ============================================================
 // SINGLE PRODUCT
-// DUMMY / FRONTEND DATA
+// REAL / FRONTEND DATA    product detail
 // ============================================================
 
 export async function getProductById(id) {
-  return products.find((product) => String(product.id) === String(id)) || null;
+  try {
+    const response = await api.get(`/${id}`);
+    return response.data.product || null;
+  } catch (error) {
+    console.error("Failed to fetch product:", error);
+    return null;
+  }
 }
 
 // ============================================================
-// ALL PRODUCTS — SHOP PAGE
-// DUMMY / FRONTEND DATA
+// ============================================================
+// PRODUCTS
+// REAL BACKEND API
 // ============================================================
 
 export async function getAllProducts() {
-  return products;
+  try {
+    const response = await api.get("/products?limit=100");
+    return response.data.products || [];
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+    return [];
+  }
 }
+
+// ============================================================
+// SINGLE PRODUCT
+// REAL BACKEND API
+// ============================================================
 
 // ============================================================
 // SEARCH PRODUCTS

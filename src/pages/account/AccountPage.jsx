@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
+
 import { FiHeart, FiShoppingBag, FiLogOut } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
+
+import { Link } from "react-router-dom";
+
 import { useAuth } from "../../context/AuthContext";
+
 import SignIn from "./SignIn";
+
 import SignUp from "./SignUp";
 
 function AccountPage() {
   const [mode, setMode] = useState("signin");
   const { user: authUser, logout } = useAuth();
   const [localUser, setLocalUser] = useState(null);
-  const navigate = useNavigate();
   const [wishlistCount, setWishlistCount] = useState(0);
   const [cartCount, setCartCount] = useState(0);
 
@@ -101,14 +105,24 @@ function AccountPage() {
                 </div>
               </div>
 
-              <button
-                type="button"
-                onClick={handleSignOut}
-                className="flex items-center gap-2 border-b border-[var(--color-accent)] pb-1 text-[10px] font-medium tracking-[0.08em] text-[var(--color-accent)] transition hover:opacity-70"
-              >
-                SIGN OUT
-                <FiLogOut size={13} />
-              </button>
+              {/* EDIT PROFILE + SIGN OUT */}
+              <div className="flex items-center gap-5">
+                <Link
+                  to="/profile"
+                  className="border-b border-[var(--color-text-primary)] pb-1 text-[10px] font-medium tracking-[0.08em] text-[var(--color-text-primary)] transition hover:opacity-70"
+                >
+                  EDIT PROFILE
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  className="flex items-center gap-2 border-b border-[var(--color-accent)] pb-1 text-[10px] font-medium tracking-[0.08em] text-[var(--color-accent)] transition hover:opacity-70"
+                >
+                  SIGN OUT
+                  <FiLogOut size={13} />
+                </button>
+              </div>
             </div>
 
             {/* USER DETAILS */}

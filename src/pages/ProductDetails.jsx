@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import {
   FiArrowLeft,
   FiChevronLeft,
@@ -8,9 +9,11 @@ import {
   FiPlus,
   FiShoppingBag,
 } from "react-icons/fi";
+
 import { useNavigate, useParams } from "react-router-dom";
 
-import { enrichedProducts } from "../data/products";
+import { getAllProducts } from "../api/api";
+
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
 
@@ -35,6 +38,7 @@ function ProductDetails() {
 
   // ===============================
   // CART
+  // ===============================
   const { addToCart, removeFromCart, isInCart } = useCart();
 
   // ===============================
@@ -46,39 +50,59 @@ function ProductDetails() {
   // LOAD PRODUCT
   // ===============================
   useEffect(() => {
-    setLoading(true);
+    async function loadProduct() {
+      try {
+        setLoading(true);
 
-    const selectedProduct = enrichedProducts.find(
-      (item) => String(item.id) === String(id),
-    );
+        const data = await getAllProducts();
+        const allProducts = Array.isArray(data) ? data : [];
 
-    setProduct(selectedProduct || null);
+        const selectedProduct = allProducts.find(
+          (item) => String(item._id) === String(id),
+        );
+        /////for testing purpose
+        console.log("ALL PRODUCTS:", allProducts);
+        console.log("SELECTED PRODUCT:", selectedProduct);
+        setProduct(selectedProduct || null);
 
-    if (selectedProduct) {
-      const suggestedProducts = enrichedProducts
-        .filter(
-          (item) =>
-            String(item.id) !== String(selectedProduct.id) &&
-            item.category === selectedProduct.category,
-        )
-        .slice(0, 4);
+        if (selectedProduct) {
+          const suggestedProducts = allProducts
+            .filter(
+              (item) =>
+                String(item._id) !== String(selectedProduct._id) &&
+                item.category === selectedProduct.category,
+            )
+            .slice(0, 4);
 
-      setSuggestions(suggestedProducts);
+          setSuggestions(suggestedProducts);
 
-      // First color selected by default
-      const firstColor = selectedProduct.colors?.[0];
+          // First color selected by default
+          const firstColor = selectedProduct.colors?.[0];
 
-      setSelectedColor(
-        typeof firstColor === "object" ? firstColor.name : firstColor || null,
-      );
-    } else {
-      setSuggestions([]);
-      setSelectedColor(null);
+          setSelectedColor(
+            typeof firstColor === "object"
+              ? firstColor.name
+              : firstColor || null,
+          );
+        } else {
+          setSuggestions([]);
+          setSelectedColor(null);
+        }
+
+        setQuantity(1);
+        setCurrentImageIndex(0);
+      } catch (error) {
+        console.error("Failed to load product:", error);
+
+        setProduct(null);
+        setSuggestions([]);
+        setSelectedColor(null);
+      } finally {
+        setLoading(false);
+      }
     }
 
-    setQuantity(1);
-    setCurrentImageIndex(0);
-    setLoading(false);
+    loadProduct();
   }, [id]);
 
   // ===============================
@@ -104,28 +128,45 @@ function ProductDetails() {
   });
 
   // ===============================
-  // PRODUCT IMAGES
+  // PRODUCT IMAGES real api
   // ===============================
-  const productImages =
-    typeof selectedColorData === "object" &&
-    selectedColorData?.images?.length > 0
-      ? selectedColorData.images
-      : product?.images?.length > 0
-        ? product.images
-        : product?.thumbnail || product?.image
-          ? [product.thumbnail || product.image]
-          : [];
+  const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+  const getImageUrl = (image) => {
+    if (!image) return "";
+
+    if (image.startsWith("http://") || image.startsWith("https://")) {
+      return image;
+    }
+
+    return `${API_BASE_URL.replace("/api", "")}${image}`;
+  };
+
+  const productImages =
+    selectedColorData &&
+    typeof selectedColorData === "object" &&
+    Array.isArray(selectedColorData.images) &&
+    selectedColorData.images.length > 0
+      ? selectedColorData.images.map(getImageUrl)
+      : Array.isArray(product?.images?.desktop) &&
+          product.images.desktop.length > 0
+        ? product.images.desktop.map(getImageUrl)
+        : Array.isArray(product?.images?.mobile) &&
+            product.images.mobile.length > 0
+          ? product.images.mobile.map(getImageUrl)
+          : product?.thumbnail || product?.image
+            ? [getImageUrl(product.thumbnail || product.image)]
+            : [];
   // ===============================
   // MAIN PRODUCT CART
   // ===============================
   const handleMainCart = () => {
     if (!product) return;
 
-    const variantId = `${product.id}-${selectedColor || "default"}`;
+    const variantId = `${product._id}-${selectedColor || "default"}`;
 
-    if (isInCart(product.id, selectedColor)) {
-      removeFromCart(product.id, selectedColor);
+    if (isInCart(product._id, selectedColor)) {
+      removeFromCart(product._id, selectedColor);
       return;
     }
 
@@ -143,8 +184,8 @@ function ProductDetails() {
   // SUGGESTION CART
   // ===============================
   const handleSuggestionCart = (item) => {
-    if (isInCart(item.id)) {
-      removeFromCart(item.id);
+    if (isInCart(item._id)) {
+      removeFromCart(item._id);
     } else {
       addToCart(item, 1);
     }
@@ -222,12 +263,13 @@ function ProductDetails() {
   const currentImage = productImages[currentImageIndex] || productImages[0];
 
   const finalPrice = product.salePrice || product.price || 0;
+
   const originalPrice = product.price || 0;
 
-  const wishlisted = isInWishlist(product.id);
+  const wishlisted = isInWishlist(product._id);
 
   // Cart state depends on product + selected color
-  const cartActive = isInCart(product.id, selectedColor);
+  const cartActive = isInCart(product._id, selectedColor);
 
   return (
     <main className="min-h-screen bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]">
@@ -252,13 +294,13 @@ function ProductDetails() {
         =============================== */}
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
           {/* ===============================
-    IMAGE GALLERY
-=============================== */}
+              IMAGE GALLERY
+          =============================== */}
           <div>
             <div className="flex flex-col gap-3 sm:gap-4 lg:flex-row">
               {/* ===============================
-        THUMBNAILS
-    =============================== */}
+                  THUMBNAILS
+              =============================== */}
               {productImages.length > 1 && (
                 <div className="order-2 flex gap-2 overflow-x-auto lg:order-1 lg:w-[78px] lg:flex-col lg:overflow-y-auto">
                   {productImages.map((image, index) => (
@@ -275,7 +317,7 @@ function ProductDetails() {
                     >
                       <img
                         src={image}
-                        alt={`${product.title} thumbnail ${index + 1}`}
+                        alt={`${product.name} thumbnail ${index + 1}`}
                         className="h-20 w-16 object-cover sm:h-24 sm:w-20 lg:h-[92px] lg:w-[72px]"
                       />
 
@@ -289,13 +331,15 @@ function ProductDetails() {
               )}
 
               {/* ===============================
-        MAIN IMAGE
-    =============================== */}
+                  MAIN IMAGE
+              =============================== */}
               <div className="order-1 min-w-0 flex-1 lg:order-2">
                 <div className="relative overflow-hidden bg-[var(--color-bg-secondary)]">
                   <img
                     src={currentImage}
-                    alt={`${product.title}${selectedColor ? ` - ${selectedColor}` : ""}`}
+                    alt={`${product.name}${
+                      selectedColor ? ` - ${selectedColor}` : ""
+                    }`}
                     className="aspect-[4/5] w-full object-cover"
                   />
 
@@ -325,9 +369,7 @@ function ProductDetails() {
                     />
                   </button>
 
-                  {/* ===============================
-            LEFT ARROW
-        =============================== */}
+                  {/* LEFT ARROW */}
                   {productImages.length > 1 && (
                     <button
                       type="button"
@@ -342,9 +384,7 @@ function ProductDetails() {
                     </button>
                   )}
 
-                  {/* ===============================
-            RIGHT ARROW
-        =============================== */}
+                  {/* RIGHT ARROW */}
                   {productImages.length > 1 && (
                     <button
                       type="button"
@@ -369,6 +409,7 @@ function ProductDetails() {
               </div>
             </div>
           </div>
+
           {/* ===============================
               PRODUCT INFO
           =============================== */}
@@ -380,7 +421,7 @@ function ProductDetails() {
 
             {/* TITLE */}
             <h1 className="mt-3 font-serif text-3xl leading-tight sm:text-4xl">
-              {product.title}
+              {product.name}
             </h1>
 
             {/* PRICE */}
@@ -413,7 +454,7 @@ function ProductDetails() {
               {product.description}
             </p>
 
-            {/* ============COLORS========== */}
+            {/* COLORS */}
             {product.colors?.length > 0 && (
               <div className="mt-6">
                 <div className="flex items-center justify-between">
@@ -513,23 +554,27 @@ function ProductDetails() {
             <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 lg:gap-x-5">
               {suggestions.map((item) => {
                 const itemImage =
-                  item.thumbnail || item.images?.[0] || item.image;
+                  item.images?.desktop?.[0] ||
+                  item.images?.mobile?.[0] ||
+                  item.thumbnail ||
+                  item.image ||
+                  "";
 
                 const itemPrice = item.salePrice || item.price || 0;
 
-                const itemWishlist = isInWishlist(item.id);
+                const itemWishlist = isInWishlist(item._id);
 
-                const itemInCart = isInCart(item.id);
+                const itemInCart = isInCart(item._id);
 
                 return (
-                  <article key={item.id} className="group min-w-0">
+                  <article key={item._id} className="group min-w-0">
                     {/* IMAGE */}
                     <div
                       className="relative cursor-pointer overflow-hidden bg-[var(--color-bg-tertiary)]"
-                      onClick={() => navigate(`/product/${item.id}`)}
+                      onClick={() => navigate(`/product/${item._id}`)}
                     >
                       <img
-                        src={itemImage}
+                        src={getImageUrl(itemImage)}
                         alt={item.title}
                         className="aspect-[4/5] w-full object-cover transition duration-700 group-hover:scale-[1.04]"
                       />
@@ -585,7 +630,7 @@ function ProductDetails() {
                     <div className="pt-3">
                       <h3
                         className="cursor-pointer truncate font-serif text-sm transition hover:text-[var(--color-accent)]"
-                        onClick={() => navigate(`/product/${item.id}`)}
+                        onClick={() => navigate(`/product/${item._id}`)}
                       >
                         {item.title}
                       </h3>

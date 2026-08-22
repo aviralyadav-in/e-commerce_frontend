@@ -387,21 +387,25 @@ function ShopPage() {
                 ) : (
                   <div className="grid grid-cols-2 gap-x-4 gap-y-9 md:grid-cols-3 lg:grid-cols-4">
                     {filteredProducts.map((product) => {
-                      const isWishlisted = isInWishlist(product.id);
+                      const isWishlisted = isInWishlist(product._id);
 
-                      const isAddedToCart = isInCart(product.id);
+                      const isAddedToCart = isInCart(product._id);
 
                       return (
                         <Link
-                          key={product.id}
-                          to={`/product/${product.id}`}
+                          key={product._id}
+                          to={`/product/${product._id}`}
                           className="group"
                         >
                           {/* PRODUCT IMAGE */}
                           <div className="relative aspect-[4/5] overflow-hidden bg-[var(--color-bg-tertiary)]">
                             <img
-                              src={product.thumbnail || product.images?.[0]}
-                              alt={product.title}
+                              src={
+                                product.images?.desktop?.[0]
+                                  ? `${import.meta.env.VITE_API_BASE_URL.replace("/api", "")}${product.images.desktop[0]}`
+                                  : ""
+                              }
+                              alt={product.name}
                               loading="lazy"
                               className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
                             />
@@ -411,8 +415,8 @@ function ShopPage() {
                               type="button"
                               aria-label={
                                 isWishlisted
-                                  ? `Remove ${product.title} from wishlist`
-                                  : `Add ${product.title} to wishlist`
+                                  ? `Remove ${product.name} from wishlist`
+                                  : `Add ${product.name} to wishlist`
                               }
                               onClick={(event) => {
                                 event.preventDefault();
@@ -461,7 +465,7 @@ function ShopPage() {
                             </p>
 
                             <h2 className="line-clamp-1 text-xs font-medium text-[var(--color-text-primary)]">
-                              {product.title}
+                              {product.name}
                             </h2>
 
                             <p className="mt-1 text-[11px] text-[var(--color-text-muted)]">
