@@ -12,9 +12,13 @@ import SignUp from "./SignUp";
 
 function AccountPage() {
   const [mode, setMode] = useState("signin");
+
   const { user: authUser, logout } = useAuth();
+
   const [localUser, setLocalUser] = useState(null);
+
   const [wishlistCount, setWishlistCount] = useState(0);
+
   const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
@@ -47,16 +51,14 @@ function AccountPage() {
     }
 
     localStorage.removeItem("niyaUser");
+
     setLocalUser(null);
+
     setMode("signin");
   };
 
   if (currentUser) {
-    const displayName =
-      currentUser.firstName || currentUser.name || currentUser.email || "User";
-
-    const username =
-      currentUser.username || currentUser.email?.split("@")[0] || "user";
+    const displayName = currentUser.name || "User";
 
     return (
       <main className="min-h-[calc(100vh-70px)] bg-bg-primary px-5 py-8 text-text-primary md:px-10 md:py-10">
@@ -80,9 +82,9 @@ function AccountPage() {
           <div className="border border-border-soft bg-bg-secondary p-6 md:p-10 rounded-sm">
             <div className="mb-8 flex items-center justify-between border-b border-border-soft pb-8">
               <div className="flex items-center gap-5">
-                {currentUser.image ? (
+                {currentUser.avatar ? (
                   <img
-                    src={currentUser.image}
+                    src={currentUser.avatar}
                     alt={displayName}
                     className="h-16 w-16 rounded-full object-cover border border-border-soft"
                   />
@@ -94,14 +96,8 @@ function AccountPage() {
 
                 <div>
                   <h2 className="font-serif text-2xl text-text-primary">
-                    {currentUser.firstName
-                      ? `${currentUser.firstName} ${currentUser.lastName || ""}`
-                      : displayName}
+                    {displayName}
                   </h2>
-
-                  <p className="mt-1 text-xs text-text-secondary">
-                    @{username}
-                  </p>
                 </div>
               </div>
 
@@ -127,6 +123,18 @@ function AccountPage() {
 
             {/* USER DETAILS */}
             <div className="grid gap-6 sm:grid-cols-2">
+              {/* NAME */}
+              <div>
+                <p className="mb-2 text-[10px] tracking-[0.12em] text-accent font-medium">
+                  NAME
+                </p>
+
+                <p className="text-xs text-text-secondary">
+                  {currentUser.name || "—"}
+                </p>
+              </div>
+
+              {/* EMAIL */}
               <div>
                 <p className="mb-2 text-[10px] tracking-[0.12em] text-accent font-medium">
                   EMAIL
@@ -137,6 +145,7 @@ function AccountPage() {
                 </p>
               </div>
 
+              {/* PHONE */}
               <div>
                 <p className="mb-2 text-[10px] tracking-[0.12em] text-accent font-medium">
                   PHONE
@@ -147,6 +156,7 @@ function AccountPage() {
                 </p>
               </div>
 
+              {/* GENDER */}
               <div>
                 <p className="mb-2 text-[10px] tracking-[0.12em] text-accent font-medium">
                   GENDER
@@ -157,57 +167,61 @@ function AccountPage() {
                 </p>
               </div>
 
+              {/* DATE OF BIRTH */}
               <div>
                 <p className="mb-2 text-[10px] tracking-[0.12em] text-accent font-medium">
-                  USERNAME
+                  DATE OF BIRTH
                 </p>
 
-                <p className="text-xs text-text-secondary">{username}</p>
+                <p className="text-xs text-text-secondary">
+                  {currentUser.dateOfBirth || "—"}
+                </p>
+              </div>
+
+              {/* ADDRESS */}
+              <div>
+                <p className="mb-2 text-[10px] tracking-[0.12em] text-accent font-medium">
+                  ADDRESS
+                </p>
+
+                <p className="text-xs text-text-secondary">
+                  {currentUser.address || "—"}
+                </p>
+              </div>
+
+              {/* CITY */}
+              <div>
+                <p className="mb-2 text-[10px] tracking-[0.12em] text-accent font-medium">
+                  CITY
+                </p>
+
+                <p className="text-xs text-text-secondary">
+                  {currentUser.city || "—"}
+                </p>
+              </div>
+
+              {/* STATE */}
+              <div>
+                <p className="mb-2 text-[10px] tracking-[0.12em] text-accent font-medium">
+                  STATE
+                </p>
+
+                <p className="text-xs text-text-secondary">
+                  {currentUser.state || "—"}
+                </p>
+              </div>
+
+              {/* PINCODE */}
+              <div>
+                <p className="mb-2 text-[10px] tracking-[0.12em] text-accent font-medium">
+                  PINCODE
+                </p>
+
+                <p className="text-xs text-text-secondary">
+                  {currentUser.pincode || "—"}
+                </p>
               </div>
             </div>
-            <div>
-              <p className="mb-2 text-[10px] tracking-[0.12em] text-accent font-medium">
-                DATE OF BIRTH
-              </p>
-              <p className="text-xs text-text-secondary">
-                {currentUser.dateOfBirth || "—"}
-              </p>
-            </div>
-
-            <div>
-  <p className="mb-2 text-[10px] tracking-[0.12em] text-accent font-medium">
-    ADDRESS
-  </p>
-  <p className="text-xs text-text-secondary">
-    {currentUser.address || "—"}
-  </p>
-</div>
-
-<div>
-  <p className="mb-2 text-[10px] tracking-[0.12em] text-accent font-medium">
-    ADDRESS
-  </p>
-  <p className="text-xs text-text-secondary">
-    {currentUser.address || "—"}
-  </p>
-</div>
-
-<div>
-  <p className="mb-2 text-[10px] tracking-[0.12em] text-accent font-medium">
-    STATE
-  </p>
-  <p className="text-xs text-text-secondary">
-    {currentUser.state || "—"}
-  </p>
-</div>
-<div>
-  <p className="mb-2 text-[10px] tracking-[0.12em] text-accent font-medium">
-    PINCODE
-  </p>
-  <p className="text-xs text-text-secondary">
-    {currentUser.pincode || "—"}
-  </p>
-</div>
 
             {/* WISHLIST + CART LINKS */}
             <div className="mt-10 grid gap-4 border-t border-border-soft pt-10 sm:grid-cols-2">
