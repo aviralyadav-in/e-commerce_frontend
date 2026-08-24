@@ -29,13 +29,17 @@ function Footer() {
   if (!footer) return null;
 
   return (
-    <footer className="bg-dark-section px-5 py-10 text-white md:px-8 md:py-12">
-      <div className="mx-auto max-w-[1100px]">
+    // Change 1: Footer wrapper ki horizontal padding same Navbar jaisi karein (px-5 md:px-10 lg:px-14)
+    <footer className="bg-dark-section px-5 py-10 text-white md:px-10 lg:px-14 md:py-12">
+      {/* Change 2: max-width ko Navbar ke equal (max-w-[1440px]) karein */}
+      <div className="mx-auto max-w-[1440px]">
         {/* MAIN */}
         <div className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-4 lg:grid-cols-5">
           {/* BRAND */}
           <div className="col-span-2 lg:col-span-2">
-            <h2 className="font-serif text-2xl font-semibold tracking-tight">{footer.brand.name}</h2>
+            <h2 className="font-serif text-2xl font-semibold tracking-tight">
+              {footer.brand.name}
+            </h2>
 
             <p className="mt-3 max-w-[300px] text-xs leading-relaxed text-white/60">
               {footer.brand.description}

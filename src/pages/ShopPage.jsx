@@ -10,7 +10,13 @@ import {
 
 import { Link, useSearchParams } from "react-router-dom";
 
-import { getAllProducts } from "../api/api";
+import {
+  getAllProducts,
+  getProductsByCategory,
+  getFeaturedProducts,
+  getBestSellerProducts,
+  getNewArrivalProducts,
+} from "../api/api";
 
 import { useCart } from "../context/CartContext";
 import { useWishlist } from "../context/WishlistContext";
@@ -37,9 +43,7 @@ function ShopPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-
   const [selectedFilter, setSelectedFilter] = useState(null);
 
   const [openSections, setOpenSections] = useState({
@@ -79,20 +83,62 @@ function ShopPage() {
         setLoading(true);
         setError("");
 
-        const data = await getAllProducts();
+        let data;
+
+        // ===============================
+        // SHOP ALL
+        // ===============================
+
+        if (!selectedFilter) {
+          data = await getAllProducts();
+        }
+
+        // ===============================
+        // FEATURED
+        // ===============================
+        else if (selectedFilter === "featured") {
+          data = await getFeaturedProducts();
+        }
+
+        // ===============================
+        // BEST SELLERS
+        // ===============================
+        else if (selectedFilter === "best-sellers") {
+          data = await getBestSellerProducts();
+        }
+
+        // ===============================
+        // NEW ARRIVALS
+        // ===============================
+        else if (selectedFilter === "new-arrivals") {
+          data = await getNewArrivalProducts();
+        }
+
+        // ===============================
+        // CATEGORY
+        // ===============================
+        else {
+          data = await getProductsByCategory(selectedFilter);
+        }
 
         setProducts(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error("Failed to load products:", err);
-
         setError("Unable to load products. Please try again.");
+        setProducts([]);
       } finally {
         setLoading(false);
       }
     }
 
     loadProducts();
-  }, []);
+  }, [selectedFilter]);
+
+  // ===============================
+  // DISPLAYED PRODUCTS
+  // ===============================
+
+  const filteredProducts = products;
 
   // ===============================
   // TOGGLE DESKTOP FILTER SECTION
@@ -178,35 +224,6 @@ function ShopPage() {
       value: "new-arrivals",
     },
   ];
-
-  // ===============================
-  // FILTER PRODUCTS
-  // ===============================
-
-  const filteredProducts = (() => {
-    if (!selectedFilter) return products;
-
-    if (selectedFilter === "featured") {
-      return products.filter((product) => product.isFeatured);
-    }
-
-    if (selectedFilter === "best-sellers") {
-      return [...products]
-        .sort((a, b) => Number(b.orderCount || 0) - Number(a.orderCount || 0))
-        .slice(0, 8);
-    }
-
-    if (selectedFilter === "new-arrivals") {
-      return [...products]
-        .sort(
-          (a, b) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-        )
-        .slice(0, 8);
-    }
-
-    return products.filter((product) => product.subcategory === selectedFilter);
-  })();
 
   // ===============================
   // FILTER SECTION COMPONENT
@@ -444,8 +461,26 @@ function ShopPage() {
                       const productId = product?._id || product?.id;
 
                       const isWishlisted = isInWishlist(productId);
-
                       const isAddedToCart = isInCart(productId);
+
+                      /*
+                       * Current product data structure:
+                       *
+                       * variants: [
+                       *   {
+                       *     name: "Black",
+                       *     images: [...]
+                       *   }
+                       * ]
+                       *
+                       * Product API supplies the product object.
+                       * ShopPage only reads the data it receives.
+                       */
+
+                      const productImage =
+                        product?.variants?.[0]?.images?.[0] || "";
+
+                      const productTitle = product?.title || "";
 
                       return (
                         <Link
@@ -457,15 +492,8 @@ function ShopPage() {
 
                           <div className="relative aspect-[4/5] overflow-hidden bg-[var(--color-bg-tertiary)]">
                             <img
-                              src={
-                                product.images?.desktop?.[0]
-                                  ? `${import.meta.env.VITE_API_BASE_URL.replace(
-                                      "/api",
-                                      "",
-                                    )}${product.images.desktop[0]}`
-                                  : ""
-                              }
-                              alt={product.name}
+                              src={productImage}
+                              alt={productTitle}
                               loading="lazy"
                               className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
                             />
@@ -476,13 +504,12 @@ function ShopPage() {
                               type="button"
                               aria-label={
                                 isWishlisted
-                                  ? `Remove ${product.name} from wishlist`
-                                  : `Add ${product.name} to wishlist`
+                                  ? `Remove ${productTitle} from wishlist`
+                                  : `Add ${productTitle} to wishlist`
                               }
                               onClick={(event) => {
                                 event.preventDefault();
                                 event.stopPropagation();
-
                                 toggleWishlist(product);
                               }}
                               className={`absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-bg-secondary)]/90 transition ${
@@ -505,7 +532,6 @@ function ShopPage() {
                               onClick={(event) => {
                                 event.preventDefault();
                                 event.stopPropagation();
-
                                 toggleCart(product, 1);
                               }}
                               className={`absolute bottom-3 left-3 right-3 flex h-9 items-center justify-center gap-2 text-[9px] font-semibold tracking-[0.12em] transition ${
@@ -528,7 +554,7 @@ function ShopPage() {
                             </p>
 
                             <h2 className="line-clamp-1 text-xs font-medium text-[var(--color-text-primary)]">
-                              {product.name}
+                              {productTitle}
                             </h2>
 
                             <p className="mt-1 text-[11px] text-[var(--color-text-muted)]">
