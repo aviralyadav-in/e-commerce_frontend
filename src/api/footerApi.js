@@ -1,11 +1,17 @@
-import { contentApi } from "./axiosClient";
+import { footerData, footerPagesData } from "../data/footerData";
+
+// ============================================
+// FOOTER
+// ============================================
 
 export async function getFooter() {
-  const response = await contentApi.get("/footer");
-  return response.data;
+  return footerData;
 }
 
+// ============================================
+// FOOTER PAGES
+// ============================================
+
 export async function getFooterPage(slug) {
-  const response = await contentApi.get(`/footer-pages/${slug}`);
-  return response.data;
+  return footerPagesData[slug] || null;
 }

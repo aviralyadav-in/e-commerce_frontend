@@ -39,7 +39,7 @@ export function getReviews() {
 //-------------------
 //sahi h
 
-export async function getCraftsmanship() {
+export function getCraftsmanship() {
   return craftsmanshipData;
 }
 //--------------------------------------------------

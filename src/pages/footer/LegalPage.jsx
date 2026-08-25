@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { getFooterPage } from "../../api/footerApi";
 
 function LegalPage() {
+  const location = useLocation();
   const [data, setData] = useState(null);
+
+  // Current URL se correct footer page slug
+  const slug = location.pathname.split("/")[1];
 
   useEffect(() => {
     const loadPage = async () => {
       try {
-        const result = await getFooterPage("legal");
+        setData(null);
+
+        const result = await getFooterPage(slug);
 
         if (result) {
           setData(result);
@@ -17,9 +24,12 @@ function LegalPage() {
       }
     };
 
-    loadPage();
-  }, []);
+    if (slug) {
+      loadPage();
+    }
+  }, [slug]);
 
+  // Scroll to hash section
   useEffect(() => {
     if (!data) return;
 
@@ -39,7 +49,7 @@ function LegalPage() {
     return (
       <main className="min-h-screen bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]">
         <div className="mx-auto max-w-6xl px-5 py-10 sm:px-6 lg:px-8">
-          Loading...
+          <p className="text-sm text-[var(--color-text-muted)]">Loading...</p>
         </div>
       </main>
     );
@@ -54,13 +64,15 @@ function LegalPage() {
             {data.eyebrow}
           </p>
 
-          <h1 className="mt-2 font-serif text-4xl leading-tight sm:text-5xl lg:text-6xl text-[var(--color-text-primary)]">
+          <h1 className="mt-2 font-serif text-4xl leading-tight text-[var(--color-text-primary)] sm:text-5xl lg:text-6xl">
             {data.title}
           </h1>
 
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--color-text-secondary)] sm:text-base">
-            {data.intro}
-          </p>
+          {data.intro && (
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-[var(--color-text-secondary)] sm:text-base">
+              {data.intro}
+            </p>
+          )}
         </div>
       </section>
 
@@ -70,17 +82,17 @@ function LegalPage() {
           <div className="space-y-7">
             {data.sections?.map((section, index) => (
               <article
-                key={section.id}
+                key={section.id || section.title || index}
                 id={section.id}
                 className="scroll-mt-24 border-b border-[var(--color-border)] pb-7 last:border-b-0 last:pb-0"
               >
                 <div className="flex items-start gap-4">
                   <span className="pt-1 text-xs tracking-widest text-[var(--color-text-muted)]">
-                    0{index + 1}
+                    {String(index + 1).padStart(2, "0")}
                   </span>
 
                   <div className="flex-1">
-                    <h2 className="font-serif text-2xl sm:text-3xl text-[var(--color-text-primary)]">
+                    <h2 className="font-serif text-2xl text-[var(--color-text-primary)] sm:text-3xl">
                       {section.title}
                     </h2>
 
