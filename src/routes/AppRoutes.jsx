@@ -19,6 +19,7 @@ import EditProfile from "../pages/account/EditProfile";
 
 
 // FOOTER PAGES
+
 import AboutPage from "../pages/footer/AboutPage";
 import OurStoryPage from "../pages/footer/OurStoryPage";
 import ContactPage from "../pages/footer/ContactPage";

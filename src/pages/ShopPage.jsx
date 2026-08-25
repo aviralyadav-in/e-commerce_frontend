@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-
+import PromoBanner from "../components/home/PromoBanner";
 import {
+  FiFilter,
   FiSliders,
   FiX,
   FiChevronDown,
+  FiCheck,
 } from "react-icons/fi";
 
 import { useSearchParams } from "react-router-dom";
@@ -31,6 +33,18 @@ function ShopPage() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState(null);
 
+  // PRICE SORT
+  const [priceSort, setPriceSort] = useState("");
+
+  // CUSTOMER RATING FILTER
+  const [ratingFilter, setRatingFilter] = useState("");
+
+  // CUSTOMER REVIEW SORT
+  const [reviewSort, setReviewSort] = useState("");
+
+  // FUNNEL DROPDOWN
+  const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
+
   const [openSections, setOpenSections] = useState({
     women: true,
     men: false,
@@ -49,8 +63,7 @@ function ShopPage() {
 
   useEffect(() => {
     const filterFromUrl =
-      searchParams.get("subcategory") ||
-      searchParams.get("filter");
+      searchParams.get("subcategory") || searchParams.get("filter");
 
     if (filterFromUrl) {
       setSelectedFilter(filterFromUrl);
@@ -82,7 +95,6 @@ function ShopPage() {
         // ===============================
         // FEATURED
         // ===============================
-
         else if (selectedFilter === "featured") {
           data = await getFeaturedProducts();
         }
@@ -90,7 +102,6 @@ function ShopPage() {
         // ===============================
         // BEST SELLERS
         // ===============================
-
         else if (selectedFilter === "best-sellers") {
           data = await getBestSellerProducts();
         }
@@ -98,7 +109,6 @@ function ShopPage() {
         // ===============================
         // NEW ARRIVALS
         // ===============================
-
         else if (selectedFilter === "new-arrivals") {
           data = await getNewArrivalProducts();
         }
@@ -106,7 +116,6 @@ function ShopPage() {
         // ===============================
         // CATEGORY
         // ===============================
-
         else {
           data = await getProductsByCategory(selectedFilter);
         }
@@ -128,7 +137,36 @@ function ShopPage() {
   // DISPLAYED PRODUCTS
   // ===============================
 
-  const filteredProducts = products;
+  const filteredProducts = products.filter((product) => {
+    if (!ratingFilter) {
+      return true;
+    }
+
+    return Number(product.rating) >= Number(ratingFilter);
+  });
+
+  // ===============================
+  // SORT PRODUCTS
+  // ===============================
+
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    // PRICE LOW TO HIGH
+    if (priceSort === "low-to-high") {
+      return Number(a.price) - Number(b.price);
+    }
+
+    // PRICE HIGH TO LOW
+    if (priceSort === "high-to-low") {
+      return Number(b.price) - Number(a.price);
+    }
+
+    // AVERAGE CUSTOMER RATING HIGH TO LOW
+    if (reviewSort === "high-to-low") {
+      return Number(b.rating) - Number(a.rating);
+    }
+
+    return 0;
+  });
 
   // ===============================
   // TOGGLE DESKTOP FILTER SECTION
@@ -153,12 +191,11 @@ function ShopPage() {
   };
 
   // ===============================
-  // HANDLE FILTER CHANGE
+  // HANDLE CATEGORY FILTER CHANGE
   // ===============================
 
   const handleFilterChange = (filterValue) => {
-    const newFilter =
-      selectedFilter === filterValue ? null : filterValue;
+    const newFilter = selectedFilter === filterValue ? null : filterValue;
 
     setSelectedFilter(newFilter);
 
@@ -170,6 +207,55 @@ function ShopPage() {
       setSearchParams({});
     }
   };
+
+  // ===============================
+  // PRICE OPTIONS
+  // ===============================
+
+  const priceOptions = [
+    {
+      label: "Price: Low to High",
+      value: "low-to-high",
+    },
+    {
+      label: "Price: High to Low",
+      value: "high-to-low",
+    },
+  ];
+
+  // ===============================
+  // CUSTOMER RATING SORT
+  // ===============================
+
+  const reviewSortOptions = [
+    {
+      label: "Average Customer Rating: High to Low",
+      value: "high-to-low",
+    },
+  ];
+
+  // ===============================
+  // CUSTOMER REVIEW FILTER
+  // ===============================
+
+  const ratingOptions = [
+    {
+      label: "4★ & Above",
+      value: "4",
+    },
+    {
+      label: "3★ & Above",
+      value: "3",
+    },
+    {
+      label: "2★ & Above",
+      value: "2",
+    },
+    {
+      label: "1★ & Above",
+      value: "1",
+    },
+  ];
 
   // ===============================
   // FILTER DATA
@@ -220,15 +306,8 @@ function ShopPage() {
   // FILTER SECTION COMPONENT
   // ===============================
 
-  const FilterSection = ({
-    title,
-    section,
-    items,
-    mobile = false,
-  }) => {
-    const isOpen = mobile
-      ? mobileOpenSections[section]
-      : openSections[section];
+  const FilterSection = ({ title, section, items, mobile = false }) => {
+    const isOpen = mobile ? mobileOpenSections[section] : openSections[section];
 
     const handleToggle = mobile
       ? () => toggleMobileSection(section)
@@ -256,9 +335,7 @@ function ShopPage() {
 
         <div
           className={`grid transition-all duration-300 ease-in-out ${
-            isOpen
-              ? "grid-rows-[1fr] opacity-100"
-              : "grid-rows-[0fr] opacity-0"
+            isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
           }`}
         >
           <div className="overflow-hidden">
@@ -271,9 +348,7 @@ function ShopPage() {
                   <input
                     type="checkbox"
                     checked={selectedFilter === item.value}
-                    onChange={() =>
-                      handleFilterChange(item.value)
-                    }
+                    onChange={() => handleFilterChange(item.value)}
                     className="h-3.5 w-3.5 accent-[var(--color-accent)]"
                   />
 
@@ -308,12 +383,21 @@ function ShopPage() {
   };
 
   // ===============================
+  // CLEAR SORT / REVIEW FILTERS
+  // ===============================
+
+  const clearSortFilters = () => {
+    setPriceSort("");
+    setRatingFilter("");
+    setReviewSort("");
+  };
+
+  // ===============================
   // RENDER
   // ===============================
 
   return (
-    <main className="min-h-screen bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]">
-      {/* ================= PAGE HEADER ================= */}
+<main className="min-h-dvh w-full text-[13px] bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]">      {/* ================= PAGE HEADER ================= */}
 
       <section className="border-b border-[var(--color-border)]">
         <div className="mx-auto max-w-[1440px] px-5 py-4 md:px-10 md:py-8">
@@ -329,24 +413,21 @@ function ShopPage() {
             </div>
 
             <p className="max-w-[420px] text-[10px] leading-5 text-[var(--color-text-muted)] md:text-right">
-              Discover the complete Niya Bags collection,
-              thoughtfully designed for every moment.
+              Discover the complete Niya Bags collection, thoughtfully designed
+              for every moment.
             </p>
           </div>
         </div>
       </section>
-
+      <PromoBanner page="shop" position="after-hero" />
       {/* ================= SHOP CONTENT ================= */}
 
       <section className="mx-auto max-w-[1440px] px-5 py-5 md:px-10 md:py-8">
-
         {/* ================= MOBILE TOOLBAR ================= */}
 
         <div className="mb-5 flex items-center justify-between md:hidden">
           <p className="text-[9px] tracking-[0.15em] text-[var(--color-text-muted)]">
-            {loading
-              ? "LOADING..."
-              : `${filteredProducts.length} PRODUCTS`}
+            {loading ? "LOADING..." : `${sortedProducts.length} PRODUCTS`}
           </p>
 
           <button
@@ -360,7 +441,6 @@ function ShopPage() {
         </div>
 
         {/* ================= MOBILE FILTER PANEL ================= */}
-
         {mobileFiltersOpen && (
           <div className="fixed inset-0 z-[100] md:hidden">
             <button
@@ -407,15 +487,15 @@ function ShopPage() {
                   items={collections}
                   mobile
                 />
+
+                <PriceRange />
               </div>
             </aside>
           </div>
         )}
-
         {/* ================= MAIN SHOP LAYOUT ================= */}
 
         <div className="grid grid-cols-1 gap-7 md:grid-cols-[190px_1fr] lg:grid-cols-[210px_1fr]">
-
           {/* ================= DESKTOP SIDEBAR ================= */}
 
           <aside className="hidden md:block">
@@ -432,11 +512,7 @@ function ShopPage() {
                 items={womenCategories}
               />
 
-              <FilterSection
-                title="MEN"
-                section="men"
-                items={menCategories}
-              />
+              <FilterSection title="MEN" section="men" items={menCategories} />
 
               <FilterSection
                 title="COLLECTION"
@@ -449,15 +525,175 @@ function ShopPage() {
           {/* ================= PRODUCTS ================= */}
 
           <div className="min-w-0">
-
-            {/* PRODUCT COUNT */}
+            {/* ================= PRODUCT TOOLBAR ================= */}
 
             <div className="mb-4 hidden items-center justify-between md:flex">
               <p className="text-[9px] tracking-[0.15em] text-[var(--color-text-muted)]">
-                {loading
-                  ? "LOADING..."
-                  : `${filteredProducts.length} PRODUCTS`}
+                {loading ? "LOADING..." : `${sortedProducts.length} PRODUCTS`}
               </p>
+
+              {/* ================= FUNNEL DROPDOWN ================= */}
+
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setFilterDropdownOpen((prev) => !prev)}
+                  className={`flex items-center gap-2 text-[9px] font-medium tracking-[0.16em] transition ${
+                    priceSort || ratingFilter || reviewSort
+                      ? "text-[var(--color-accent)]"
+                      : "text-[var(--color-text-primary)]"
+                  }`}
+                >
+                  <FiFilter size={14} strokeWidth={1.5} />
+
+                  <span>FILTER</span>
+
+                  <FiChevronDown
+                    size={12}
+                    strokeWidth={1.4}
+                    className={`transition-transform ${
+                      filterDropdownOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+
+                {/* ================= DROPDOWN ================= */}
+
+                {filterDropdownOpen && (
+                  <div className="absolute right-0 top-8 z-50 w-[280px] border border-[var(--color-border)] bg-[var(--color-bg-primary)] p-5 shadow-lg">
+                    {/* ================= SORT BY ================= */}
+
+                    <div>
+                      <p className="mb-4 text-[9px] font-semibold tracking-[0.18em] text-[var(--color-text-primary)]">
+                        SORT BY
+                      </p>
+
+                      <div className="space-y-3">
+                        {/* PRICE OPTIONS */}
+
+                        {priceOptions.map((option) => (
+                          <button
+                            key={option.value}
+                            type="button"
+                            onClick={() => {
+                              setPriceSort(
+                                priceSort === option.value ? "" : option.value,
+                              );
+
+                              setReviewSort("");
+                            }}
+                            className={`flex w-full items-center justify-between gap-3 text-left text-[11px] transition ${
+                              priceSort === option.value
+                                ? "text-[var(--color-accent)]"
+                                : "text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+                            }`}
+                          >
+                            <span className="whitespace-nowrap">
+                              {option.label}
+                            </span>
+
+                            {priceSort === option.value && (
+                              <FiCheck
+                                size={13}
+                                strokeWidth={1.5}
+                                className="shrink-0"
+                              />
+                            )}
+                          </button>
+                        ))}
+
+                        {/* AVERAGE CUSTOMER RATING */}
+
+                        {reviewSortOptions.map((option) => (
+                          <button
+                            key={option.value}
+                            type="button"
+                            onClick={() => {
+                              setReviewSort(
+                                reviewSort === option.value ? "" : option.value,
+                              );
+
+                              setPriceSort("");
+                            }}
+                            className={`flex w-full items-center justify-between gap-3 text-left text-[11px] transition ${
+                              reviewSort === option.value
+                                ? "text-[var(--color-accent)]"
+                                : "text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+                            }`}
+                          >
+                            <span className="whitespace-nowrap">
+                              {option.label}
+                            </span>
+
+                            {reviewSort === option.value && (
+                              <FiCheck
+                                size={13}
+                                strokeWidth={1.5}
+                                className="shrink-0"
+                              />
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* ================= DIVIDER ================= */}
+
+                    <div className="my-5 border-t border-[var(--color-border)]" />
+
+                    {/* ================= CUSTOMER REVIEWS ================= */}
+
+                    <div>
+                      <p className="mb-4 text-[9px] font-semibold tracking-[0.18em] text-[var(--color-text-primary)]">
+                        CUSTOMER REVIEWS
+                      </p>
+
+                      <div className="space-y-3">
+                        {ratingOptions.map((option) => (
+                          <button
+                            key={option.value}
+                            type="button"
+                            onClick={() =>
+                              setRatingFilter(
+                                ratingFilter === option.value
+                                  ? ""
+                                  : option.value,
+                              )
+                            }
+                            className={`flex w-full items-center justify-between text-left text-[11px] transition ${
+                              ratingFilter === option.value
+                                ? "text-[var(--color-accent)]"
+                                : "text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
+                            }`}
+                          >
+                            <span>{option.label}</span>
+
+                            {ratingFilter === option.value && (
+                              <FiCheck size={13} strokeWidth={1.5} />
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* ================= CLEAR ================= */}
+
+                    {(priceSort || ratingFilter || reviewSort) && (
+                      <>
+                        <div className="my-5 border-t border-[var(--color-border)]" />
+
+                        <button
+                          type="button"
+                          onClick={clearSortFilters}
+                          className="w-full text-left text-[9px] font-semibold tracking-[0.16em] text-[var(--color-accent)] transition hover:opacity-70"
+                        >
+                          CLEAR FILTERS
+                        </button>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* ================= LOADING ================= */}
@@ -480,9 +716,7 @@ function ShopPage() {
 
             {error && (
               <div className="py-16 text-center">
-                <p className="text-sm text-red-500">
-                  {error}
-                </p>
+                <p className="text-sm text-red-500">{error}</p>
               </div>
             )}
 
@@ -490,7 +724,7 @@ function ShopPage() {
 
             {!loading && !error && (
               <>
-                {filteredProducts.length === 0 ? (
+                {sortedProducts.length === 0 ? (
                   <div className="py-16 text-center">
                     <p className="text-sm text-[var(--color-text-muted)]">
                       No products found.
@@ -498,7 +732,7 @@ function ShopPage() {
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 gap-x-4 gap-y-9 md:grid-cols-3 lg:grid-cols-4">
-                    {filteredProducts.map((product) => (
+                    {sortedProducts.map((product) => (
                       <ProductCard
                         key={product.id || product._id}
                         product={product}

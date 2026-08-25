@@ -1,8 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowLeft, FiCamera } from "react-icons/fi";
+import { getProfile, updateProfile } from "../../api/authApi";
 
 function EditProfile() {
+  const { updateUserProfile } = useAuth();
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -16,6 +18,42 @@ function EditProfile() {
     avatar: "",
   });
 
+  // ============================================
+  // LOAD CURRENT USER PROFILE
+  // ============================================
+
+  useEffect(() => {
+    async function loadProfile() {
+      try {
+        const response = await getProfile();
+        const user = response?.user;
+
+        if (!user) return;
+
+        setFormData({
+          fullName: user.name || "",
+          email: user.email || "",
+          phone: user.phone || "",
+          gender: user.gender || "",
+          dateOfBirth: user.dateOfBirth || "",
+          address: user.address || "",
+          city: user.city || "",
+          state: user.state || "",
+          pincode: user.pincode || "",
+          avatar: user.avatar || "",
+        });
+      } catch (error) {
+        console.error("Failed to load profile:", error);
+      }
+    }
+
+    loadProfile();
+  }, []);
+
+  // ============================================
+  // HANDLE INPUT CHANGE
+  // ============================================
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -25,12 +63,34 @@ function EditProfile() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  // ============================================
+  // SUBMIT
+  // ============================================
+  // Backend PUT /profile yahan baad mein connect karenge
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    console.log("Profile data:", formData);
+    try {
+      const response = await updateUserProfile({
+        name: formData.fullName,
+        phone: formData.phone,
+        gender: formData.gender,
+        dateOfBirth: formData.dateOfBirth,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
+        pincode: formData.pincode,
+        avatar: formData.avatar,
+      });
 
-    // Backend PUT /profile yahan baad mein connect karenge
+      console.log("PROFILE UPDATED:", response);
+
+      alert("Profile updated successfully.");
+    } catch (error) {
+      console.error("Failed to update profile:", error);
+      alert(error.message || "Failed to update profile.");
+    }
   };
 
   return (

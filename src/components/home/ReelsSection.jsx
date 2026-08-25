@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { getReels } from "../../api/api";
+
+import { getReels } from "../../api/homeApi";
 
 function ReelsSection() {
   const [reels, setReels] = useState([]);
@@ -84,16 +85,11 @@ function ReelsSection() {
     );
   }
 
-  /*
-    Duplicate the reels so the animation can loop seamlessly.
-    The second set follows immediately after the first set.
-  */
   const scrollingReels = [...reels, ...reels];
 
   return (
     <section className="overflow-hidden bg-[var(--color-bg-primary)] px-5 py-14 md:px-10 md:py-20">
       <div className="mx-auto max-w-[1440px]">
-        {/* HEADER */}
         <div className="mb-7 text-center md:mb-9">
           <p className="mb-2 text-[9px] font-semibold tracking-[0.22em] text-[var(--color-accent)]">
             FOLLOW THE STORY
@@ -108,7 +104,6 @@ function ReelsSection() {
           </p>
         </div>
 
-        {/* AUTO-SCROLL REELS */}
         <div className="relative overflow-hidden">
           <div className="reels-marquee flex w-max gap-3 hover:[animation-play-state:paused]">
             {scrollingReels.map((reel, index) => (
@@ -144,7 +139,6 @@ function ReelsSection() {
         </p>
       </div>
 
-      {/* MODAL */}
       {selectedReel && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-[#021f29]/80 px-5 backdrop-blur-sm"
@@ -184,7 +178,6 @@ function ReelsSection() {
         </div>
       )}
 
-      {/* MARQUEE ANIMATION */}
       <style>{`
         .reels-marquee {
           animation: niyaReelsScroll 35s linear infinite;

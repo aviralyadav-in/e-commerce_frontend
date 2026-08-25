@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getFooterPage } from "../../api/api";
+import { getFooterPage } from "../../api/footerApi";
 
 function LegalPage() {
   const [data, setData] = useState(null);

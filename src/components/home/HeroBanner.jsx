@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { getHeroBanners } from "../../api/api";
-
+import { getHeroBanners } from "../../api/homeApi";
+import PromoBanner from "./PromoBanner";
 import { Link } from "react-router-dom";
 
 function HeroBanner() {
@@ -138,9 +138,7 @@ function HeroBanner() {
                 type="button"
                 onClick={() => setCurrent(index)}
                 className={`h-1.5 rounded-full transition-all ${
-                  index === current
-                    ? "w-8 bg-accent-bright"
-                    : "w-2 bg-white/50"
+                  index === current ? "w-8 bg-accent-bright" : "w-2 bg-white/50"
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
                 aria-current={index === current ? "true" : undefined}
@@ -149,23 +147,7 @@ function HeroBanner() {
           </div>
         )}
       </section>
-
-      {/* ===============================
-          POSTER (FULL-WIDTH EDGE-TO-EDGE, HALF-HEIGHT BANNER)
-    {/* POSTER */}
-{/* POSTER */}
-{/* POSTER */}
-<section className="w-full bg-bg-primary py-6">
-  <div className="w-full px-6 md:px-14">
-    <div className="w-full overflow-hidden">
-      <img
-        src="/products/bags/image.png"
-        alt="Niya Collection Promo Banner"
-        className="h-[130px] w-full object-cover sm:h-[150px] md:h-[170px] lg:h-[190px]"
-      />
-    </div>
-  </div>
-</section>
+      <PromoBanner page="home" position="after-hero" />
     </>
   );
 }

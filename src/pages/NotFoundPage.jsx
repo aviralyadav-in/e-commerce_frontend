@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowLeft, FiHome, FiShoppingBag } from "react-icons/fi";
-import { getNotFoundBags } from "../api/api";
+import { getNotFoundBags } from "../api/notFoundApi";
 
 const bagAnimations = [
   "bag-fly-one",

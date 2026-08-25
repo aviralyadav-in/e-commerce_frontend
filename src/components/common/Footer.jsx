@@ -9,7 +9,7 @@ import {
 
 import { Link } from "react-router-dom";
 
-import { getFooter } from "../../api/api";
+import { getFooter } from "../../api/footerApi";
 
 const iconMap = {
   Instagram: FiInstagram,

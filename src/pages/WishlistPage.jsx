@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import PromoBanner from "../components/home/PromoBanner";
+
 import {
   FiArrowRight,
   FiHeart,
@@ -18,15 +20,9 @@ function WishlistPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const {
-    toggleCart,
-    isInCart,
-  } = useCart();
+  const { toggleCart, isInCart } = useCart();
 
-  const {
-    wishlistItems,
-    removeFromWishlist,
-  } = useWishlist();
+  const { wishlistItems, removeFromWishlist } = useWishlist();
 
   // ============================================================
   // FETCH PRODUCTS FROM PRODUCT API
@@ -47,10 +43,7 @@ function WishlistPage() {
 
         setProducts(Array.isArray(data) ? data : []);
       } catch (error) {
-        console.error(
-          "WISHLIST PRODUCT FETCH ERROR:",
-          error,
-        );
+        console.error("WISHLIST PRODUCT FETCH ERROR:", error);
 
         if (mounted) {
           setProducts([]);
@@ -77,8 +70,7 @@ function WishlistPage() {
     const productId = product?._id || product?.id;
 
     return wishlistItems.some(
-      (wishlistId) =>
-        String(wishlistId) === String(productId),
+      (wishlistId) => String(wishlistId) === String(productId),
     );
   });
 
@@ -140,7 +132,6 @@ function WishlistPage() {
     return (
       <main className="min-h-[70vh] bg-bg-primary px-5 py-6 text-text-primary md:px-10 md:py-10">
         <div className="mx-auto max-w-[1100px]">
-
           <div className="mb-12 text-center">
             <p className="mb-3 text-[10px] tracking-[0.25em] text-accent">
               SAVED FOR YOU
@@ -156,7 +147,6 @@ function WishlistPage() {
           </div>
 
           <div className="mx-auto flex max-w-[600px] flex-col items-center border border-border-soft bg-bg-secondary px-6 py-16 text-center">
-
             <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-accent-soft text-accent">
               <FiHeart size={25} strokeWidth={1.2} />
             </div>
@@ -226,17 +216,7 @@ function WishlistPage() {
         ) : (
           <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
             {wishlistProducts.map((product) => {
-              const productId =
-                product?._id || product?.id;
-
-              /*
-               * IMPORTANT:
-               * Your current product structure has images inside:
-               *
-               * variants[0].images[0]
-               *
-               * So this fallback handles that.
-               */
+              const productId = product?._id || product?.id;
 
               const productImage =
                 product?.thumbnail ||
@@ -256,15 +236,13 @@ function WishlistPage() {
                 product?.price ||
                 0;
 
-              const alreadyInCart =
-                isInCart(productId);
+              const alreadyInCart = isInCart(productId);
 
               return (
                 <article
                   key={productId}
                   className="group overflow-hidden border border-border-soft bg-bg-secondary"
                 >
-
                   {/* IMAGE */}
 
                   <Link
@@ -307,7 +285,6 @@ function WishlistPage() {
                   {/* DETAILS */}
 
                   <div className="p-4">
-
                     <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-accent">
                       {product?.subcategory ||
                         product?.category?.name ||
@@ -315,9 +292,7 @@ function WishlistPage() {
                         "Handbags"}
                     </p>
 
-                    <Link
-                      to={`/product/${productId}`}
-                    >
+                    <Link to={`/product/${productId}`}>
                       <h3 className="mt-1 truncate font-serif text-base text-text-primary transition hover:text-accent">
                         {productTitle}
                       </h3>
@@ -374,6 +349,16 @@ function WishlistPage() {
             })}
           </div>
         )}
+
+        {/* ========================================================
+            PROMO BANNER - BELOW WISHLIST PRODUCTS
+        ======================================================== */}
+
+        <PromoBanner
+          page="wishlist"
+          position="after-products"
+        />
+
       </div>
     </main>
   );

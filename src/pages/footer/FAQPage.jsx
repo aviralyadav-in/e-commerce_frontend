@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FiPlus } from "react-icons/fi";
-import { getFooterPage } from "../../api/api";
+import { getFooterPage } from "../../api/footerApi";
 
 function FAQPage() {
   const [data, setData] = useState(null);

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAnnouncements } from "../../api/api";
+import { getAnnouncements } from "../../api/homeApi";
 
 function AnnouncementBar() {
   const [announcements, setAnnouncements] = useState([]);
@@ -41,7 +41,7 @@ function AnnouncementBar() {
             <span className="text-accent-bright">✦</span>
             {item.text}
           </span>
-        ))}
+        ))} 
       </div>
     </div>
   );

@@ -1,0 +1,151 @@
+export const craftsmanshipData = {
+  eyebrow: "OUR PROMISE",
+  title: "The Art of\nCraftsmanship",
+  description: [
+    "Every Niya bag begins as a sketch and ends in the hands of a master artisan.",
+    "We believe luxury is not just about materials. It is about the human touch, patience, precision, and stories woven into every stitch.",
+  ],
+  stats: [
+    {
+      value: "25+",
+      label: "Pieces of craft",
+    },
+    {
+      value: "40+",
+      label: "Handcrafted steps",
+    },
+    {
+      value: "100%",
+      label: "Intentional design",
+    },
+  ],
+  image:
+    "https://images.unsplash.com/photo-1612902456551-333ac5afa26e?auto=format&fit=crop&w=1200&q=85",
+  imageAlt: "Niya craftsmanship",
+  buttonText: "Discover Our Story",
+  buttonLink: "/craftsmanship",
+};
+export const reviewsData = [
+  {
+    name: "Ananya M.",
+    location: "Mumbai",
+    text: "The craftsmanship is even more beautiful in person. It feels luxurious without being overdone.",
+  },
+  {
+    name: "Priya R.",
+    location: "Delhi",
+    text: "My Niya bag has become my everyday favourite. The quality, details and packaging were exceptional.",
+  },
+  {
+    name: "Meera S.",
+    location: "Bengaluru",
+    text: "Elegant, practical and beautifully made. I have already recommended Niya to my friends.",
+  },
+];
+
+
+export const campaignData = {
+  eyebrow: "OUR ENTIRE WORLD IN A SINGLE COLLECTION",
+  title: "Made for\nYour Moment",
+  description:
+    "A celebration of modern elegance, effortless movement, and the quiet confidence that comes with carrying something beautifully made.",
+  image:
+    "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=1200&q=85",
+  buttonText: "Explore every piece possible",
+  buttonLink: "/shop",
+};
+
+export const heroBannersData = [
+  {
+    id: "hero-1",
+    image:
+      "/products/bags/handbags/WhatsApp%20Image%202026-08-17%20at%205.37.34%20PM%20%281%29.jpeg",
+    title: "Carry Your\nStory",
+    subtitle:
+      "Discover timeless handbags crafted for the modern woman.",
+    buttonText: "Shop Collection",
+    buttonLink: "/shop",
+  },
+
+  {
+    id: "hero-2",
+    image:
+      "/products/bags/handbags/WhatsApp%20Image%202026-08-17%20at%205.37.34%20PM.jpeg",
+    title: "Made for\nYour Moment",
+    subtitle:
+      "Elegant silhouettes designed to move with you.",
+    buttonText: "Explore Collection",
+    buttonLink: "/shop",
+  },
+];
+
+
+export const reelsData = [
+  {
+    id: 1,
+    image:
+      "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=700&q=85",
+    title: "Everyday elegance",
+  },
+  {
+    id: 2,
+    image:
+      "https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=700&q=85",
+    title: "Style it your way",
+  },
+  {
+    id: 3,
+    image:
+      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=85",
+    title: "Behind the craft",
+  },
+  {
+    id: 4,
+    image:
+      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=700&q=85",
+    title: "The Niya edit",
+  },
+];
+export const announcementsData = [
+  {
+    id: 1,
+    text: "Complimentary shipping on all orders",
+  },
+  {
+    id: 2,
+    text: "Discover the new Niya collection",
+  },
+  {
+    id: 3,
+    text: "Crafted with intention, made for you",
+  },
+];
+export const promoBannersData = [
+  {
+    id: "promo-home-001",
+    page: "home",
+    position: "after-hero",
+    image: "/products/bags/image.png",
+    title: "Niya Collection",
+    alt: "Niya Collection Promo Banner",
+    isActive: true,
+  },
+  {
+    id: "promo-shop-001",
+    page: "shop",
+    position: "after-hero",
+    image: "/products/bags/image.png",
+    title: "Niya Collection",
+    alt: "Niya Collection Promo Banner",
+    isActive: true,
+  },
+  {
+    id: "promo-wishlist-001",
+    page: "wishlist",
+    position: "after-products",
+    image: "/products/bags/image.png",
+    title: "Niya Collection",
+    alt: "Niya Collection Promo Banner",
+    isActive: true,
+  },
+];
