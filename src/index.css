@@ -82,6 +82,13 @@
 
 html {
   scroll-behavior: smooth;
+
+  /* Hide scrollbar but keep scrolling */
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
 }
 
 html,
@@ -151,4 +158,4 @@ img {
   to {
     transform: translateX(-33.333%);
   }
-}
+}

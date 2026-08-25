@@ -1,199 +1,372 @@
 import { useEffect, useState } from "react";
-import { FiArrowRight, FiHeart, FiShoppingBag, FiTrash2 } from "react-icons/fi";
+
+import {
+  FiArrowRight,
+  FiHeart,
+  FiShoppingBag,
+  FiTrash2,
+} from "react-icons/fi";
+
 import { Link } from "react-router-dom";
+
+import { getAllProducts } from "../api/productApi";
+
 import { useCart } from "../context/CartContext";
+import { useWishlist } from "../context/WishlistContext";
 
 function WishlistPage() {
-  const [wishlistItems, setWishlistItems] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const { cartItems, addToCart, removeFromCart } = useCart();
+  const {
+    toggleCart,
+    isInCart,
+  } = useCart();
 
-  // ===============================
-  // LOAD WISHLIST
-  // ===============================
+  const {
+    wishlistItems,
+    removeFromWishlist,
+  } = useWishlist();
+
+  // ============================================================
+  // FETCH PRODUCTS FROM PRODUCT API
+  // ============================================================
+
   useEffect(() => {
-    function loadWishlist() {
+    let mounted = true;
+
+    async function loadProducts() {
       try {
-        const savedWishlist = JSON.parse(
-          localStorage.getItem("niyaWishlist") || "[]",
+        setLoading(true);
+
+        const data = await getAllProducts();
+
+        if (!mounted) {
+          return;
+        }
+
+        setProducts(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error(
+          "WISHLIST PRODUCT FETCH ERROR:",
+          error,
         );
 
-        setWishlistItems(Array.isArray(savedWishlist) ? savedWishlist : []);
-      } catch (error) {
-        console.error("Failed to load wishlist:", error);
-        setWishlistItems([]);
+        if (mounted) {
+          setProducts([]);
+        }
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
       }
     }
 
-    loadWishlist();
-
-    window.addEventListener("niyaWishlistUpdated", loadWishlist);
+    loadProducts();
 
     return () => {
-      window.removeEventListener("niyaWishlistUpdated", loadWishlist);
+      mounted = false;
     };
   }, []);
 
-  // ===============================
+  // ============================================================
+  // GET WISHLIST PRODUCTS
+  // ============================================================
+
+  const wishlistProducts = products.filter((product) => {
+    const productId = product?._id || product?.id;
+
+    return wishlistItems.some(
+      (wishlistId) =>
+        String(wishlistId) === String(productId),
+    );
+  });
+
+  // ============================================================
   // REMOVE FROM WISHLIST
-  // ===============================
-  function removeFromWishlist(productId) {
-    const updatedWishlist = wishlistItems.filter(
-      (item) => String(item.id) !== String(productId),
-    );
+  // ============================================================
 
-    setWishlistItems(updatedWishlist);
+  const handleRemoveWishlist = (event, productId) => {
+    event.preventDefault();
+    event.stopPropagation();
 
-    localStorage.setItem("niyaWishlist", JSON.stringify(updatedWishlist));
+    removeFromWishlist(productId);
+  };
 
-    window.dispatchEvent(new Event("niyaWishlistUpdated"));
-  }
+  // ============================================================
+  // CART TOGGLE
+  // ============================================================
 
-  // ===============================
-  // TOGGLE CART
-  // ===============================
-  function handleCartToggle(product) {
-    const alreadyInCart = cartItems.some(
-      (item) => String(item.id) === String(product.id),
-    );
+  const handleCartToggle = (event, product) => {
+    event.preventDefault();
+    event.stopPropagation();
 
-    if (alreadyInCart) {
-      removeFromCart(product.id);
-    } else {
-      addToCart(product, 1);
-    }
-  }
+    toggleCart(product, 1);
+  };
 
-  return (
-    <main className="min-h-[70vh] bg-[var(--color-bg-primary)] px-5 py-6 text-[var(--color-text-primary)] md:px-10 md:py-10">
-      <div className="mx-auto max-w-[1100px]">
-        {/* HEADER */}
-        <div className="mb-12 text-center">
-          <p className="mb-3 text-[10px] tracking-[0.25em] text-[var(--color-accent)]">
-            SAVED FOR YOU
-          </p>
+  // ============================================================
+  // LOADING
+  // ============================================================
 
-          <h1 className="font-serif text-[34px] font-medium text-[var(--color-text-primary)] md:text-[40px]">
-            Your Wishlist
-          </h1>
+  if (loading) {
+    return (
+      <main className="min-h-[70vh] bg-bg-primary px-5 py-10 md:px-10 md:py-12">
+        <div className="mx-auto max-w-[1100px]">
+          <div className="mb-12 text-center">
+            <p className="mb-3 text-[10px] tracking-[0.25em] text-accent">
+              SAVED FOR YOU
+            </p>
 
-          <p className="mx-auto mt-3 max-w-[420px] text-[12px] leading-6 text-[var(--color-text-secondary)]">
-            A collection of pieces you would love to carry.
-          </p>
+            <h1 className="font-serif text-[34px] font-medium text-text-primary md:text-[40px]">
+              Your Wishlist
+            </h1>
+          </div>
+
+          <div className="flex min-h-[250px] items-center justify-center">
+            <p className="text-xs text-text-secondary">
+              Loading wishlist...
+            </p>
+          </div>
         </div>
+      </main>
+    );
+  }
 
-        {/* EMPTY STATE */}
-        {wishlistItems.length === 0 ? (
-          <div className="mx-auto flex max-w-[600px] flex-col items-center border border-[var(--color-border-soft)] bg-[var(--color-bg-secondary)] px-6 py-16 text-center">
-            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--color-accent-soft)] text-[var(--color-accent)]">
+  // ============================================================
+  // EMPTY WISHLIST
+  // ============================================================
+
+  if (wishlistItems.length === 0) {
+    return (
+      <main className="min-h-[70vh] bg-bg-primary px-5 py-6 text-text-primary md:px-10 md:py-10">
+        <div className="mx-auto max-w-[1100px]">
+
+          <div className="mb-12 text-center">
+            <p className="mb-3 text-[10px] tracking-[0.25em] text-accent">
+              SAVED FOR YOU
+            </p>
+
+            <h1 className="font-serif text-[34px] font-medium text-text-primary md:text-[40px]">
+              Your Wishlist
+            </h1>
+
+            <p className="mx-auto mt-3 max-w-[420px] text-[12px] leading-6 text-text-secondary">
+              A collection of pieces you would love to carry.
+            </p>
+          </div>
+
+          <div className="mx-auto flex max-w-[600px] flex-col items-center border border-border-soft bg-bg-secondary px-6 py-16 text-center">
+
+            <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-accent-soft text-accent">
               <FiHeart size={25} strokeWidth={1.2} />
             </div>
 
-            <h2 className="font-serif text-2xl text-[var(--color-text-primary)]">
+            <h2 className="font-serif text-2xl text-text-primary">
               Nothing saved yet
             </h2>
 
-            <p className="mt-3 max-w-[360px] text-[11px] leading-6 text-[var(--color-text-secondary)]">
-              Keep the pieces you love close. Your wishlist will hold them here
-              until you are ready.
+            <p className="mt-3 max-w-[360px] text-[11px] leading-6 text-text-secondary">
+              Keep the pieces you love close. Your wishlist will
+              hold them here until you are ready.
             </p>
 
             <Link
-              to="/"
-              className="mt-8 flex h-11 items-center gap-2 bg-[var(--color-button-primary)] px-7 text-[10px] font-semibold tracking-[0.12em] text-white transition hover:bg-[var(--color-button-primary-hover)]"
+              to="/shop"
+              className="mt-8 flex h-11 items-center gap-2 bg-dark-section px-7 text-[10px] font-semibold tracking-[0.12em] text-white transition hover:opacity-90"
             >
               DISCOVER NIYA
               <FiArrowRight size={14} />
             </Link>
           </div>
+        </div>
+      </main>
+    );
+  }
+
+  // ============================================================
+  // WISHLIST
+  // ============================================================
+
+  return (
+    <main className="min-h-[70vh] bg-bg-primary px-5 py-6 text-text-primary md:px-10 md:py-10">
+      <div className="mx-auto max-w-[1100px]">
+
+        {/* HEADER */}
+
+        <div className="mb-12 text-center">
+          <p className="mb-3 text-[10px] tracking-[0.25em] text-accent">
+            SAVED FOR YOU
+          </p>
+
+          <h1 className="font-serif text-[34px] font-medium text-text-primary md:text-[40px]">
+            Your Wishlist
+          </h1>
+
+          <p className="mx-auto mt-3 max-w-[420px] text-[12px] leading-6 text-text-secondary">
+            A collection of pieces you would love to carry.
+          </p>
+        </div>
+
+        {/* PRODUCTS */}
+
+        {wishlistProducts.length === 0 ? (
+          <div className="mx-auto max-w-[600px] border border-border-soft bg-bg-secondary px-6 py-12 text-center">
+            <p className="text-xs text-text-secondary">
+              Wishlist products are no longer available.
+            </p>
+
+            <Link
+              to="/shop"
+              className="mt-6 inline-flex h-10 items-center gap-2 bg-dark-section px-6 text-[10px] font-semibold tracking-wider text-white"
+            >
+              CONTINUE SHOPPING
+              <FiArrowRight size={14} />
+            </Link>
+          </div>
         ) : (
           <div className="grid grid-cols-2 gap-x-4 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
-            {wishlistItems.map((item) => {
-              const image =
-                item.thumbnail ||
-                item.images?.[0] ||
-                item.image ||
-                item.image_link;
+            {wishlistProducts.map((product) => {
+              const productId =
+                product?._id || product?.id;
 
-              const finalPrice = item.salePrice || item.price || 0;
+              /*
+               * IMPORTANT:
+               * Your current product structure has images inside:
+               *
+               * variants[0].images[0]
+               *
+               * So this fallback handles that.
+               */
 
-              const alreadyInCart = cartItems.some(
-                (cartItem) => String(cartItem.id) === String(item.id),
-              );
+              const productImage =
+                product?.thumbnail ||
+                product?.images?.[0] ||
+                product?.variants?.[0]?.images?.[0] ||
+                product?.image ||
+                product?.image_link ||
+                "";
+
+              const productTitle =
+                product?.title ||
+                product?.name ||
+                "Product";
+
+              const finalPrice =
+                product?.salePrice ||
+                product?.price ||
+                0;
+
+              const alreadyInCart =
+                isInCart(productId);
 
               return (
                 <article
-                  key={item.id}
-                  className="group border border-[var(--color-border-soft)] bg-[var(--color-bg-secondary)]"
+                  key={productId}
+                  className="group overflow-hidden border border-border-soft bg-bg-secondary"
                 >
-                  {/* IMAGE */}
-                  <Link
-                    to={`/product/${item.id}`}
-                    className="relative block aspect-[4/5] overflow-hidden bg-[var(--color-bg-tertiary)]"
-                  >
-                    <img
-                      src={image}
-                      alt={item.title || item.name}
-                      className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
-                    />
 
-                    {/* REMOVE WISHLIST */}
+                  {/* IMAGE */}
+
+                  <Link
+                    to={`/product/${productId}`}
+                    className="relative block aspect-[4/5] overflow-hidden bg-bg-tertiary"
+                  >
+                    {productImage ? (
+                      <img
+                        src={productImage}
+                        alt={productTitle}
+                        loading="lazy"
+                        className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center text-[10px] uppercase tracking-widest text-text-muted">
+                        No Image
+                      </div>
+                    )}
+
+                    {/* REMOVE */}
+
                     <button
                       type="button"
-                      onClick={(event) => {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        removeFromWishlist(item.id);
-                      }}
-                      className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-[var(--color-bg-secondary)]/90 text-[var(--color-text-primary)] transition hover:bg-[var(--color-bg-secondary)]"
-                      aria-label="Remove from wishlist"
+                      onClick={(event) =>
+                        handleRemoveWishlist(
+                          event,
+                          productId,
+                        )
+                      }
+                      className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-bg-secondary/90 text-text-primary shadow-sm transition hover:bg-bg-secondary"
+                      aria-label={`Remove ${productTitle} from wishlist`}
                     >
-                      <FiTrash2 size={13} strokeWidth={1.3} />
+                      <FiTrash2
+                        size={13}
+                        strokeWidth={1.3}
+                      />
                     </button>
                   </Link>
 
                   {/* DETAILS */}
+
                   <div className="p-4">
-                    <p className="text-[9px] tracking-[0.12em] text-[var(--color-accent)]">
-                      {item.category?.name ||
-                        item.subcategory ||
-                        item.category ||
-                        "Bags"}
+
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-accent">
+                      {product?.subcategory ||
+                        product?.category?.name ||
+                        product?.category ||
+                        "Handbags"}
                     </p>
 
-                    <Link to={`/product/${item.id}`}>
-                      <h3 className="mt-1 font-serif text-base text-[var(--color-text-primary)] transition hover:text-[var(--color-accent)]">
-                        {item.title || item.name}
+                    <Link
+                      to={`/product/${productId}`}
+                    >
+                      <h3 className="mt-1 truncate font-serif text-base text-text-primary transition hover:text-accent">
+                        {productTitle}
                       </h3>
                     </Link>
 
+                    {/* PRICE */}
+
                     <div className="mt-2 flex items-center gap-2">
-                      <p className="text-[11px] font-medium text-[var(--color-text-secondary)]">
-                        ₹{Number(finalPrice).toLocaleString("en-IN")}
+                      <p className="text-[11px] font-medium text-text-secondary">
+                        ₹
+                        {Number(finalPrice).toLocaleString(
+                          "en-IN",
+                        )}
                       </p>
 
-                      {item.salePrice &&
-                        item.price &&
-                        item.salePrice !== item.price && (
-                          <p className="text-[10px] text-[var(--color-text-muted)] line-through">
-                            ₹{Number(item.price).toLocaleString("en-IN")}
+                      {product?.salePrice &&
+                        product?.price &&
+                        Number(product.salePrice) !==
+                          Number(product.price) && (
+                          <p className="text-[10px] text-text-muted line-through">
+                            ₹
+                            {Number(
+                              product.price,
+                            ).toLocaleString("en-IN")}
                           </p>
                         )}
                     </div>
 
-                    {/* ADD / REMOVE CART */}
+                    {/* CART */}
+
                     <button
                       type="button"
-                      onClick={() => handleCartToggle(item)}
+                      onClick={(event) =>
+                        handleCartToggle(
+                          event,
+                          product,
+                        )
+                      }
                       className={`mt-5 flex h-10 w-full items-center justify-center gap-2 border text-[10px] font-semibold tracking-[0.1em] transition ${
                         alreadyInCart
-                          ? "border-black bg-white text-black hover:bg-gray-100"
-                          : "border-black bg-black text-white hover:bg-gray-800"
+                          ? "border-text-primary bg-bg-primary text-text-primary hover:bg-bg-tertiary"
+                          : "border-dark-section bg-dark-section text-white hover:opacity-90"
                       }`}
                     >
                       <FiShoppingBag size={13} />
 
-                      {alreadyInCart ? "REMOVE FROM BAG" : "ADD TO BAG"}
+                      {alreadyInCart
+                        ? "REMOVE FROM BAG"
+                        : "ADD TO BAG"}
                     </button>
                   </div>
                 </article>

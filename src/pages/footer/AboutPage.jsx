@@ -36,7 +36,75 @@ function AboutPage() {
       </main>
     );
   }
+{/* ===============================
+    JOIN THE NIYA CIRCLE
+=============================== */}
+<section className="border-t border-[var(--color-border)] bg-[var(--color-bg-secondary)] overflow-hidden">
+  <div className="mx-auto max-w-6xl px-5 py-10 sm:px-6 lg:px-8 lg:py-14">
 
+    <div className="group relative overflow-hidden border border-[var(--color-border)] bg-[var(--color-bg-primary)] px-6 py-8 sm:px-10 sm:py-10 lg:px-14 lg:py-12">
+
+      {/* DECORATIVE ELEMENTS */}
+      <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full border border-[var(--color-accent)]/20 transition-transform duration-700 group-hover:scale-125" />
+
+      <div className="pointer-events-none absolute -bottom-20 -left-20 h-44 w-44 rounded-full border border-[var(--color-accent)]/10 transition-transform duration-1000 group-hover:scale-110" />
+
+      <div className="relative grid gap-8 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+
+        {/* TEXT */}
+        <div>
+          <p className="text-xs font-medium uppercase tracking-[0.22em] text-[var(--color-accent)]">
+            Stay in the know
+          </p>
+
+          <h2 className="mt-2 max-w-xl font-serif text-3xl leading-tight text-[var(--color-text-primary)] sm:text-4xl lg:text-5xl">
+            Join the Niya Circle.
+          </h2>
+
+          <p className="mt-3 max-w-lg text-sm leading-6 text-[var(--color-text-secondary)] sm:text-base">
+            Be the first to discover new arrivals, thoughtful collections,
+            styling inspiration and exclusive offers from Niya.
+          </p>
+        </div>
+
+        {/* NEWSLETTER */}
+        <div>
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+            }}
+            className="flex flex-col gap-2 sm:flex-row"
+          >
+            <input
+              type="email"
+              placeholder="Your email address"
+              aria-label="Email address"
+              className="h-11 min-w-0 flex-1 border border-[var(--color-border)] bg-[var(--color-bg-secondary)] px-4 text-sm text-[var(--color-text-primary)] outline-none transition focus:border-[var(--color-accent)]"
+            />
+
+            <button
+              type="submit"
+              className="group/button inline-flex h-11 items-center justify-center gap-2 bg-[var(--color-text-primary)] px-5 text-sm font-medium text-[var(--color-bg-primary)] transition-all duration-300 hover:bg-[var(--color-accent)]"
+            >
+              Subscribe
+
+              <FiArrowRight
+                size={15}
+                className="transition-transform duration-300 group-hover/button:translate-x-1"
+              />
+            </button>
+          </form>
+
+          <p className="mt-3 text-[11px] leading-5 text-[var(--color-text-muted)]">
+            By subscribing, you agree to receive occasional updates from Niya.
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
   return (
     <main className="min-h-screen bg-[var(--color-bg-primary)] text-[var(--color-text-primary)] transition-colors duration-300">
       {/* ===============================

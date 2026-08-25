@@ -152,16 +152,20 @@ function HeroBanner() {
 
       {/* ===============================
           POSTER (FULL-WIDTH EDGE-TO-EDGE, HALF-HEIGHT BANNER)
-      =============================== */}
-      <section className="w-full bg-bg-primary py-3">
-        <div className="w-full overflow-hidden">
-          <img
-            src="/products/bags/image.png"
-            alt="Niya Collection Promo Banner"
-            className="h-[130px] sm:h-[150px] md:h-[170px] lg:h-[190px] w-full object-cover aspect-[16/3]"
-          />
-        </div>
-      </section>
+    {/* POSTER */}
+{/* POSTER */}
+{/* POSTER */}
+<section className="w-full bg-bg-primary py-6">
+  <div className="w-full px-6 md:px-14">
+    <div className="w-full overflow-hidden">
+      <img
+        src="/products/bags/image.png"
+        alt="Niya Collection Promo Banner"
+        className="h-[130px] w-full object-cover sm:h-[150px] md:h-[170px] lg:h-[190px]"
+      />
+    </div>
+  </div>
+</section>
     </>
   );
 }
