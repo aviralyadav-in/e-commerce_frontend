@@ -13,9 +13,12 @@ import {
   FiTrendingUp,
   FiTag,
 } from "react-icons/fi";
+
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import SearchOverlay from "./SearchOverlay";
+
 import { useTheme } from "../../context/ThemeContext";
 import { useCart } from "../../context/CartContext";
 import { useWishlist } from "../../context/WishlistContext";
@@ -45,6 +48,23 @@ function Navbar() {
   // ===============================
   const { user, isAuthenticated, logout } = useAuth();
 
+  // ===============================
+  // BODY SCROLL LOCK
+  // ===============================
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+
+    if (menuOpen) {
+      document.body.style.overflow = "hidden";
+    }
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [menuOpen]);
+  // ===============================
+  // SEARCH
+  // ===============================
   function handleSearchOpen() {
     setMenuOpen(false);
     setSearchOpen(true);
@@ -54,6 +74,9 @@ function Navbar() {
     setSearchOpen(false);
   }
 
+  // ===============================
+  // LOGOUT
+  // ===============================
   async function handleLogout() {
     try {
       await logout();
@@ -65,6 +88,9 @@ function Navbar() {
 
   return (
     <>
+      {/* ==================================================
+          NAVBAR
+          ================================================== */}
       <header className="sticky top-0 z-50 border-b border-border-soft bg-bg-secondary">
         <div className="mx-auto flex h-[70px] max-w-[1440px] items-center px-5 md:px-10 lg:px-14">
           {/* LOGO */}
@@ -75,9 +101,9 @@ function Navbar() {
             Niya Bags
           </Link>
 
-          {/* ==========================================
+          {/* ==================================================
               DESKTOP NAVIGATION
-              ========================================== */}
+              ================================================== */}
           <nav className="ml-16 hidden items-center gap-8 md:flex">
             <Link
               to="/shop"
@@ -100,7 +126,6 @@ function Navbar() {
               Bestsellers
             </Link>
 
-            {/* SALE = TEXT ONLY */}
             <Link
               to="/sale"
               className="text-sm font-medium text-accent transition hover:text-text-primary"
@@ -109,9 +134,9 @@ function Navbar() {
             </Link>
           </nav>
 
-          {/* ==========================================
+          {/* ==================================================
               RIGHT SIDE
-              ========================================== */}
+              ================================================== */}
           <div className="ml-auto flex items-center gap-2 text-text-primary md:gap-4">
             {/* SEARCH */}
             <button
@@ -138,11 +163,27 @@ function Navbar() {
               )}
             </Link>
 
-            {/* ==========================================
-                DESKTOP ONLY ICONS
-                ========================================== */}
+            {/* ==================================================
+                MOBILE SHOPPING BAG
+                ================================================== */}
+            <Link
+              to="/cart"
+              aria-label="Shopping Bag"
+              title="Shopping Bag"
+              className="relative p-1 transition hover:text-accent md:hidden"
+            >
+              <FiShoppingBag size={18} strokeWidth={1.4} />
 
-            {/* ACCOUNT */}
+              {cartCount > 0 && (
+                <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[8px] font-semibold text-white">
+                  {cartCount}
+                </span>
+              )}
+            </Link>
+
+            {/* ==================================================
+                DESKTOP ACCOUNT
+                ================================================== */}
             <Link
               to="/account"
               aria-label="Account"
@@ -152,7 +193,7 @@ function Navbar() {
               <FiUser size={18} strokeWidth={1.4} />
             </Link>
 
-            {/* THEME */}
+            {/* DESKTOP THEME */}
             <button
               type="button"
               aria-label="Toggle theme"
@@ -167,7 +208,7 @@ function Navbar() {
               )}
             </button>
 
-            {/* CART */}
+            {/* DESKTOP CART */}
             <Link
               to="/cart"
               aria-label="Shopping Bag"
@@ -183,7 +224,7 @@ function Navbar() {
               )}
             </Link>
 
-            {/* LOGOUT */}
+            {/* DESKTOP LOGOUT */}
             {isAuthenticated && (
               <button
                 type="button"
@@ -196,9 +237,9 @@ function Navbar() {
               </button>
             )}
 
-            {/* ==========================================
-                MOBILE HAMBURGER ONLY
-                ========================================== */}
+            {/* ==================================================
+                MOBILE HAMBURGER
+                ================================================== */}
             <button
               type="button"
               className="p-1 transition hover:text-accent md:hidden"
@@ -211,13 +252,11 @@ function Navbar() {
           </div>
         </div>
 
-        {/* ==========================================
-            MOBILE SIDE DRAWER
-            ========================================== */}
-
-        {/* BACKDROP */}
+        {/* ==================================================
+            MOBILE BACKDROP
+            ================================================== */}
         <div
-          className={`fixed inset-0 top-[70px] z-40 bg-black/30 transition-opacity duration-300 md:hidden ${
+          className={`fixed inset-0 z-[60] bg-black/50 transition-opacity duration-300 md:hidden ${
             menuOpen
               ? "pointer-events-auto opacity-100"
               : "pointer-events-none opacity-0"
@@ -226,14 +265,42 @@ function Navbar() {
           aria-hidden="true"
         />
 
-        {/* SIDE DRAWER */}
+        {/* ==================================================
+            MOBILE LEFT DRAWER
+            ================================================== */}
         <nav
-          className={`fixed bottom-0 right-0 top-[70px] z-50 w-[78%] max-w-[320px] overflow-y-auto border-l border-border-soft bg-bg-secondary px-4 py-4 shadow-2xl transition-transform duration-300 ease-out md:hidden ${
-            menuOpen ? "translate-x-0" : "translate-x-full"
+          className={`fixed bottom-0 left-0 top-0 z-[70] w-[60%] max-w-[320px] overflow-y-auto bg-bg-secondary shadow-[8px_0_30px_rgba(0,0,0,0.18)] transition-transform duration-300 ease-out md:hidden ${
+            menuOpen ? "translate-x-0" : "-translate-x-full"
           }`}
           aria-hidden={!menuOpen}
         >
-          <div className="flex flex-col gap-2">
+          {/* ==================================================
+    DRAWER HEADER
+    ================================================== */}
+          <div className="flex min-h-[82px] items-center rounded-tr-[28px] bg-gradient-to-br from-[#073b4c] to-[#0b4658] px-5">
+            <div className="min-w-0">
+              <p className="text-xs font-medium tracking-wide text-white/70">
+                Welcome
+              </p>
+
+              <p className="mt-1 truncate font-serif text-2xl font-semibold tracking-tight text-white">
+                {isAuthenticated ? user?.name || user?.email || "User" : "User"}
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setMenuOpen(false)}
+              aria-label="Close menu"
+              className="ml-auto shrink-0 p-1 text-white/90 transition hover:text-white"
+            >
+              <FiX size={20} strokeWidth={1.5} />
+            </button>
+          </div>
+          {/* ==================================================
+              DRAWER CONTENT
+              ================================================== */}
+          <div className="flex flex-col gap-2 px-4 py-5">
             {/* SHOP ALL */}
             <Link
               to="/shop"
@@ -289,9 +356,7 @@ function Navbar() {
                 <FiTag size={14} />
               </div>
 
-              <span className="text-xs font-semibold text-accent">
-                Sale
-              </span>
+              <span className="text-xs font-semibold text-accent">Sale</span>
             </Link>
 
             {/* ACCOUNT */}
@@ -311,27 +376,6 @@ function Navbar() {
               </span>
             </Link>
 
-            {/* SHOPPING BAG */}
-            <Link
-              to="/cart"
-              onClick={() => setMenuOpen(false)}
-              className="flex items-center gap-3 rounded-xs border border-border-soft bg-bg-primary px-3 py-2.5 transition hover:bg-bg-tertiary"
-            >
-              <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
-                <FiShoppingBag size={14} />
-
-                {cartCount > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-accent px-0.5 text-[7px] font-semibold text-white">
-                    {cartCount}
-                  </span>
-                )}
-              </div>
-
-              <span className="text-xs font-semibold text-text-primary">
-                Shopping Bag
-              </span>
-            </Link>
-
             {/* THEME */}
             <button
               type="button"
@@ -339,11 +383,7 @@ function Navbar() {
               className="flex items-center gap-3 rounded-xs border border-border-soft bg-bg-primary px-3 py-2.5 text-left transition hover:bg-bg-tertiary"
             >
               <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
-                {isDarkMode ? (
-                  <FiSun size={14} />
-                ) : (
-                  <FiMoon size={14} />
-                )}
+                {isDarkMode ? <FiSun size={14} /> : <FiMoon size={14} />}
               </div>
 
               <span className="text-xs font-semibold text-text-primary">
@@ -360,9 +400,7 @@ function Navbar() {
               >
                 <FiLogOut size={15} />
 
-                <span className="text-xs font-semibold">
-                  Sign Out
-                </span>
+                <span className="text-xs font-semibold">Sign Out</span>
               </button>
             )}
           </div>
@@ -370,10 +408,7 @@ function Navbar() {
       </header>
 
       {/* SEARCH OVERLAY */}
-      <SearchOverlay
-        isOpen={searchOpen}
-        onClose={handleSearchClose}
-      />
+      <SearchOverlay isOpen={searchOpen} onClose={handleSearchClose} />
     </>
   );
 }

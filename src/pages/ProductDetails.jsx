@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import {
-  FiArrowLeft,
   FiChevronLeft,
   FiChevronRight,
   FiHeart,
@@ -9,6 +8,8 @@ import {
   FiPlus,
   FiShoppingBag,
 } from "react-icons/fi";
+
+import BackButton from "../components/common/BackButton";
 
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -206,6 +207,7 @@ function ProductDetails() {
     ]
 
     Therefore:
+
     - Variant product -> use selected variant images
     - No variant product -> use available product image
   */
@@ -351,13 +353,7 @@ function ProductDetails() {
             Product not found
           </p>
 
-          <button
-            type="button"
-            onClick={() => navigate("/shop")}
-            className="border border-[var(--color-border)] px-6 py-3 text-[10px] uppercase tracking-[0.2em] transition hover:border-[var(--color-accent)] hover:text-[var(--color-accent)]"
-          >
-            Back to Shop
-          </button>
+          <BackButton className="mb-7" />
         </div>
       </main>
     );
@@ -393,22 +389,15 @@ function ProductDetails() {
     <main className="min-h-screen bg-[var(--color-bg-primary)] text-[var(--color-text-primary)]">
       <div className="mx-auto max-w-7xl px-5 pb-16 pt-8 sm:px-8 lg:px-12">
 
-        {/* BACK */}
+        {/* ===============================
+            BACK
+        =============================== */}
 
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="group mb-7 inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-[var(--color-text-muted)] transition hover:text-[var(--color-accent)]"
-        >
-          <FiArrowLeft
-            size={14}
-            className="transition-transform duration-300 group-hover:-translate-x-1"
-          />
+        <BackButton className="mb-7" />
 
-          Back
-        </button>
-
-        {/* PRODUCT DETAILS */}
+        {/* ===============================
+            PRODUCT DETAILS
+        =============================== */}
 
         <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
 
@@ -471,7 +460,10 @@ function ProductDetails() {
                   {currentImage ? (
                     <img
                       src={currentImage}
-                      alt={`${product.title || product.name}${
+                      alt={`${
+                        product.title ||
+                        product.name
+                      }${
                         selectedColor
                           ? ` - ${selectedColor}`
                           : ""
@@ -629,12 +621,10 @@ function ProductDetails() {
 
             {/* ===============================
                 VARIANTS
-                Only shown when product has them
             =============================== */}
 
             {hasVariants && (
               <div className="mt-6">
-
                 <div className="flex items-center justify-between">
                   <p className="text-[9px] uppercase tracking-[0.2em] text-[var(--color-text-muted)]">
                     Color
@@ -693,9 +683,7 @@ function ProductDetails() {
               <div className="flex h-12 items-center border border-[var(--color-border)]">
                 <button
                   type="button"
-                  onClick={
-                    decreaseQuantity
-                  }
+                  onClick={decreaseQuantity}
                   className="flex h-full w-11 items-center justify-center text-[var(--color-text-muted)] transition hover:text-[var(--color-accent)]"
                 >
                   <FiMinus size={14} />
@@ -707,9 +695,7 @@ function ProductDetails() {
 
                 <button
                   type="button"
-                  onClick={
-                    increaseQuantity
-                  }
+                  onClick={increaseQuantity}
                   className="flex h-full w-11 items-center justify-center text-[var(--color-text-muted)] transition hover:text-[var(--color-accent)]"
                 >
                   <FiPlus size={14} />
@@ -743,7 +729,6 @@ function ProductDetails() {
 
         {suggestions.length > 0 && (
           <section className="mt-20">
-
             <div className="mb-7">
               <p className="text-[9px] uppercase tracking-[0.25em] text-[var(--color-accent)]">
                 You May Also Like
@@ -755,7 +740,6 @@ function ProductDetails() {
             </div>
 
             <div className="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 lg:grid-cols-4 lg:gap-x-5">
-
               {suggestions.map((item) => {
                 const itemId =
                   item?.id || item?._id;
@@ -801,7 +785,6 @@ function ProductDetails() {
                     key={itemId}
                     className="group min-w-0"
                   >
-
                     {/* IMAGE */}
 
                     <div
@@ -843,9 +826,7 @@ function ProductDetails() {
                           e.preventDefault();
                           e.stopPropagation();
 
-                          toggleWishlist(
-                            item,
-                          );
+                          toggleWishlist(item);
                         }}
                         className={`absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border bg-[var(--color-bg-primary)]/90 backdrop-blur transition ${
                           itemWishlist
@@ -892,7 +873,6 @@ function ProductDetails() {
                     {/* INFO */}
 
                     <div className="pt-3">
-
                       <h3
                         className="cursor-pointer truncate font-serif text-sm transition hover:text-[var(--color-accent)]"
                         onClick={() =>

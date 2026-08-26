@@ -36,10 +36,7 @@ function ShopPage() {
   // PRICE SORT
   const [priceSort, setPriceSort] = useState("");
 
-  // CUSTOMER RATING FILTER
-  const [ratingFilter, setRatingFilter] = useState("");
-
-  // CUSTOMER REVIEW SORT
+    // CUSTOMER REVIEW SORT
   const [reviewSort, setReviewSort] = useState("");
 
   // FUNNEL DROPDOWN
@@ -137,13 +134,7 @@ function ShopPage() {
   // DISPLAYED PRODUCTS
   // ===============================
 
-  const filteredProducts = products.filter((product) => {
-    if (!ratingFilter) {
-      return true;
-    }
-
-    return Number(product.rating) >= Number(ratingFilter);
-  });
+  const filteredProducts = products;
 
   // ===============================
   // SORT PRODUCTS
@@ -231,29 +222,6 @@ function ShopPage() {
     {
       label: "Average Customer Rating: High to Low",
       value: "high-to-low",
-    },
-  ];
-
-  // ===============================
-  // CUSTOMER REVIEW FILTER
-  // ===============================
-
-  const ratingOptions = [
-    {
-      label: "4★ & Above",
-      value: "4",
-    },
-    {
-      label: "3★ & Above",
-      value: "3",
-    },
-    {
-      label: "2★ & Above",
-      value: "2",
-    },
-    {
-      label: "1★ & Above",
-      value: "1",
     },
   ];
 
@@ -388,7 +356,6 @@ function ShopPage() {
 
   const clearSortFilters = () => {
     setPriceSort("");
-    setRatingFilter("");
     setReviewSort("");
   };
 
@@ -528,25 +495,22 @@ function ShopPage() {
             {/* ================= PRODUCT TOOLBAR ================= */}
 
             <div className="mb-4 hidden items-center justify-between md:flex">
-              <p className="text-[9px] tracking-[0.15em] text-[var(--color-text-muted)]">
-                {loading ? "LOADING..." : `${sortedProducts.length} PRODUCTS`}
-              </p>
-
               {/* ================= FUNNEL DROPDOWN ================= */}
 
               <div className="relative">
+
                 <button
                   type="button"
                   onClick={() => setFilterDropdownOpen((prev) => !prev)}
                   className={`flex items-center gap-2 text-[9px] font-medium tracking-[0.16em] transition ${
-                    priceSort || ratingFilter || reviewSort
+                    priceSort || reviewSort
                       ? "text-[var(--color-accent)]"
                       : "text-[var(--color-text-primary)]"
                   }`}
                 >
                   <FiFilter size={14} strokeWidth={1.5} />
 
-                  <span>FILTER</span>
+                  <span>SORT BY</span>
 
                   <FiChevronDown
                     size={12}
@@ -641,44 +605,9 @@ function ShopPage() {
 
                     <div className="my-5 border-t border-[var(--color-border)]" />
 
-                    {/* ================= CUSTOMER REVIEWS ================= */}
-
-                    <div>
-                      <p className="mb-4 text-[9px] font-semibold tracking-[0.18em] text-[var(--color-text-primary)]">
-                        CUSTOMER REVIEWS
-                      </p>
-
-                      <div className="space-y-3">
-                        {ratingOptions.map((option) => (
-                          <button
-                            key={option.value}
-                            type="button"
-                            onClick={() =>
-                              setRatingFilter(
-                                ratingFilter === option.value
-                                  ? ""
-                                  : option.value,
-                              )
-                            }
-                            className={`flex w-full items-center justify-between text-left text-[11px] transition ${
-                              ratingFilter === option.value
-                                ? "text-[var(--color-accent)]"
-                                : "text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
-                            }`}
-                          >
-                            <span>{option.label}</span>
-
-                            {ratingFilter === option.value && (
-                              <FiCheck size={13} strokeWidth={1.5} />
-                            )}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
                     {/* ================= CLEAR ================= */}
 
-                    {(priceSort || ratingFilter || reviewSort) && (
+                    {(priceSort || reviewSort) && (
                       <>
                         <div className="my-5 border-t border-[var(--color-border)]" />
 
@@ -694,6 +623,10 @@ function ShopPage() {
                   </div>
                 )}
               </div>
+
+              <p className="text-[9px] tracking-[0.15em] text-[var(--color-text-muted)]">
+                {loading ? "LOADING..." : `${sortedProducts.length} PRODUCTS`}
+              </p>
             </div>
 
             {/* ================= LOADING ================= */}

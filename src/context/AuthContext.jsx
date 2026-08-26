@@ -1,10 +1,12 @@
 import { createContext, useContext, useEffect, useState } from "react";
+
 import {
   getProfile,
   loginUser,
   logoutUser,
   updateProfile,
 } from "../api/authApi";
+
 // ===============================
 // AUTH CONTEXT
 // ===============================
@@ -24,26 +26,34 @@ export function AuthProvider({ children }) {
   // ===============================
 
   useEffect(() => {
+    let mounted = true;
+
     async function checkAuth() {
       try {
         const response = await getProfile();
-
         const currentUser = response?.user || null;
 
-        if (currentUser) {
+        if (mounted) {
           setUser(currentUser);
-        } else {
-          setUser(null);
         }
       } catch (error) {
         console.log("AUTH CHECK: No active session");
-        setUser(null);
+
+        if (mounted) {
+          setUser(null);
+        }
       } finally {
-        setLoading(false);
+        if (mounted) {
+          setLoading(false);
+        }
       }
     }
 
     checkAuth();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   // ===============================
@@ -53,11 +63,12 @@ export function AuthProvider({ children }) {
   async function login(email, password) {
     try {
       const response = await loginUser(email, password);
-
       const loggedInUser = response?.user || null;
 
       if (!loggedInUser) {
-        throw new Error("Login successful but user data was not returned.");
+        throw new Error(
+          "Login successful but user data was not returned."
+        );
       }
 
       setUser(loggedInUser);
@@ -68,21 +79,22 @@ export function AuthProvider({ children }) {
       throw error;
     }
   }
-// ===============================
-// UPDATE PROFILE
-// ===============================
 
-async function updateUserProfile(profileData) {
-  const response = await updateProfile(profileData);
+  // ===============================
+  // UPDATE PROFILE
+  // ===============================
 
-  const updatedUser = response?.user || null;
+  async function updateUserProfile(profileData) {
+    const response = await updateProfile(profileData);
+    const updatedUser = response?.user || null;
 
-  if (updatedUser) {
-    setUser(updatedUser);
+    if (updatedUser) {
+      setUser(updatedUser);
+    }
+
+    return response;
   }
 
-  return response;
-}
   // ===============================
   // LOGOUT
   // ===============================
@@ -100,17 +112,22 @@ async function updateUserProfile(profileData) {
   // ===============================
   // CONTEXT VALUE
   // ===============================
-const value = {
-  user,
-  setUser,
-  loading,
-  login,
-  logout,
-  updateUserProfile,
-  isAuthenticated: !!user,
-};
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  const value = {
+    user,
+    setUser,
+    loading,
+    login,
+    logout,
+    updateUserProfile,
+    isAuthenticated: !!user,
+  };
+
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 }
 
 // ===============================

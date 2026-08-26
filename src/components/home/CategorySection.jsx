@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { getCategories } from "../../api/api";
 
 function CategorySection() {
   const [gender, setGender] = useState("women");
   const [categories, setCategories] = useState([]);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,7 +26,9 @@ function CategorySection() {
   );
 
   const handleCategoryClick = (category) => {
-    navigate(`/shop?gender=${category.gender}&subcategory=${category.filter}`);
+    navigate(
+      `/shop?gender=${category.gender}&subcategory=${category.filter}`,
+    );
   };
 
   return (
@@ -75,46 +77,28 @@ function CategorySection() {
           </div>
         </div>
 
-        {/* CATEGORY CAROUSEL / GRID */}
+        {/* CATEGORY GRID */}
         <div
-          className={`
-   flex gap-4 overflow-x-auto px-[11vw] md:px-0 pb-10 pt-6
-snap-x snap-mandatory
-scrollbar-hide
-
-    md:grid md:grid-cols-2 md:overflow-visible
-
-    ${
-      filteredCategories.length > 4
-        ? "lg:flex lg:overflow-x-auto"
-        : "lg:grid lg:grid-cols-4"
-    }
-  `}
+          className="
+            grid grid-cols-2 gap-4
+            pb-10 pt-6
+            md:grid-cols-2
+            lg:grid-cols-4
+          "
         >
           {filteredCategories.map((category) => (
             <button
               type="button"
               onClick={() => handleCategoryClick(category)}
               key={`${category.gender}-${category.filter}`}
-              className={`
-                group relative shrink-0 overflow-hidden rounded-xl text-left
+              className="
+                group relative overflow-hidden rounded-xl text-left
                 transition-all duration-500 ease-out
-
-                /* MOBILE — SQUARE */
-                aspect-square w-[78vw] snap-center
-
-                /* TABLET */
-                md:w-auto md:aspect-auto md:h-[320px]
-
-                /* DESKTOP */
-                ${
-                  filteredCategories.length > 4
-                    ? "lg:min-w-[280px] lg:h-[360px]"
-                    : "lg:w-auto lg:h-[360px]"
-                }
-
+                aspect-square w-full
+                md:aspect-auto md:h-[320px]
+                lg:h-[360px]
                 hover:z-10 hover:scale-[1.03]
-              `}
+              "
             >
               <img
                 src={category.image}
