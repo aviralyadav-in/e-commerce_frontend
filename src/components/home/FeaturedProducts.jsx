@@ -101,64 +101,66 @@ function FeaturedProducts() {
         <div className="mx-auto max-w-[1440px]">
           {/* SECTION HEADER */}
 
-          <div className="mb-8 flex items-end justify-between">
-            <div>
-              <p
-                className="
-                  mb-2
-                  text-[10px]
-                  font-semibold
-                  tracking-widest
-                  text-accent
-                "
-              >
-                {eyebrow}
-              </p>
+          <div className="mb-8">
+            {/* EYEBROW */}
+            <p
+              className="
+                mb-2
+                text-[10px]
+                font-semibold
+                tracking-widest
+                text-accent
+              "
+            >
+              {eyebrow}
+            </p>
 
+            {/* TITLE & VIEW ALL ROW - Ab View All exact h2 heading ke saamne aayega */}
+            <div className="flex items-center justify-between gap-4">
               <h2
                 className="
                   font-serif
-                  text-3xl
+                  text-2xl
                   font-medium
                   text-text-primary
+                  sm:text-3xl
                   md:text-4xl
                 "
               >
                 {title}
               </h2>
 
-              <p
+              <Link
+                to={`/shop?filter=${shopFilter}`}
                 className="
-                  mt-2
-                  max-w-[560px]
+                  shrink-0
+                  border-b
+                  border-accent
+                  pb-0.5
                   text-xs
-                  leading-relaxed
-                  text-text-muted
+                  font-semibold
+                  text-text-primary
+                  transition
+                  hover:opacity-70
+                  sm:text-sm
                 "
               >
-                {description}
-              </p>
+                View All →
+              </Link>
             </div>
 
-            {/* VIEW ALL */}
-
-            <Link
-              to={`/shop?filter=${shopFilter}`}
+            {/* DESCRIPTION */}
+            <p
               className="
-                hidden
-                border-b
-                border-accent
-                pb-1
-                text-sm
-                font-semibold
-                text-text-primary
-                transition
-                hover:opacity-70
-                sm:block
+                mt-2
+                max-w-[560px]
+                text-xs
+                leading-relaxed
+                text-text-muted
               "
             >
-              View All →
-            </Link>
+              {description}
+            </p>
           </div>
 
           {/* PRODUCTS */}
