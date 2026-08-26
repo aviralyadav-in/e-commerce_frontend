@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiArrowLeft, FiCamera } from "react-icons/fi";
-import { getProfile, updateProfile } from "../../api/authApi";
+import { getProfile } from "../../api/authApi";
+import { useAuth } from "../../context/AuthContext";
 
 function EditProfile() {
   const { updateUserProfile } = useAuth();
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -66,7 +68,6 @@ function EditProfile() {
   // ============================================
   // SUBMIT
   // ============================================
-  // Backend PUT /profile yahan baad mein connect karenge
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -96,6 +97,7 @@ function EditProfile() {
   return (
     <main className="min-h-[calc(100vh-70px)] bg-bg-primary px-5 py-8 text-text-primary md:px-10 md:py-10">
       <div className="mx-auto max-w-[900px]">
+
         {/* BACK */}
         <Link
           to="/account"
@@ -157,6 +159,7 @@ function EditProfile() {
             </p>
 
             <div className="grid gap-6 md:grid-cols-2">
+
               {/* FULL NAME */}
               <div>
                 <label className="mb-2 block text-[10px] font-semibold tracking-wider text-text-primary">
@@ -253,6 +256,7 @@ function EditProfile() {
             </p>
 
             <div className="grid gap-6">
+
               {/* ADDRESS */}
               <div>
                 <label className="mb-2 block text-[10px] font-semibold tracking-wider text-text-primary">
@@ -270,6 +274,7 @@ function EditProfile() {
               </div>
 
               <div className="grid gap-6 sm:grid-cols-3">
+
                 {/* CITY */}
                 <div>
                   <label className="mb-2 block text-[10px] font-semibold tracking-wider text-text-primary">

@@ -5,6 +5,7 @@ import { getCategories } from "../../api/api";
 function CategorySection() {
   const [gender, setGender] = useState("women");
   const [categories, setCategories] = useState([]);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,6 +35,7 @@ function CategorySection() {
       className="bg-bg-primary px-5 pt-6 pb-14 md:px-10 md:pt-8 md:pb-16"
     >
       <div className="mx-auto max-w-[1440px]">
+        {/* HEADER */}
         <div className="mb-7 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="mb-2 text-[9px] font-semibold tracking-[0.22em] text-[var(--color-accent)]">
@@ -45,6 +47,7 @@ function CategorySection() {
             </h2>
           </div>
 
+          {/* GENDER TOGGLE */}
           <div className="flex w-fit items-center rounded-full border border-[var(--color-border)] bg-[var(--color-bg-secondary)] p-1">
             <button
               type="button"
@@ -72,13 +75,46 @@ function CategorySection() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-2 lg:grid-cols-4">
+        {/* CATEGORY CAROUSEL / GRID */}
+        <div
+          className={`
+   flex gap-4 overflow-x-auto px-[11vw] md:px-0 pb-10 pt-6
+snap-x snap-mandatory
+scrollbar-hide
+
+    md:grid md:grid-cols-2 md:overflow-visible
+
+    ${
+      filteredCategories.length > 4
+        ? "lg:flex lg:overflow-x-auto"
+        : "lg:grid lg:grid-cols-4"
+    }
+  `}
+        >
           {filteredCategories.map((category) => (
             <button
               type="button"
               onClick={() => handleCategoryClick(category)}
               key={`${category.gender}-${category.filter}`}
-              className="group relative h-[280px] overflow-hidden rounded-xl text-left md:h-[320px] lg:h-[360px]"
+              className={`
+                group relative shrink-0 overflow-hidden rounded-xl text-left
+                transition-all duration-500 ease-out
+
+                /* MOBILE — SQUARE */
+                aspect-square w-[78vw] snap-center
+
+                /* TABLET */
+                md:w-auto md:aspect-auto md:h-[320px]
+
+                /* DESKTOP */
+                ${
+                  filteredCategories.length > 4
+                    ? "lg:min-w-[280px] lg:h-[360px]"
+                    : "lg:w-auto lg:h-[360px]"
+                }
+
+                hover:z-10 hover:scale-[1.03]
+              `}
             >
               <img
                 src={category.image}

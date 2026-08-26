@@ -32,16 +32,32 @@ function AnnouncementBar() {
 
   return (
     <div className="h-7 overflow-hidden bg-dark-section text-white">
-      <div className="mx-auto flex h-full max-w-[1440px] items-center justify-around gap-8 px-5 text-[10px] font-medium tracking-wider">
+      {/* Mobile / Tablet */}
+      <div className="announcement-mobile h-full overflow-hidden sm:hidden">
+        <div className="announcement-carousel h-full">
+          {announcements.map((item) => (
+            <span
+              key={item.id}
+              className="announcement-slide flex h-full items-center justify-center gap-2 whitespace-nowrap px-5 text-[10px] font-medium tracking-wider"
+            >
+              <span className="text-accent-bright">✦</span>
+              {item.text}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop */}
+      <div className="mx-auto hidden h-full max-w-[1440px] items-center justify-around gap-8 px-5 text-[10px] font-medium tracking-wider sm:flex">
         {announcements.map((item) => (
           <span
             key={item.id}
-            className="hidden items-center gap-2 whitespace-nowrap first:flex sm:flex"
+            className="flex items-center gap-2 whitespace-nowrap"
           >
             <span className="text-accent-bright">✦</span>
             {item.text}
           </span>
-        ))} 
+        ))}
       </div>
     </div>
   );

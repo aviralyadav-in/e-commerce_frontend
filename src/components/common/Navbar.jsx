@@ -13,10 +13,8 @@ import {
   FiTrendingUp,
   FiTag,
 } from "react-icons/fi";
-
 import { Link } from "react-router-dom";
 import { useState } from "react";
-
 import SearchOverlay from "./SearchOverlay";
 import { useTheme } from "../../context/ThemeContext";
 import { useCart } from "../../context/CartContext";
@@ -214,168 +212,168 @@ function Navbar() {
         </div>
 
         {/* ==========================================
-            MOBILE SIDE DRAWER ONLY
+            MOBILE SIDE DRAWER
             ========================================== */}
-        {menuOpen && (
-          <>
-            {/* BACKDROP */}
-            <div
-              className="fixed inset-0 top-[70px] z-40 bg-black/30 md:hidden"
+
+        {/* BACKDROP */}
+        <div
+          className={`fixed inset-0 top-[70px] z-40 bg-black/30 transition-opacity duration-300 md:hidden ${
+            menuOpen
+              ? "pointer-events-auto opacity-100"
+              : "pointer-events-none opacity-0"
+          }`}
+          onClick={() => setMenuOpen(false)}
+          aria-hidden="true"
+        />
+
+        {/* SIDE DRAWER */}
+        <nav
+          className={`fixed bottom-0 right-0 top-[70px] z-50 w-[78%] max-w-[320px] overflow-y-auto border-l border-border-soft bg-bg-secondary px-4 py-4 shadow-2xl transition-transform duration-300 ease-out md:hidden ${
+            menuOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+          aria-hidden={!menuOpen}
+        >
+          <div className="flex flex-col gap-2">
+            {/* SHOP ALL */}
+            <Link
+              to="/shop"
               onClick={() => setMenuOpen(false)}
-            />
-
-            {/* SIDE DRAWER */}
-            <nav className="fixed right-0 top-[70px] z-50 w-[78%] max-w-[320px] border-l border-border-soft bg-bg-secondary px-4 py-4 shadow-2xl md:hidden">
-              {/* DRAWER HEADER */}
-              <div className="mb-3 flex items-center justify-between border-b border-border-soft pb-3">
-                <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-accent">
-                  MENU
-                </span>
-
-                <button
-                  type="button"
-                  onClick={() => setMenuOpen(false)}
-                  className="text-text-muted transition hover:text-text-primary"
-                  aria-label="Close menu"
-                >
-                  <FiX size={16} />
-                </button>
+              className="flex items-center gap-3 rounded-xs border border-border-soft bg-bg-primary px-3 py-2.5 transition hover:bg-bg-tertiary"
+            >
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
+                <FiGrid size={14} />
               </div>
 
-              <div className="flex flex-col gap-2">
-                {/* SHOP ALL */}
-                <Link
-                  to="/shop"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-3 rounded-xs border border-border-soft bg-bg-primary px-3 py-2.5 transition hover:bg-bg-tertiary"
-                >
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
-                    <FiGrid size={14} />
-                  </div>
+              <span className="text-xs font-semibold text-text-primary">
+                Shop All Bags
+              </span>
+            </Link>
 
-                  <span className="text-xs font-semibold text-text-primary">
-                    Shop All Bags
+            {/* NEW ARRIVALS */}
+            <Link
+              to="/shop?filter=new-arrivals"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center gap-3 rounded-xs border border-border-soft bg-bg-primary px-3 py-2.5 transition hover:bg-bg-tertiary"
+            >
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
+                <FiAward size={14} />
+              </div>
+
+              <span className="text-xs font-semibold text-text-primary">
+                New Arrivals
+              </span>
+            </Link>
+
+            {/* BESTSELLERS */}
+            <Link
+              to="/shop?filter=best-sellers"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center gap-3 rounded-xs border border-border-soft bg-bg-primary px-3 py-2.5 transition hover:bg-bg-tertiary"
+            >
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
+                <FiTrendingUp size={14} />
+              </div>
+
+              <span className="text-xs font-semibold text-text-primary">
+                Bestsellers
+              </span>
+            </Link>
+
+            {/* SALE */}
+            <Link
+              to="/sale"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center gap-3 rounded-xs border border-border-soft bg-bg-primary px-3 py-2.5 transition hover:bg-bg-tertiary"
+            >
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
+                <FiTag size={14} />
+              </div>
+
+              <span className="text-xs font-semibold text-accent">
+                Sale
+              </span>
+            </Link>
+
+            {/* ACCOUNT */}
+            <Link
+              to="/account"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center gap-3 rounded-xs border border-border-soft bg-bg-primary px-3 py-2.5 transition hover:bg-bg-tertiary"
+            >
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
+                <FiUser size={14} />
+              </div>
+
+              <span className="text-xs font-semibold text-text-primary">
+                {isAuthenticated
+                  ? user?.name || user?.email || "My Account"
+                  : "Sign In / Register"}
+              </span>
+            </Link>
+
+            {/* SHOPPING BAG */}
+            <Link
+              to="/cart"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center gap-3 rounded-xs border border-border-soft bg-bg-primary px-3 py-2.5 transition hover:bg-bg-tertiary"
+            >
+              <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
+                <FiShoppingBag size={14} />
+
+                {cartCount > 0 && (
+                  <span className="absolute -right-1 -top-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-accent px-0.5 text-[7px] font-semibold text-white">
+                    {cartCount}
                   </span>
-                </Link>
-
-                {/* NEW ARRIVALS */}
-                <Link
-                  to="/shop?filter=new-arrivals"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-3 rounded-xs border border-border-soft bg-bg-primary px-3 py-2.5 transition hover:bg-bg-tertiary"
-                >
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
-                    <FiAward size={14} />
-                  </div>
-
-                  <span className="text-xs font-semibold text-text-primary">
-                    New Arrivals
-                  </span>
-                </Link>
-
-                {/* BESTSELLERS */}
-                <Link
-                  to="/shop?filter=best-sellers"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-3 rounded-xs border border-border-soft bg-bg-primary px-3 py-2.5 transition hover:bg-bg-tertiary"
-                >
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
-                    <FiTrendingUp size={14} />
-                  </div>
-
-                  <span className="text-xs font-semibold text-text-primary">
-                    Bestsellers
-                  </span>
-                </Link>
-
-                {/* SALE */}
-                <Link
-                  to="/sale"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-3 rounded-xs border border-border-soft bg-bg-primary px-3 py-2.5 transition hover:bg-bg-tertiary"
-                >
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
-                    <FiTag size={14} />
-                  </div>
-
-                  <span className="text-xs font-semibold text-accent">
-                    Sale
-                  </span>
-                </Link>
-
-                {/* ACCOUNT */}
-                <Link
-                  to="/account"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-3 rounded-xs border border-border-soft bg-bg-primary px-3 py-2.5 transition hover:bg-bg-tertiary"
-                >
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
-                    <FiUser size={14} />
-                  </div>
-
-                  <span className="text-xs font-semibold text-text-primary">
-                    {isAuthenticated
-                      ? user?.name || user?.email || "My Account"
-                      : "Sign In / Register"}
-                  </span>
-                </Link>
-
-                {/* SHOPPING BAG */}
-                <Link
-                  to="/cart"
-                  onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-3 rounded-xs border border-border-soft bg-bg-primary px-3 py-2.5 transition hover:bg-bg-tertiary"
-                >
-                  <div className="relative flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
-                    <FiShoppingBag size={14} />
-
-                    {cartCount > 0 && (
-                      <span className="absolute -right-1 -top-1 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-accent px-0.5 text-[7px] font-semibold text-white">
-                        {cartCount}
-                      </span>
-                    )}
-                  </div>
-
-                  <span className="text-xs font-semibold text-text-primary">
-                    Shopping Bag
-                  </span>
-                </Link>
-
-                {/* THEME */}
-                <button
-                  type="button"
-                  onClick={toggleTheme}
-                  className="flex items-center gap-3 rounded-xs border border-border-soft bg-bg-primary px-3 py-2.5 text-left transition hover:bg-bg-tertiary"
-                >
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
-                    {isDarkMode ? <FiSun size={14} /> : <FiMoon size={14} />}
-                  </div>
-
-                  <span className="text-xs font-semibold text-text-primary">
-                    {isDarkMode ? "Light Mode" : "Dark Mode"}
-                  </span>
-                </button>
-
-                {/* LOGOUT */}
-                {isAuthenticated && (
-                  <button
-                    type="button"
-                    onClick={handleLogout}
-                    className="mt-1 flex items-center gap-3 border-t border-border-soft px-3 py-3 text-left text-red-500 transition hover:text-red-600"
-                  >
-                    <FiLogOut size={15} />
-
-                    <span className="text-xs font-semibold">Sign Out</span>
-                  </button>
                 )}
               </div>
-            </nav>
-          </>
-        )}
+
+              <span className="text-xs font-semibold text-text-primary">
+                Shopping Bag
+              </span>
+            </Link>
+
+            {/* THEME */}
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="flex items-center gap-3 rounded-xs border border-border-soft bg-bg-primary px-3 py-2.5 text-left transition hover:bg-bg-tertiary"
+            >
+              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent-soft text-accent">
+                {isDarkMode ? (
+                  <FiSun size={14} />
+                ) : (
+                  <FiMoon size={14} />
+                )}
+              </div>
+
+              <span className="text-xs font-semibold text-text-primary">
+                {isDarkMode ? "Light Mode" : "Dark Mode"}
+              </span>
+            </button>
+
+            {/* LOGOUT */}
+            {isAuthenticated && (
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="mt-1 flex items-center gap-3 border-t border-border-soft px-3 py-3 text-left text-red-500 transition hover:text-red-600"
+              >
+                <FiLogOut size={15} />
+
+                <span className="text-xs font-semibold">
+                  Sign Out
+                </span>
+              </button>
+            )}
+          </div>
+        </nav>
       </header>
 
       {/* SEARCH OVERLAY */}
-      <SearchOverlay isOpen={searchOpen} onClose={handleSearchClose} />
+      <SearchOverlay
+        isOpen={searchOpen}
+        onClose={handleSearchClose}
+      />
     </>
   );
 }
