@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { FiArrowRight } from "react-icons/fi";
+import { FiArrowRight, FiEye, FiEyeOff } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
 export default function SignInForm({ onSwitch }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // Password visibility ke liye state
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -79,15 +80,27 @@ export default function SignInForm({ onSwitch }) {
             </button>
           </div>
 
-          <input
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.target.value)}
-            placeholder="Enter your password"
-            required
-            autoComplete="current-password"
-            className="h-12 w-full border border-border-soft bg-bg-primary px-4 text-xs text-text-primary outline-none transition placeholder:text-text-muted focus:border-text-primary rounded-xs"
-          />
+          {/* Password Input Wrapper */}
+          <div className="relative flex items-center">
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder="Enter your password"
+              required
+              autoComplete="current-password"
+              className="h-12 w-full border border-border-soft bg-bg-primary px-4 pr-12 text-xs text-text-primary outline-none transition placeholder:text-text-muted focus:border-text-primary rounded-xs"
+            />
+            
+            {/* Eye Icon Button */}
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-4 text-text-secondary hover:text-text-primary focus:outline-none"
+            >
+              {showPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+            </button>
+          </div>
         </div>
 
         {error && <p className="text-xs leading-relaxed text-red-500 font-medium">{error}</p>}

@@ -19,9 +19,6 @@ import { getAllProducts } from "../api/productApi";
 function CartPage() {
   const {
     cartItems,
-    totalPrice,
-    discountAmount,
-    totalAmountAfterDiscount,
     increaseQuantity,
     decreaseQuantity,
     removeFromCart,
@@ -79,25 +76,37 @@ function CartPage() {
   };
 
   const getCartProduct = (item) => {
-    const cartProductId =
+    const rawCartId =
       item?.product?._id ||
       item?.product?.id ||
+      item?.productId ||
       item?._id ||
-      item?.id;
+      item?.id ||
+      item;
+
+    const cartIdStr = String(rawCartId);
+
+    const baseProductId = cartIdStr.includes("-")
+      ? cartIdStr.split("-")[0]
+      : cartIdStr;
 
     return products.find((product) => {
-      const productId = getProductId(product);
+      const productId = String(getProductId(product) || "");
 
-      return String(productId) === String(cartProductId);
+      return productId === baseProductId || productId === cartIdStr;
     });
   };
 
   // ============================================================
-  // PRODUCT IMAGE
+  // PRODUCT IMAGE & VARIANT DETAILS
   // ============================================================
 
-  const getProductImage = (product) => {
-    if (!product) return "";
+  const getProductImage = (product, item) => {
+    if (!product && !item) return "";
+
+    if (item?.variant?.images?.[0]) {
+      return item.variant.images[0];
+    }
 
     return (
       product?.thumbnail ||
@@ -110,14 +119,43 @@ function CartPage() {
   };
 
   // ============================================================
-  // TOTAL UNITS
+  // DYNAMIC CART CALCULATIONS
   // ============================================================
 
   const totalUnits = cartItems.reduce(
-    (sum, item) =>
-      sum + Number(item?.quantity || 1),
+    (sum, item) => sum + Number(item?.quantity || 1),
     0,
   );
+
+  const subtotal = cartItems.reduce((sum, item) => {
+    const product = getCartProduct(item);
+
+    const itemPrice = Number(
+      item?.variant?.price ||
+        product?.price ||
+        item?.product?.price ||
+        0,
+    );
+
+    const quantity = Number(item?.quantity || 1);
+
+    return sum + itemPrice * quantity;
+  }, 0);
+
+  // Unique products / line items
+  const uniqueProductIds = new Set(
+    cartItems.map((item) => {
+      return (
+        item?.id ||
+        item?._id ||
+        item?.product?._id ||
+        item?.product?.id ||
+        item?.productId
+      );
+    }),
+  );
+
+  const totalProducts = uniqueProductIds.size;
 
   // ============================================================
   // FREE SHIPPING
@@ -125,23 +163,30 @@ function CartPage() {
 
   const FREE_SHIPPING_LIMIT = 2000;
 
-  const currentAmount = Number(
-    totalAmountAfterDiscount || totalPrice || 0,
-  );
-
   const shippingProgress = Math.min(
-    (currentAmount / FREE_SHIPPING_LIMIT) * 100,
+    (subtotal / FREE_SHIPPING_LIMIT) * 100,
     100,
   );
 
   const amountRemaining = Math.max(
-    FREE_SHIPPING_LIMIT - currentAmount,
+    FREE_SHIPPING_LIMIT - subtotal,
     0,
   );
+
+  const isFreeShipping = subtotal >= FREE_SHIPPING_LIMIT;
+
+  // Shipping is currently FREE on the cart
+  const estimatedShipping = 0;
 
   // ============================================================
   // PROMO
   // ============================================================
+
+  const promoDiscount =
+    appliedCode === "NIYA10" ? subtotal * 0.1 : 0;
+
+  const grandTotal =
+    subtotal - promoDiscount + estimatedShipping;
 
   const handleApplyPromo = (event) => {
     event.preventDefault();
@@ -150,12 +195,8 @@ function CartPage() {
 
     const cleanCode = promoCode.trim().toUpperCase();
 
-    if (
-      cleanCode === "NIYA10" ||
-      cleanCode === "FIRST10" ||
-      cleanCode === "WELCOME"
-    ) {
-      setAppliedCode(cleanCode);
+    if (cleanCode === "NIYA10") {
+      setAppliedCode("NIYA10");
       setPromoCode("");
       return;
     }
@@ -193,10 +234,7 @@ function CartPage() {
 
           <div className="mx-auto flex max-w-[580px] flex-col items-center rounded-sm border border-border-soft bg-bg-secondary px-6 py-16 text-center shadow-sm">
             <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-accent-soft text-accent">
-              <FiShoppingBag
-                size={26}
-                strokeWidth={1.2}
-              />
+              <FiShoppingBag size={26} strokeWidth={1.2} />
             </div>
 
             <h2 className="font-serif text-2xl text-text-primary">
@@ -257,16 +295,26 @@ function CartPage() {
               <div className="mb-2 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-2">
                   <FiTruck
-                    className="text-accent"
+                    className={
+                      isFreeShipping
+                        ? "text-emerald-600"
+                        : "text-accent"
+                    }
                     size={15}
                   />
 
-                  <span className="text-xs font-medium text-text-primary">
-                    {amountRemaining > 0
-                      ? `Add ₹${amountRemaining.toLocaleString(
+                  <span
+                    className={`text-xs font-medium ${
+                      isFreeShipping
+                        ? "text-emerald-600"
+                        : "text-text-primary"
+                    }`}
+                  >
+                    {isFreeShipping
+                      ? "FREE SHIPPING"
+                      : `Add ₹${amountRemaining.toLocaleString(
                           "en-IN",
-                        )} more for FREE shipping`
-                      : "Free shipping unlocked!"}
+                        )} more for FREE shipping`}
                   </span>
                 </div>
 
@@ -277,7 +325,11 @@ function CartPage() {
 
               <div className="h-1.5 w-full overflow-hidden rounded-full bg-bg-tertiary">
                 <div
-                  className="h-full bg-accent transition-all duration-500"
+                  className={`h-full transition-all duration-500 ${
+                    isFreeShipping
+                      ? "bg-emerald-600"
+                      : "bg-accent"
+                  }`}
                   style={{
                     width: `${shippingProgress}%`,
                   }}
@@ -289,7 +341,13 @@ function CartPage() {
                   Shipping progress
                 </span>
 
-                <span className="text-[9px] font-semibold text-accent">
+                <span
+                  className={`text-[9px] font-semibold ${
+                    isFreeShipping
+                      ? "text-emerald-600"
+                      : "text-accent"
+                  }`}
+                >
                   {Math.round(shippingProgress)}%
                 </span>
               </div>
@@ -324,15 +382,10 @@ function CartPage() {
                   </p>
 
                   <p className="mt-1 text-xs text-text-secondary">
-                    Total {cartItems.length}{" "}
-                    {cartItems.length === 1
-                      ? "Item"
-                      : "Items"}{" "}
+                    Total {totalProducts}{" "}
+                    {totalProducts === 1 ? "Item" : "Items"}{" "}
                     ({totalUnits}{" "}
-                    {totalUnits === 1
-                      ? "Unit"
-                      : "Units"}
-                    )
+                    {totalUnits === 1 ? "Unit" : "Units"})
                   </p>
                 </div>
 
@@ -346,10 +399,17 @@ function CartPage() {
 
               {/* ITEMS */}
 
-              {cartItems.map((item) => {
+              {cartItems.map((item, index) => {
                 const product = getCartProduct(item);
 
-                const productId =
+                const itemUniqueKey =
+                  item?.id ||
+                  item?._id ||
+                  item?.product?._id ||
+                  item?.product?.id ||
+                  index;
+
+                const baseProductId =
                   getProductId(product) ||
                   item?.product?._id ||
                   item?.product?.id;
@@ -359,14 +419,16 @@ function CartPage() {
                 );
 
                 const itemPrice = Number(
-                  product?.price ||
+                  item?.variant?.price ||
+                    product?.price ||
                     item?.product?.price ||
                     0,
                 );
 
-                const productImage =
-                  getProductImage(product) ||
-                  getProductImage(item?.product);
+                const productImage = getProductImage(
+                  product,
+                  item,
+                );
 
                 const productTitle =
                   product?.title ||
@@ -384,13 +446,13 @@ function CartPage() {
 
                 return (
                   <div
-                    key={productId}
+                    key={itemUniqueKey}
                     className="flex gap-4 border-b border-border-soft p-5 last:border-b-0 md:gap-6"
                   >
                     {/* IMAGE */}
 
                     <Link
-                      to={`/product/${productId}`}
+                      to={`/product/${baseProductId}`}
                       className="h-28 w-24 shrink-0 overflow-hidden rounded-xs border border-border-soft bg-bg-tertiary md:h-32 md:w-28"
                     >
                       {loadingProducts && !product ? (
@@ -424,20 +486,28 @@ function CartPage() {
                             ₹
                             {(
                               itemPrice * quantity
-                            ).toLocaleString(
-                              "en-IN",
-                            )}
+                            ).toLocaleString("en-IN")}
                           </span>
                         </div>
 
                         <Link
-                          to={`/product/${productId}`}
+                          to={`/product/${baseProductId}`}
                           className="mt-1 block"
                         >
                           <h3 className="line-clamp-1 font-serif text-lg text-text-primary hover:text-accent">
                             {productTitle}
                           </h3>
                         </Link>
+
+                        {/* Variant description */}
+                        {item?.variant && (
+                          <p className="mt-0.5 text-[11px] text-text-muted">
+                            Variant:{" "}
+                            {item.variant.name ||
+                              item.variant.color ||
+                              "Selected"}
+                          </p>
+                        )}
 
                         <p className="mt-1 text-xs text-text-secondary">
                           ₹
@@ -456,7 +526,8 @@ function CartPage() {
                             type="button"
                             onClick={() =>
                               decreaseQuantity(
-                                productId,
+                                item?.id ||
+                                  baseProductId,
                               )
                             }
                             className="flex h-full w-8 items-center justify-center text-text-secondary transition hover:bg-accent-soft hover:text-accent"
@@ -473,7 +544,8 @@ function CartPage() {
                             type="button"
                             onClick={() =>
                               increaseQuantity(
-                                productId,
+                                item?.id ||
+                                  baseProductId,
                               )
                             }
                             className="flex h-full w-8 items-center justify-center text-text-secondary transition hover:bg-accent-soft hover:text-accent"
@@ -487,7 +559,8 @@ function CartPage() {
                           type="button"
                           onClick={() =>
                             removeFromCart(
-                              productId,
+                              item?.id ||
+                                baseProductId,
                             )
                           }
                           className="flex items-center gap-1 text-xs text-red-500 transition hover:text-red-700"
@@ -518,58 +591,67 @@ function CartPage() {
               </p>
 
               <div className="space-y-3.5 border-b border-border-soft pb-5 text-xs">
+                {/* TOTAL PRODUCTS */}
+
                 <div className="flex justify-between text-text-secondary">
                   <span>Total Products</span>
 
                   <span className="font-semibold text-text-primary">
-                    {cartItems.length} Items
+                    {totalProducts}{" "}
+                    {totalProducts === 1
+                      ? "Item"
+                      : "Items"}
                   </span>
                 </div>
+
+                {/* TOTAL UNITS */}
 
                 <div className="flex justify-between text-text-secondary">
                   <span>Total Units</span>
 
                   <span className="font-semibold text-text-primary">
-                    {totalUnits} Pieces
+                    {totalUnits}{" "}
+                    {totalUnits === 1
+                      ? "Piece"
+                      : "Pieces"}
                   </span>
                 </div>
+
+                {/* SUBTOTAL */}
 
                 <div className="flex justify-between text-text-secondary">
                   <span>Subtotal</span>
 
                   <span className="font-semibold text-text-primary">
                     ₹
-                    {Number(
-                      totalPrice || 0,
-                    ).toLocaleString("en-IN")}
+                    {subtotal.toLocaleString(
+                      "en-IN",
+                    )}
                   </span>
                 </div>
 
-                {appliedCode && (
-                  <div className="flex justify-between font-medium text-emerald-600">
+                {/* DISCOUNT */}
+
+                {promoDiscount > 0 && (
+                  <div className="flex justify-between font-medium text-accent">
                     <span className="flex items-center gap-1">
                       <FiCheckCircle size={12} />
-                      Promo ({appliedCode})
+                      Discount (-10%)
                     </span>
-
-                    <span>-10% Applied</span>
-                  </div>
-                )}
-
-                {Number(discountAmount || 0) > 0 && (
-                  <div className="flex justify-between font-medium text-accent">
-                    <span>Discount</span>
 
                     <span>
                       -₹
-                      {Number(
-                        discountAmount || 0,
-                      ).toLocaleString(
+                      {promoDiscount.toLocaleString(
                         "en-IN",
+                        {
+                          maximumFractionDigits: 0,
+                        },
                       )}
                     </span>
                   </div>
                 )}
+
+                {/* SHIPPING */}
 
                 <div className="flex justify-between text-text-secondary">
                   <span>Estimated Shipping</span>
@@ -580,7 +662,7 @@ function CartPage() {
                 </div>
               </div>
 
-              {/* TOTAL */}
+              {/* GRAND TOTAL */}
 
               <div className="flex justify-between py-5 text-text-primary">
                 <div>
@@ -595,11 +677,12 @@ function CartPage() {
 
                 <span className="font-serif text-xl font-semibold text-accent">
                   ₹
-                  {Number(
-                    totalAmountAfterDiscount ||
-                      totalPrice ||
-                      0,
-                  ).toLocaleString("en-IN")}
+                  {grandTotal.toLocaleString(
+                    "en-IN",
+                    {
+                      maximumFractionDigits: 0,
+                    },
+                  )}
                 </span>
               </div>
 

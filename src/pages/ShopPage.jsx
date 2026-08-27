@@ -27,7 +27,7 @@ function ShopPage() {
   // MULTIPLE SUBCATEGORIES SELECTION
   const [selectedSubcategories, setSelectedSubcategories] = useState([]);
 
-  // SORT STATES (Defaulting to empty so no sorting is applied initially/on reset)
+  // SORT STATES
   const [sortBy, setSortBy] = useState("");
 
   // DYNAMIC FILTER STATES
@@ -38,7 +38,7 @@ function ShopPage() {
   // FUNNEL DROPDOWN
   const [filterDropdownOpen, setFilterDropdownOpen] = useState(false);
 
-  // ACCORDIONS (Defaulting Women to open, rest closed)
+  // ACCORDIONS
   const [openSections, setOpenSections] = useState({
     category: true,
     women: true,
@@ -224,7 +224,6 @@ function ShopPage() {
   // ===============================
   const sortedProducts = useMemo(() => {
     return [...filteredProducts].sort((a, b) => {
-      // Agar sortBy khaali hai, toh koi sorting mat karo (original order rakho)
       if (!sortBy) return 0;
 
       if (sortBy === "low-to-high") {
@@ -286,7 +285,7 @@ function ShopPage() {
   };
 
   const clearAllFilters = () => {
-    setSortBy(""); // Reset sort to empty/default order
+    setSortBy("");
     setSelectedSubcategories([]);
     setSelectedColors([]);
     setAvailabilityFilter([]);
@@ -433,7 +432,7 @@ function ShopPage() {
 
     return (
       <div className="space-y-1">
-        {/* SHOP BY CATEGORY CONTAINER */}
+        {/* SHOP BY CATEGORY */}
         <div className="border-t border-[var(--color-border)]">
           <button
             type="button"
@@ -671,8 +670,7 @@ function ShopPage() {
               className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             />
 
-            <aside className="absolute right-0 top-0 flex h-full w-[85%] max-w-[360px] flex-col bg-[var(--color-bg-primary)] shadow-2xl">
-              <div className="flex items-center justify-between border-b border-[var(--color-border)] px-5 py-3">
+<aside className="absolute inset-0 flex h-full w-full flex-col bg-[var(--color-bg-primary)] shadow-2xl">              <div className="flex items-center justify-between border-b border-[var(--color-border)] px-5 py-3">
                 <p className="text-[10px] font-semibold tracking-[0.2em]">
                   FILTERS
                 </p>
@@ -804,12 +802,7 @@ function ShopPage() {
                   </div>
                 ) : (
                   <div className="grid grid-cols-2 gap-x-4 gap-y-9 md:grid-cols-3 lg:grid-cols-4">
-                    {sortedProducts.main?.map((product) => (
-                      <ProductCard
-                        key={product.id || product._id}
-                        product={product}
-                      />
-                    )) || sortedProducts.map((product) => (
+                    {sortedProducts.map((product) => (
                       <ProductCard
                         key={product.id || product._id}
                         product={product}

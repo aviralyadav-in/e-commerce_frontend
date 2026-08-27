@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 
 import { getHeroBanners } from "../../api/homeApi";
+
 import PromoBanner from "./PromoBanner";
+
 import { Link } from "react-router-dom";
 
 function HeroBanner() {
@@ -11,6 +13,7 @@ function HeroBanner() {
   // ===============================
   // LOAD HERO BANNERS
   // ===============================
+
   useEffect(() => {
     let mounted = true;
 
@@ -36,6 +39,7 @@ function HeroBanner() {
   // ===============================
   // AUTO CAROUSEL
   // ===============================
+
   useEffect(() => {
     if (slides.length < 2) return;
 
@@ -49,10 +53,11 @@ function HeroBanner() {
   // ===============================
   // LOADING
   // ===============================
+
   if (!slides.length) {
     return (
       <section className="bg-[var(--color-dark-section)]">
-        <div className="flex min-h-[620px] items-center">
+        <div className="flex h-[520px] items-center sm:h-[calc(100vh-70px)]">
           <div className="mx-auto w-full max-w-[1440px] px-6">
             <div className="h-5 w-28 animate-pulse bg-white/20" />
           </div>
@@ -77,7 +82,17 @@ function HeroBanner() {
       {/* ===============================
           HERO CAROUSEL
       =============================== */}
-      <section className="relative min-h-[calc(100vh-70px)] w-full overflow-hidden bg-dark-section">
+
+      <section
+        className="
+          relative
+          h-[520px]
+          w-full
+          overflow-hidden
+          bg-dark-section
+          sm:h-[calc(100vh-70px)]
+        "
+      >
         {/* SLIDES */}
         {slides.map((item, index) => (
           <div
@@ -98,10 +113,27 @@ function HeroBanner() {
         {/* OVERLAY */}
         <div className="absolute inset-0 bg-gradient-to-r from-dark-section/95 via-dark-section/65 to-dark-section/10" />
 
-        {/* CONTENT (POSITIONED SLIGHTLY LOWER) */}
-        <div className="relative mx-auto flex min-h-[calc(100vh-70px)] max-w-[1440px] items-end pb-16 pt-32 px-6 md:pb-24 md:px-14">
+        {/* CONTENT */}
+        <div
+          className="
+            relative
+            mx-auto
+            flex
+            h-full
+            max-w-[1440px]
+            items-end
+            px-6
+            pb-16
+            pt-20
+            sm:px-8
+            sm:pb-20
+            md:px-14
+            md:pb-24
+            lg:pt-32
+          "
+        >
           <div className="max-w-[620px] text-white">
-            <p className="mb-4 text-[11px] font-semibold tracking-widest text-accent-bright uppercase">
+            <p className="mb-4 text-[11px] font-semibold uppercase tracking-widest text-accent-bright">
               THE NIYA EDIT
             </p>
 
@@ -114,14 +146,29 @@ function HeroBanner() {
               ))}
             </h1>
 
-            {/* LARGER DESCRIPTION FONT SIZE */}
-            <p className="mt-5 max-w-[480px] text-sm sm:text-base md:text-lg leading-relaxed text-white/90 font-normal">
+            {/* DESCRIPTION */}
+            <p className="mt-5 max-w-[480px] text-sm font-normal leading-relaxed text-white/90 sm:text-base md:text-lg">
               {slide.subtitle}
             </p>
 
             <Link
               to={slide.buttonLink}
-              className="mt-7 inline-flex items-center gap-4 rounded-full bg-accent-bright px-7 py-3.5 text-xs font-semibold text-dark-section transition hover:opacity-90 shadow-lg"
+              className="
+                mt-7
+                inline-flex
+                items-center
+                gap-4
+                rounded-full
+                bg-accent-bright
+                px-7
+                py-3.5
+                text-xs
+                font-semibold
+                text-dark-section
+                shadow-lg
+                transition
+                hover:opacity-90
+              "
             >
               {slide.buttonText}
               <span>→</span>
@@ -138,7 +185,9 @@ function HeroBanner() {
                 type="button"
                 onClick={() => setCurrent(index)}
                 className={`h-1.5 rounded-full transition-all ${
-                  index === current ? "w-8 bg-accent-bright" : "w-2 bg-white/50"
+                  index === current
+                    ? "w-8 bg-accent-bright"
+                    : "w-2 bg-white/50"
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
                 aria-current={index === current ? "true" : undefined}
@@ -147,6 +196,7 @@ function HeroBanner() {
           </div>
         )}
       </section>
+
       <PromoBanner page="home" position="after-hero" />
     </>
   );

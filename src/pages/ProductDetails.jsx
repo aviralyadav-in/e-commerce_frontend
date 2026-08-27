@@ -5,6 +5,7 @@ import {
   FiMinus,
   FiPlus,
   FiShoppingBag,
+  FiCheck,
   FiStar,
   FiTruck,
   FiRefreshCw,
@@ -26,7 +27,7 @@ function ProductDetails() {
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
-  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedVariant, setSelectedVariant] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Touch Swipe Handling States
@@ -37,7 +38,7 @@ function ProductDetails() {
   const [showDescription, setShowDescription] = useState(true);
 
   // Contexts
-  const { addToCart, removeFromCart, isInCart } = useCart();
+  const { toggleCart, isInCart } = useCart();
   const { toggleWishlist, isInWishlist } = useWishlist();
 
   useEffect(() => {
@@ -49,11 +50,11 @@ function ProductDetails() {
         if (!isMounted) return;
         setProduct(currentProd || null);
         if (currentProd) {
-          const currentId = currentProd._id || currentProd.id;
+          const currentId = currentProd.id || currentProd._id;
           const rawSuggestions = await getSuggestedProducts(currentId);
           if (isMounted && Array.isArray(rawSuggestions)) {
             const filtered = rawSuggestions.filter((item) => {
-              const itemId = item?._id || item?.id;
+              const itemId = item?.id || item?._id;
               if (String(itemId) === String(currentId)) return false;
               const matchSub =
                 currentProd.subcategory &&
@@ -68,9 +69,9 @@ function ProductDetails() {
             setSuggestions(filtered.slice(0, 4));
           }
           if (Array.isArray(currentProd.variants) && currentProd.variants.length > 0) {
-            setSelectedColor(currentProd.variants[0]?.name || null);
+            setSelectedVariant(currentProd.variants[0]);
           } else {
-            setSelectedColor(null);
+            setSelectedVariant(null);
           }
         }
       } catch (error) {
@@ -91,21 +92,9 @@ function ProductDetails() {
     };
   }, [id]);
 
-  // Base Product ID
-  const productId = product?._id || product?.id;
   const hasVariants = Array.isArray(product?.variants) && product.variants.length > 0;
 
-  // DYNAMIC VARIANT ID: productId + selectedColor
-  const currentVariantId = useMemo(() => {
-    if (!productId) return "";
-    return selectedColor ? `${productId}-${selectedColor}` : String(productId);
-  }, [productId, selectedColor]);
-
-  const selectedVariant = useMemo(() => {
-    if (!hasVariants) return null;
-    return product.variants.find((v) => v?.name === selectedColor) || product.variants[0];
-  }, [product, selectedColor, hasVariants]);
-
+  // Active Variant Image selection
   const productImages = useMemo(() => {
     let images = [];
     if (selectedVariant?.images?.length > 0) {
@@ -125,14 +114,27 @@ function ProductDetails() {
   const currentImage = productImages[currentImageIndex] || productImages[0] || null;
   const finalPrice = Number(product?.salePrice || product?.price || 0);
   const originalPrice = Number(product?.price || 0);
-  const wishlisted = isInWishlist(productId);
+  
+  // Extracted Color name string for Wishlist compatibility
+  const selectedColorName = useMemo(() => {
+    return selectedVariant?.name || selectedVariant?.color || product?.color || null;
+  }, [selectedVariant, product]);
 
-  // Dynamic Rating & Reviews
+  // Real-time Wishlist Sync
+  const wishlisted = useMemo(() => {
+    if (!product) return false;
+    return isInWishlist(product, selectedColorName);
+  }, [isInWishlist, product, selectedColorName]);
+
+  // Real-time Cart Sync
+  const cartActive = useMemo(() => {
+    if (!product) return false;
+    return isInCart(product, selectedVariant);
+  }, [isInCart, product, selectedVariant]);
+
   const rating = Number(product?.rating || product?.averageRating || 0);
-  const reviewsList = Array.isArray(product?.reviews) ? product.reviews : [];
-  const reviewCount = Number(product?.numReviews || product?.reviewsCount || reviewsList.length || 0);
+  const reviewCount = Number(product?.numReviews || product?.reviewsCount || product?.reviews?.length || 0);
 
-  // Discount Percentage
   const discountPercentage = useMemo(() => {
     if (originalPrice > finalPrice && finalPrice > 0) {
       return Math.round(((originalPrice - finalPrice) / originalPrice) * 100);
@@ -140,49 +142,28 @@ function ProductDetails() {
     return 0;
   }, [originalPrice, finalPrice]);
 
-  // CHECK CART STATUS USING DYNAMIC VARIANT ID
-  const cartActive = useMemo(() => {
-    if (!currentVariantId) return false;
-    return isInCart(currentVariantId);
-  }, [isInCart, currentVariantId]);
-
-  // ADD / REMOVE FROM CART HANDLER
+  // Main Cart Handler
   const handleMainCart = () => {
-    if (!product || !productId) return;
-    if (cartActive) {
-      removeFromCart(currentVariantId);
-    } else {
-      const itemToCart = {
-        ...product,
-        id: currentVariantId,
-        _id: currentVariantId,
-        variantId: currentVariantId,
-        baseProductId: productId,
-        selectedColor: selectedColor || null,
-        price: finalPrice,
-        image: currentImage,
-        thumbnail: currentImage,
-      };
-      addToCart(itemToCart, quantity);
-    }
+    if (!product) return;
+    toggleCart(product, selectedVariant, quantity);
   };
 
-  // Touch Swipe Gesture logic
-  const handleTouchStart = (e) => {
-    setTouchStartX(e.targetTouches[0].clientX);
+  // Main Wishlist Handler (Passing product and color name correctly)
+  const handleWishlistClick = () => {
+    if (!product) return;
+    toggleWishlist(product, selectedColorName);
   };
-  const handleTouchMove = (e) => {
-    setTouchEndX(e.targetTouches[0].clientX);
-  };
+
+  // Touch Swipe Gesture logic for images
+  const handleTouchStart = (e) => setTouchStartX(e.targetTouches[0].clientX);
+  const handleTouchMove = (e) => setTouchEndX(e.targetTouches[0].clientX);
   const handleTouchEnd = () => {
     if (!touchStartX || !touchEndX) return;
     const distance = touchStartX - touchEndX;
-    const isLeftSwipe = distance > 40;
-    const isRightSwipe = distance < -40;
-    if (isLeftSwipe && currentImageIndex < productImages.length - 1) {
+    if (distance > 40 && currentImageIndex < productImages.length - 1) {
       setCurrentImageIndex((prev) => prev + 1);
     }
-    if (isRightSwipe && currentImageIndex > 0) {
+    if (distance < -40 && currentImageIndex > 0) {
       setCurrentImageIndex((prev) => prev - 1);
     }
     setTouchStartX(0);
@@ -213,13 +194,13 @@ function ProductDetails() {
       <div className="mx-auto max-w-7xl px-4 pt-2 pb-12 sm:px-6 lg:px-8">
         <BackButton className="mb-4" />
         
-        {/* MAIN CONTAINER: Desktop par flex row jisse left side thumbnail preview aur right side details match karein */}
+        {/* MAIN CONTAINER */}
         <div className="grid gap-8 lg:grid-cols-12 lg:gap-12 items-start">
           
-          {/* LEFT SIDE: DESKTOP THUMBNAILS PREVIEW (VERTICAL STACK) + MAIN IMAGE */}
+          {/* LEFT SIDE: THUMBNAILS + MAIN IMAGE */}
           <div className="flex flex-col sm:flex-row lg:col-span-6 gap-4 w-full">
             
-            {/* Desktop Vertical Thumbnails Sidebar (Choti Preview Images) */}
+            {/* Desktop Vertical Thumbnails */}
             {productImages.length > 1 && (
               <div className="hidden lg:flex flex-col gap-2.5 w-16 shrink-0">
                 {productImages.map((imgUrl, idx) => (
@@ -239,7 +220,7 @@ function ProductDetails() {
               </div>
             )}
 
-            {/* Main Featured Image Wrapper */}
+            {/* Main Featured Image */}
             <div className="flex-1 flex flex-col items-center w-full">
               <div
                 className="relative w-full overflow-hidden rounded-xl bg-[var(--color-bg-secondary)] select-none touch-pan-y shadow-sm"
@@ -265,7 +246,7 @@ function ProductDetails() {
                 )}
                 <button
                   type="button"
-                  onClick={() => toggleWishlist(product)}
+                  onClick={handleWishlistClick}
                   className={`absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full border bg-[var(--color-bg-primary)]/80 backdrop-blur transition ${
                     wishlisted
                       ? "border-[var(--color-accent)] text-[var(--color-accent)]"
@@ -276,7 +257,7 @@ function ProductDetails() {
                 </button>
               </div>
 
-              {/* MOBILE/TABLET DOTS PAGINATION */}
+              {/* Mobile Dots Pagination */}
               {productImages.length > 1 && (
                 <div className="mt-3 flex lg:hidden items-center justify-center gap-1.5">
                   {productImages.map((_, idx) => (
@@ -296,7 +277,7 @@ function ProductDetails() {
             </div>
           </div>
 
-          {/* RIGHT SIDE: PRODUCT DETAILS (EXPANDED TO MATCH IMAGE HEIGHT & BREATHING SPACE) */}
+          {/* RIGHT SIDE: PRODUCT DETAILS */}
           <div className="flex flex-col justify-between lg:col-span-6 w-full py-1">
             <div>
               <p className="text-[10px] uppercase tracking-[0.25em] font-semibold text-[var(--color-accent)]">
@@ -335,17 +316,17 @@ function ProductDetails() {
                 <div className="mt-5">
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-xs uppercase tracking-wider text-[var(--color-text-muted)] font-medium">Color:</span>
-                    <span className="text-xs font-bold">{selectedColor}</span>
+                    <span className="text-xs font-bold">{selectedVariant?.name}</span>
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {product.variants.map((v) => {
-                      const isSelected = selectedColor === v.name;
+                      const isSelected = selectedVariant?.name === v.name;
                       return (
                         <button
                           key={v.name}
                           type="button"
                           onClick={() => {
-                            setSelectedColor(v.name);
+                            setSelectedVariant(v);
                             setCurrentImageIndex(0);
                           }}
                           className={`rounded-md border px-3 py-1.5 text-xs transition-all font-medium ${
@@ -362,7 +343,7 @@ function ProductDetails() {
                 </div>
               )}
 
-              {/* QUANTITY & ADD TO CART */}
+              {/* QUANTITY & "ADD / ADDED" BUTTON */}
               <div className="mt-6 flex items-center gap-3">
                 <div className="flex h-11 items-center rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-secondary)]/30 px-2">
                   <button
@@ -381,17 +362,21 @@ function ProductDetails() {
                     <FiPlus size={13} />
                   </button>
                 </div>
+                
                 <button
                   type="button"
                   onClick={handleMainCart}
-                  className={`flex h-11 flex-1 items-center justify-center gap-2 rounded-lg px-6 text-xs font-bold uppercase tracking-wider transition-all shadow-md ${
-                    cartActive
-                      ? "border border-[var(--color-border)] text-[var(--color-text-primary)] hover:border-[var(--color-accent)]"
-                      : "bg-[var(--color-accent)] text-white hover:opacity-95"
-                  }`}
+                  className="flex h-11 flex-1 items-center justify-center gap-2 rounded-lg bg-[var(--color-accent)] px-6 text-xs font-bold uppercase tracking-wider text-white transition-all shadow-md hover:opacity-95"
                 >
-                  <FiShoppingBag size={15} />
-                  {cartActive ? "Remove from Cart" : "Add to Cart"}
+                  {cartActive ? (
+                    <>
+                      <FiCheck size={16} /> Added
+                    </>
+                  ) : (
+                    <>
+                      <FiShoppingBag size={16} /> Add
+                    </>
+                  )}
                 </button>
               </div>
 
@@ -414,6 +399,7 @@ function ProductDetails() {
               {/* DESCRIPTION */}
               <div className="mt-6 border-t border-[var(--color-border)] pt-4">
                 <button
+                  type="button"
                   onClick={() => setShowDescription((prev) => !prev)}
                   className="flex justify-between items-center w-full text-left font-serif text-sm tracking-wide font-medium"
                 >

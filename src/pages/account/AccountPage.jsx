@@ -1,15 +1,9 @@
 import { useEffect, useState } from "react";
-
 import { FiHeart, FiShoppingBag, FiLogOut } from "react-icons/fi";
-
 import { Link } from "react-router-dom";
-
 import { useAuth } from "../../context/AuthContext";
-
 import BackButton from "../../components/common/BackButton";
-
 import SignIn from "./SignIn";
-
 import SignUp from "./SignUp";
 
 function AccountPage() {
@@ -31,11 +25,9 @@ function AccountPage() {
     }
 
     const wishlist = JSON.parse(localStorage.getItem("niyaWishlist") || "[]");
-
     const cart = JSON.parse(localStorage.getItem("niyaCart") || "[]");
 
     setWishlistCount(wishlist.length);
-
     setCartCount(cart.reduce((total, item) => total + (item.quantity || 1), 0));
   }, []);
 
@@ -102,14 +94,13 @@ function AccountPage() {
               </div>
             </div>
 
-            {/* USER DETAILS */}
+            {/* USER DETAILS (Gender & DOB removed) */}
             <div className="grid gap-6 sm:grid-cols-2">
               {/* NAME */}
               <div>
                 <p className="mb-2 text-[10px] font-medium tracking-[0.12em] text-accent">
                   NAME
                 </p>
-
                 <p className="text-xs text-text-secondary">
                   {currentUser.name || "—"}
                 </p>
@@ -120,7 +111,6 @@ function AccountPage() {
                 <p className="mb-2 text-[10px] font-medium tracking-[0.12em] text-accent">
                   EMAIL
                 </p>
-
                 <p className="text-xs text-text-secondary">
                   {currentUser.email || "—"}
                 </p>
@@ -131,31 +121,8 @@ function AccountPage() {
                 <p className="mb-2 text-[10px] font-medium tracking-[0.12em] text-accent">
                   PHONE
                 </p>
-
                 <p className="text-xs text-text-secondary">
                   {currentUser.phone || "—"}
-                </p>
-              </div>
-
-              {/* GENDER */}
-              <div>
-                <p className="mb-2 text-[10px] font-medium tracking-[0.12em] text-accent">
-                  GENDER
-                </p>
-
-                <p className="text-xs capitalize text-text-secondary">
-                  {currentUser.gender || "—"}
-                </p>
-              </div>
-
-              {/* DATE OF BIRTH */}
-              <div>
-                <p className="mb-2 text-[10px] font-medium tracking-[0.12em] text-accent">
-                  DATE OF BIRTH
-                </p>
-
-                <p className="text-xs text-text-secondary">
-                  {currentUser.dateOfBirth || "—"}
                 </p>
               </div>
 
@@ -164,7 +131,6 @@ function AccountPage() {
                 <p className="mb-2 text-[10px] font-medium tracking-[0.12em] text-accent">
                   ADDRESS
                 </p>
-
                 <p className="text-xs text-text-secondary">
                   {currentUser.address || "—"}
                 </p>
@@ -175,7 +141,6 @@ function AccountPage() {
                 <p className="mb-2 text-[10px] font-medium tracking-[0.12em] text-accent">
                   CITY
                 </p>
-
                 <p className="text-xs text-text-secondary">
                   {currentUser.city || "—"}
                 </p>
@@ -186,7 +151,6 @@ function AccountPage() {
                 <p className="mb-2 text-[10px] font-medium tracking-[0.12em] text-accent">
                   STATE
                 </p>
-
                 <p className="text-xs text-text-secondary">
                   {currentUser.state || "—"}
                 </p>
@@ -197,7 +161,6 @@ function AccountPage() {
                 <p className="mb-2 text-[10px] font-medium tracking-[0.12em] text-accent">
                   PINCODE
                 </p>
-
                 <p className="text-xs text-text-secondary">
                   {currentUser.pincode || "—"}
                 </p>
@@ -206,7 +169,7 @@ function AccountPage() {
 
             {/* EDIT PROFILE + SIGN OUT */}
             <div className="mt-10 border-t border-border-soft pt-6">
-             <div className="mb-6 flex items-center justify-between">
+              <div className="mb-6 flex items-center justify-between">
                 <Link
                   to="/profile"
                   className="w-32 border-b border-text-primary pb-1 text-center text-[16px] font-medium tracking-[0.08em] text-text-primary transition hover:opacity-70"
@@ -235,7 +198,6 @@ function AccountPage() {
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent-soft text-accent">
                       <FiHeart size={18} strokeWidth={1.3} />
                     </div>
-
                     <span className="text-[10px] text-text-secondary">
                       {wishlistCount} {wishlistCount === 1 ? "item" : "items"}
                     </span>
@@ -263,7 +225,6 @@ function AccountPage() {
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent-soft text-accent">
                       <FiShoppingBag size={18} strokeWidth={1.3} />
                     </div>
-
                     <span className="text-[10px] text-text-secondary">
                       {cartCount} {cartCount === 1 ? "item" : "items"}
                     </span>
@@ -290,25 +251,28 @@ function AccountPage() {
   }
 
   return (
-    <main className="min-h-[calc(100vh-70px)] bg-bg-primary px-4 py-6 text-text-primary md:px-10 md:py-4">
-      <div className="mx-auto flex min-h-[calc(100vh-110px)] max-w-[1200px] flex-col items-center justify-start pt-2 md:pt-3">
-        <div className="mb-2 text-center">
-          <Link
-            to="/"
-            className="font-serif text-2xl font-semibold tracking-tight text-text-primary"
-          >
-            Niya Bags
-          </Link>
-        </div>
-
-        <div className="w-full max-w-[520px] rounded-sm border border-border-soft bg-bg-secondary px-5 py-6 shadow-sm sm:px-8 sm:py-8 md:px-12 md:py-10">
-          {mode === "signin" ? (
-            <SignIn onSwitch={() => setMode("signup")} />
-          ) : (
-            <SignUp onSwitch={() => setMode("signin")} />
-          )}
-        </div>
+    <main className="min-h-screen w-full bg-bg-primary px-5 py-6 md:px-10 md:py-8 flex flex-col justify-between">
+      {/* Logo/Brand at Top-Left (Balanced margin, not sticking to absolute edge) */}
+      <div className="w-full">
+        <Link
+          to="/"
+          className="font-serif text-lg font-bold tracking-wider text-text-primary"
+        >
+          NIYA BAGS
+        </Link>
       </div>
+
+      {/* Centered Form Area */}
+      <div className="mx-auto w-full max-w-[520px] rounded-sm border border-border-soft bg-bg-secondary px-5 py-6 shadow-sm sm:px-8 sm:py-8 md:px-12 md:py-10 my-auto">
+        {mode === "signin" ? (
+          <SignIn onSwitch={() => setMode("signup")} />
+        ) : (
+          <SignUp onSwitch={() => setMode("signin")} />
+        )}
+      </div>
+
+      {/* Empty footer space for balance */}
+      <div />
     </main>
   );
 }

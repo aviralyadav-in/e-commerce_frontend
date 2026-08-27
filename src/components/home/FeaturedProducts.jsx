@@ -93,15 +93,17 @@ function FeaturedProducts() {
         id={id}
         className="
           bg-bg-secondary
-          px-5 py-12
+          px-5
+          py-8
           transition-colors duration-300
-          md:px-10 md:py-16
+          md:px-10
+          md:py-10
         "
       >
         <div className="mx-auto max-w-[1440px]">
           {/* SECTION HEADER */}
 
-          <div className="mb-8">
+          <div className="mb-6">
             {/* EYEBROW */}
             <p
               className="
@@ -115,7 +117,7 @@ function FeaturedProducts() {
               {eyebrow}
             </p>
 
-            {/* TITLE & VIEW ALL ROW - Ab View All exact h2 heading ke saamne aayega */}
+            {/* TITLE & VIEW ALL ROW */}
             <div className="flex items-center justify-between gap-4">
               <h2
                 className="
@@ -202,9 +204,11 @@ function FeaturedProducts() {
         id="featured"
         className="
           bg-bg-secondary
-          px-5 py-12
+          px-5
+          py-8
           transition-colors duration-300
-          md:px-10 md:py-16
+          md:px-10
+          md:py-10
         "
       >
         <div className="mx-auto max-w-[1440px]">

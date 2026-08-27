@@ -39,7 +39,8 @@ function PromoBanner({ page, position }) {
 
   return (
     <section className="w-full bg-bg-primary px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-6 lg:px-8 lg:py-8">
-      <div className="w-full overflow-hidden">
+      {/* Yahan rounded-lg aur md:rounded-xl add kiya gaya hai */}
+      <div className="w-full overflow-hidden rounded-lg md:rounded-xl shadow-sm">
         <img
           src={banner.image}
           alt={banner.alt || banner.title || "Promo Banner"}
