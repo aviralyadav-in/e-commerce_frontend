@@ -82,13 +82,6 @@
 
 html {
   scroll-behavior: smooth;
-
-  /* Hide scrollbar but keep scrolling */
-  scrollbar-width: none;
-}
-
-html::-webkit-scrollbar {
-  display: none;
 }
 
 html,
@@ -97,7 +90,6 @@ body,
   width: 100%;
   max-width: 100%;
   min-height: 100%;
-  overflow-x: hidden;
 }
 
 body {
@@ -132,7 +124,6 @@ img {
   display: block;
   max-width: 100%;
 }
-
 
 /* ================================
    GLOBAL RESPONSIVE FOUNDATION

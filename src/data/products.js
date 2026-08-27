@@ -1050,7 +1050,7 @@ export const products = [
     orderCount: 135,
     rating: 4.7,
     reviewCount: 58,
-    createdAt: "2026-08-06",
+    createdAt: "2026-08-27",
     isFeatured: true,
     variants: [
       {
