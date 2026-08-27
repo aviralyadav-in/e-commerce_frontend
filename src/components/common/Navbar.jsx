@@ -92,12 +92,12 @@ function Navbar() {
       {/* ==================================================
           NAVBAR
           ================================================== */}
-      <header className="sticky top-0 z-50 border-b border-border-soft bg-bg-secondary">
-        <div className="mx-auto flex h-[70px] max-w-[1440px] items-center px-5 md:px-10 lg:px-14">
+      <header className="sticky top-0 z-50 border-b border-[var(--color-border-soft)] bg-[var(--color-bg-secondary)] shadow-sm">
+        <div className="mx-auto flex h-[70px] max-w-[1440px] items-center px-4 sm:px-6 md:px-8 lg:px-14">
           {/* LOGO */}
           <Link
             to="/"
-            className="font-serif text-xl font-semibold tracking-tight text-text-primary transition hover:text-accent md:text-2xl"
+            className="font-serif text-xl sm:text-2xl font-semibold tracking-tight text-[var(--color-text-primary)] transition-colors hover:text-[var(--color-accent)] shrink-0"
           >
             Niya Bags
           </Link>
@@ -105,31 +105,31 @@ function Navbar() {
           {/* ==================================================
               DESKTOP NAVIGATION
               ================================================== */}
-          <nav className="ml-16 hidden items-center gap-8 md:flex">
+          <nav className="hidden items-center gap-5 md:ml-8 md:flex lg:ml-12 lg:gap-8 xl:ml-16">
             <Link
               to="/shop"
-              className="text-sm font-medium text-text-secondary transition hover:text-accent"
+              className="text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-accent)]"
             >
               Shop All
             </Link>
 
             <Link
               to="/shop?filter=new-arrivals"
-              className="text-sm font-medium text-text-secondary transition hover:text-accent"
+              className="text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-accent)]"
             >
               New Arrivals
             </Link>
 
             <Link
               to="/shop?filter=best-sellers"
-              className="text-sm font-medium text-text-secondary transition hover:text-accent"
+              className="text-sm font-medium text-[var(--color-text-secondary)] transition-colors hover:text-[var(--color-accent)]"
             >
               Bestsellers
             </Link>
 
             <Link
               to="/sale"
-              className="text-sm font-medium text-accent transition hover:text-text-primary"
+              className="text-sm font-medium text-[var(--color-accent)] transition-opacity hover:opacity-80"
             >
               Sale
             </Link>
@@ -138,27 +138,27 @@ function Navbar() {
           {/* ==================================================
               RIGHT SIDE
               ================================================== */}
-          <div className="ml-auto flex items-center gap-2 text-text-primary md:gap-4">
+<div className="ml-auto flex items-center gap-1 sm:gap-1.5 md:gap-2 lg:gap-4 text-[var(--color-text-primary)]">            
             {/* SEARCH */}
             <button
               type="button"
               aria-label="Search"
               onClick={handleSearchOpen}
-              className="p-1 transition hover:text-accent"
+              className="p-1.5 sm:p-2 rounded-full transition-colors hover:text-[var(--color-accent)] hover:bg-[var(--color-bg-tertiary)]"
             >
-              <FiSearch size={17} strokeWidth={1.4} />
+              <FiSearch size={18} strokeWidth={1.5} />
             </button>
 
             {/* WISHLIST */}
             <Link
               to="/wishlist"
               aria-label="Wishlist"
-              className="relative p-1 transition hover:text-accent"
+              className="relative p-1.5 sm:p-2 rounded-full transition-colors hover:text-[var(--color-accent)] hover:bg-[var(--color-bg-tertiary)]"
             >
-              <FiHeart size={17} strokeWidth={1.4} />
+              <FiHeart size={18} strokeWidth={1.5} />
 
               {wishlistCount > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[8px] font-semibold text-white">
+                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[var(--color-accent)] px-1 text-[9px] font-semibold text-white shadow-sm">
                   {wishlistCount}
                 </span>
               )}
@@ -171,12 +171,12 @@ function Navbar() {
               to="/cart"
               aria-label="Shopping Bag"
               title="Shopping Bag"
-              className="relative p-1 transition hover:text-accent md:hidden"
+              className="relative p-1.5 sm:p-2 rounded-full transition-colors hover:text-[var(--color-accent)] hover:bg-[var(--color-bg-tertiary)] md:hidden"
             >
-              <FiShoppingBag size={18} strokeWidth={1.4} />
+              <FiShoppingBag size={18} strokeWidth={1.5} />
 
               {cartCount > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[8px] font-semibold text-white">
+                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[var(--color-accent)] px-1 text-[9px] font-semibold text-white shadow-sm">
                   {cartCount}
                 </span>
               )}
@@ -189,9 +189,9 @@ function Navbar() {
               to="/account"
               aria-label="Account"
               title="Account"
-              className="hidden p-1 transition hover:text-accent md:block"
+              className="hidden p-2 rounded-full transition-colors hover:text-[var(--color-accent)] hover:bg-[var(--color-bg-tertiary)] md:flex items-center justify-center"
             >
-              <FiUser size={18} strokeWidth={1.4} />
+              <FiUser size={18} strokeWidth={1.5} />
             </Link>
 
             {/* DESKTOP THEME */}
@@ -200,12 +200,12 @@ function Navbar() {
               aria-label="Toggle theme"
               title={isDarkMode ? "Light Mode" : "Dark Mode"}
               onClick={toggleTheme}
-              className="hidden p-1 transition hover:text-accent md:block"
+              className="hidden p-2 rounded-full transition-colors hover:text-[var(--color-accent)] hover:bg-[var(--color-bg-tertiary)] md:flex items-center justify-center"
             >
               {isDarkMode ? (
-                <FiSun size={18} strokeWidth={1.4} />
+                <FiSun size={18} strokeWidth={1.5} />
               ) : (
-                <FiMoon size={18} strokeWidth={1.4} />
+                <FiMoon size={18} strokeWidth={1.5} />
               )}
             </button>
 
@@ -214,12 +214,12 @@ function Navbar() {
               to="/cart"
               aria-label="Shopping Bag"
               title="Shopping Bag"
-              className="relative hidden p-1 transition hover:text-accent md:block"
+              className="relative hidden p-2 rounded-full transition-colors hover:text-[var(--color-accent)] hover:bg-[var(--color-bg-tertiary)] md:flex items-center justify-center"
             >
-              <FiShoppingBag size={18} strokeWidth={1.4} />
+              <FiShoppingBag size={18} strokeWidth={1.5} />
 
               {cartCount > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-accent px-1 text-[8px] font-semibold text-white">
+                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[var(--color-accent)] px-1 text-[9px] font-semibold text-white shadow-sm">
                   {cartCount}
                 </span>
               )}
@@ -232,9 +232,9 @@ function Navbar() {
                 aria-label="Sign Out"
                 title="Sign Out"
                 onClick={handleLogout}
-                className="hidden p-1 text-text-primary transition hover:text-red-500 md:block"
+                className="hidden p-2 rounded-full text-[var(--color-text-primary)] transition-colors hover:text-red-500 hover:bg-red-50 md:flex items-center justify-center"
               >
-                <FiLogOut size={18} strokeWidth={1.4} />
+                <FiLogOut size={18} strokeWidth={1.5} />
               </button>
             )}
 
@@ -243,12 +243,12 @@ function Navbar() {
                 ================================================== */}
             <button
               type="button"
-              className="p-1 transition hover:text-accent md:hidden"
+              className="p-1.5 sm:p-2 rounded-full transition-colors hover:text-[var(--color-accent)] hover:bg-[var(--color-bg-tertiary)] md:hidden"
               onClick={() => setMenuOpen((prev) => !prev)}
               aria-label={menuOpen ? "Close menu" : "Open menu"}
               aria-expanded={menuOpen}
             >
-              {menuOpen ? <FiX size={19} /> : <FiMenu size={19} />}
+              {menuOpen ? <FiX size={20} /> : <FiMenu size={20} />}
             </button>
           </div>
         </div>
@@ -257,7 +257,7 @@ function Navbar() {
             MOBILE FULL-SCREEN OVERLAY MENU
             ================================================== */}
         <nav
-          className={`fixed inset-0 z-[70] flex w-full flex-col bg-[var(--color-bg-secondary)] transition-all duration-300 ease-in-out md:hidden ${
+          className={`fixed inset-0 z-[70] flex h-[100dvh] w-full flex-col bg-[var(--color-bg-secondary)] transition-all duration-300 ease-in-out md:hidden ${
             menuOpen
               ? "pointer-events-auto opacity-100 translate-y-0"
               : "pointer-events-none opacity-0 -translate-y-4"
@@ -265,9 +265,9 @@ function Navbar() {
           aria-hidden={!menuOpen}
         >
           {/* DRAWER HEADER */}
-          <div className="flex h-[70px] shrink-0 items-center justify-between border-b border-[var(--color-border)] px-6 md:px-10">
+          <div className="flex h-[70px] shrink-0 items-center justify-between border-b border-[var(--color-border)] px-5 sm:px-8">
             <div>
-              <p className="text-[9px] uppercase tracking-[0.2em] text-[var(--color-text-muted)] font-medium">
+              <p className="text-[10px] uppercase tracking-widest text-[var(--color-text-muted)] font-medium">
                 Welcome
               </p>
               <p className="font-serif text-lg font-medium text-[var(--color-text-primary)]">
@@ -279,16 +279,16 @@ function Navbar() {
               type="button"
               onClick={() => setMenuOpen(false)}
               aria-label="Close menu"
-              className="rounded-full p-2 text-[var(--color-text-primary)] transition hover:bg-[var(--color-bg-tertiary)]"
+              className="rounded-full p-2 text-[var(--color-text-primary)] transition-colors hover:bg-[var(--color-bg-tertiary)]"
             >
               <FiX size={22} strokeWidth={1.5} />
             </button>
           </div>
 
           {/* DRAWER CONTENT */}
-          <div className="flex flex-1 flex-col justify-between overflow-y-auto px-6 py-8 md:px-10">
-            <div className="flex flex-col gap-2">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--color-text-muted)] mb-3 font-semibold">
+          <div className="flex flex-1 flex-col justify-between overflow-y-auto px-5 py-6 sm:px-8 sm:py-8">
+            <div className="flex flex-col gap-1">
+              <p className="text-[11px] uppercase tracking-widest text-[var(--color-text-muted)] mb-2 font-semibold">
                 Menu
               </p>
               
@@ -296,9 +296,9 @@ function Navbar() {
               <Link
                 to="/shop"
                 onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-4 py-3.5 text-base font-medium text-[var(--color-text-primary)] transition hover:text-[var(--color-accent)] border-b border-[var(--color-border)]/40"
+                className="flex items-center gap-4 py-4 text-base font-medium text-[var(--color-text-primary)] transition-colors hover:text-[var(--color-accent)] border-b border-[var(--color-border-soft)]"
               >
-                <FiGrid size={18} strokeWidth={1.4} className="text-[var(--color-accent)]" />
+                <FiGrid size={20} strokeWidth={1.5} className="text-[var(--color-accent)]" />
                 <span>Shop All Bags</span>
               </Link>
 
@@ -306,9 +306,9 @@ function Navbar() {
               <Link
                 to="/shop?filter=new-arrivals"
                 onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-4 py-3.5 text-base font-medium text-[var(--color-text-primary)] transition hover:text-[var(--color-accent)] border-b border-[var(--color-border)]/40"
+                className="flex items-center gap-4 py-4 text-base font-medium text-[var(--color-text-primary)] transition-colors hover:text-[var(--color-accent)] border-b border-[var(--color-border-soft)]"
               >
-                <FiAward size={18} strokeWidth={1.4} className="text-[var(--color-accent)]" />
+                <FiAward size={20} strokeWidth={1.5} className="text-[var(--color-accent)]" />
                 <span>New Arrivals</span>
               </Link>
 
@@ -316,9 +316,9 @@ function Navbar() {
               <Link
                 to="/shop?filter=best-sellers"
                 onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-4 py-3.5 text-base font-medium text-[var(--color-text-primary)] transition hover:text-[var(--color-accent)] border-b border-[var(--color-border)]/40"
+                className="flex items-center gap-4 py-4 text-base font-medium text-[var(--color-text-primary)] transition-colors hover:text-[var(--color-accent)] border-b border-[var(--color-border-soft)]"
               >
-                <FiTrendingUp size={18} strokeWidth={1.4} className="text-[var(--color-accent)]" />
+                <FiTrendingUp size={20} strokeWidth={1.5} className="text-[var(--color-accent)]" />
                 <span>Bestsellers</span>
               </Link>
 
@@ -326,13 +326,13 @@ function Navbar() {
               <Link
                 to="/sale"
                 onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-4 py-3.5 text-base font-medium text-[var(--color-accent)] transition hover:opacity-80 border-b border-[var(--color-border)]/40"
+                className="flex items-center gap-4 py-4 text-base font-medium text-[var(--color-accent)] transition-opacity hover:opacity-80 border-b border-[var(--color-border-soft)]"
               >
-                <FiTag size={18} strokeWidth={1.4} />
+                <FiTag size={20} strokeWidth={1.5} />
                 <span>Sale Collection</span>
               </Link>
 
-              <p className="text-[10px] uppercase tracking-[0.2em] text-[var(--color-text-muted)] mt-8 mb-3 font-semibold">
+              <p className="text-[11px] uppercase tracking-widest text-[var(--color-text-muted)] mt-8 mb-2 font-semibold">
                 Preferences & Account
               </p>
 
@@ -340,9 +340,9 @@ function Navbar() {
               <Link
                 to="/account"
                 onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-4 py-3.5 text-base font-medium text-[var(--color-text-primary)] transition hover:text-[var(--color-accent)] border-b border-[var(--color-border)]/40"
+                className="flex items-center gap-4 py-4 text-base font-medium text-[var(--color-text-primary)] transition-colors hover:text-[var(--color-accent)] border-b border-[var(--color-border-soft)]"
               >
-                <FiUser size={18} strokeWidth={1.4} className="text-[var(--color-accent)]" />
+                <FiUser size={20} strokeWidth={1.5} className="text-[var(--color-accent)]" />
                 <span>
                   {isAuthenticated
                     ? user?.name || user?.email || "My Account"
@@ -354,31 +354,31 @@ function Navbar() {
               <button
                 type="button"
                 onClick={toggleTheme}
-                className="flex items-center justify-width justify-between w-full py-3.5 text-base font-medium text-[var(--color-text-primary)] transition hover:text-[var(--color-accent)] border-b border-[var(--color-border)]/40 text-left"
+                className="flex w-full items-center justify-between py-4 text-left text-base font-medium text-[var(--color-text-primary)] transition-colors hover:text-[var(--color-accent)] border-b border-[var(--color-border-soft)]"
               >
                 <div className="flex items-center gap-4">
                   {isDarkMode ? (
-                    <FiSun size={18} strokeWidth={1.4} className="text-[var(--color-accent)]" />
+                    <FiSun size={20} strokeWidth={1.5} className="text-[var(--color-accent)]" />
                   ) : (
-                    <FiMoon size={18} strokeWidth={1.4} className="text-[var(--color-accent)]" />
+                    <FiMoon size={20} strokeWidth={1.5} className="text-[var(--color-accent)]" />
                   )}
                   <span>Appearance</span>
                 </div>
-                <span className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider">
+                <span className="text-[10px] sm:text-xs text-[var(--color-text-muted)] uppercase tracking-wider">
                   {isDarkMode + " Dark Mode" ? (isDarkMode ? "Dark" : "Light") : ""}
                 </span>
               </button>
             </div>
 
             {/* DRAWER FOOTER / LOGOUT */}
-            <div className="pt-6 pb-4">
+            <div className="pt-8 pb-4">
               {isAuthenticated && (
                 <button
                   type="button"
                   onClick={handleLogout}
-                  className="flex w-full items-center justify-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 py-3.5 text-xs font-semibold uppercase tracking-wider text-red-500 transition hover:bg-red-500/20"
+                  className="flex w-full items-center justify-center gap-2 rounded-lg border border-red-500/30 bg-red-500/5 py-3.5 text-sm font-semibold uppercase tracking-wider text-red-500 transition-colors hover:bg-red-500/15"
                 >
-                  <FiLogOut size={16} />
+                  <FiLogOut size={18} strokeWidth={1.5} />
                   <span>Sign Out</span>
                 </button>
               )}

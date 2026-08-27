@@ -31,16 +31,22 @@ function CampaignSpotlight() {
   }, []);
 
   // ===============================
-  // LOADING
+  // LOADING SKELETON
   // ===============================
   if (!campaign) {
     return (
-      <section className="bg-[var(--color-dark-section)] px-4 py-10 sm:px-5 sm:py-14 md:px-10 md:py-20">
+      <section className="bg-[var(--color-dark-section)] px-4 py-12 sm:px-6 sm:py-16 lg:px-12 lg:py-20">
         <div className="mx-auto grid max-w-[1440px] overflow-hidden md:grid-cols-2">
-          <div className="relative h-[300px] animate-pulse bg-white/10 sm:h-[350px] md:h-[500px]" />
+          {/* Skeleton Image */}
+          <div className="relative h-[350px] sm:h-[450px] md:h-full md:min-h-[500px] lg:min-h-[600px] animate-pulse bg-white/5" />
 
-          <div className="flex min-h-0 items-center bg-[var(--color-dark-section-secondary)] px-6 py-8 sm:px-8 sm:py-10 md:min-h-[500px] md:px-14 md:py-12">
-            <div className="h-6 w-40 animate-pulse bg-white/10" />
+          {/* Skeleton Content */}
+          <div className="flex items-center bg-[var(--color-dark-section-secondary)] px-6 py-10 sm:px-10 sm:py-14 lg:px-16 lg:py-20">
+            <div className="w-full max-w-[480px]">
+              <div className="mb-4 h-3 w-24 animate-pulse bg-white/10 rounded" />
+              <div className="mb-4 h-12 w-3/4 animate-pulse bg-white/10 rounded" />
+              <div className="h-4 w-full animate-pulse bg-white/10 rounded" />
+            </div>
           </div>
         </div>
       </section>
@@ -48,43 +54,47 @@ function CampaignSpotlight() {
   }
 
   return (
-    <section className="bg-[var(--color-dark-section)] px-4 py-10 sm:px-5 sm:py-14 md:px-10 md:py-20">
-      <div className="mx-auto grid max-w-[1440px] overflow-hidden md:grid-cols-2">
+    <section className="bg-[var(--color-dark-section)] px-4 py-12 sm:px-6 sm:py-16 lg:px-12 lg:py-20">
+      <div className="mx-auto grid max-w-[1440px] overflow-hidden md:grid-cols-2 shadow-sm">
+        
         {/* IMAGE */}
-        <div className="relative h-[300px] sm:h-[350px] md:h-[500px]">
+        <div className="relative h-[350px] sm:h-[450px] md:h-full md:min-h-[500px] lg:min-h-[600px]">
           <img
             src={campaign.image}
             alt={campaign.title}
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full object-cover object-center"
             loading="lazy"
           />
         </div>
 
         {/* CONTENT */}
-        <div className="flex min-h-0 items-center bg-[var(--color-dark-section-secondary)] px-6 py-8 sm:px-8 sm:py-10 md:min-h-[500px] md:px-14 md:py-12">
+        <div className="flex items-center bg-[var(--color-dark-section-secondary)] px-6 py-10 sm:px-10 sm:py-14 lg:px-16 lg:py-20">
           <div className="max-w-[480px] text-white">
-            <p className="mb-2 text-[8px] font-semibold tracking-[0.22em] text-[var(--color-accent-bright)] sm:text-[9px]">
+            
+            <p className="mb-3 text-[10px] sm:text-xs font-semibold tracking-widest text-[var(--color-accent-bright)] uppercase">
               {campaign.eyebrow}
             </p>
 
-            <h2 className="whitespace-pre-line font-serif text-[32px] leading-[1.05] sm:text-[38px] md:text-[52px]">
+            <h2 className="whitespace-pre-line font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-[1.1] tracking-tight">
               {campaign.title}
             </h2>
 
-            <p className="mt-4 max-w-[420px] text-[10px] leading-5 text-white/65 sm:text-[11px] sm:leading-6">
+            <p className="mt-4 sm:mt-5 max-w-[420px] text-xs sm:text-sm lg:text-base leading-relaxed text-white/70 font-normal">
               {campaign.description}
             </p>
 
             {campaign.buttonText && campaign.buttonLink && (
               <Link
                 to={campaign.buttonLink}
-                className="mt-5 inline-flex border-b border-[var(--color-accent-bright)] pb-1.5 text-[14px] font-semibold tracking-wide text-white transition-opacity hover:opacity-70 sm:mt-6 sm:text-[12px]"
+                className="mt-6 sm:mt-8 inline-flex items-center border-b border-[var(--color-accent-bright)] pb-1 text-xs sm:text-sm font-semibold tracking-wide text-white transition-all hover:text-[var(--color-accent-bright)] hover:opacity-90 active:opacity-70"
               >
-                {campaign.buttonText} →
+                {campaign.buttonText} <span className="ml-2 font-normal">→</span>
               </Link>
             )}
+            
           </div>
         </div>
+
       </div>
     </section>
   );
