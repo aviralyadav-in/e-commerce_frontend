@@ -319,8 +319,7 @@ function HeroBanner() {
               =============================== */}
 
               <div
-                className="absolute -bottom-6 left-4 z-30 flex min-h-[60px] min-w-[150px] flex-col justify-center px-4 py-2.5 shadow-md transition-transform duration-300 ease-out hover:-translate-y-1"
-                style={{
+className="absolute -bottom-5 left-4 z-30 flex min-h-[60px] min-w-[150px] flex-col justify-center px-4 py-2.5 shadow-md transition-transform duration-300 ease-out hover:-translate-y-1 md:-left-16 md:bottom-20"                style={{
                   backgroundColor: "var(--color-bg-secondary)",
                   border: "1px solid var(--color-border)",
                 }}

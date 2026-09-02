@@ -125,7 +125,7 @@ export const promoBannersData = [
     id: "promo-home-001",
     page: "home",
     position: "after-hero",
-    image: "public/products/bags/7580808.jpg",
+    image: "/products/bags/7580808.jpg",
     title: "Niya Collection",
     alt: "Niya Collection Promo Banner",
     isActive: true,
