@@ -1,14 +1,27 @@
+
 import { useEffect, useState } from "react";
-import { FiHeart, FiShoppingBag, FiLogOut } from "react-icons/fi";
+
+import {
+  FiHeart,
+  FiShoppingBag,
+  FiLogOut,
+  FiPackage,
+} from "react-icons/fi";
+
 import { Link } from "react-router-dom";
+
 import { useAuth } from "../../context/AuthContext";
+
 import BackButton from "../../components/common/BackButton";
+
 import SignIn from "./SignIn";
+
 import SignUp from "./SignUp";
 
 function AccountPage() {
   const [mode, setMode] = useState("signin");
   const { user: authUser, logout } = useAuth();
+
   const [localUser, setLocalUser] = useState(null);
   const [wishlistCount, setWishlistCount] = useState(0);
   const [cartCount, setCartCount] = useState(0);
@@ -24,11 +37,22 @@ function AccountPage() {
       }
     }
 
-    const wishlist = JSON.parse(localStorage.getItem("niyaWishlist") || "[]");
-    const cart = JSON.parse(localStorage.getItem("niyaCart") || "[]");
+    const wishlist = JSON.parse(
+      localStorage.getItem("niyaWishlist") || "[]"
+    );
+
+    const cart = JSON.parse(
+      localStorage.getItem("niyaCart") || "[]"
+    );
 
     setWishlistCount(wishlist.length);
-    setCartCount(cart.reduce((total, item) => total + (item.quantity || 1), 0));
+
+    setCartCount(
+      cart.reduce(
+        (total, item) => total + (item.quantity || 1),
+        0
+      )
+    );
   }, []);
 
   const currentUser = authUser || localUser;
@@ -51,6 +75,7 @@ function AccountPage() {
     return (
       <main className="min-h-[calc(100vh-70px)] bg-bg-primary px-5 py-8 text-text-primary md:px-10 md:py-10">
         <div className="mx-auto max-w-[900px]">
+
           {/* BACK */}
           <BackButton className="mb-7" />
 
@@ -71,9 +96,11 @@ function AccountPage() {
 
           {/* PROFILE CARD */}
           <div className="rounded-sm border border-border-soft bg-bg-secondary p-6 md:p-10">
+
             {/* PROFILE HEADER */}
             <div className="mb-8 flex items-center justify-between border-b border-border-soft pb-8">
               <div className="flex items-center gap-5">
+
                 {currentUser.avatar ? (
                   <img
                     src={currentUser.avatar}
@@ -91,11 +118,13 @@ function AccountPage() {
                     {displayName}
                   </h2>
                 </div>
+
               </div>
             </div>
 
-            {/* USER DETAILS (Gender & DOB removed) */}
+            {/* USER DETAILS */}
             <div className="grid gap-6 sm:grid-cols-2">
+
               {/* NAME */}
               <div>
                 <p className="mb-2 text-[10px] font-medium tracking-[0.12em] text-accent">
@@ -165,11 +194,14 @@ function AccountPage() {
                   {currentUser.pincode || "—"}
                 </p>
               </div>
+
             </div>
 
             {/* EDIT PROFILE + SIGN OUT */}
             <div className="mt-10 border-t border-border-soft pt-6">
+
               <div className="mb-6 flex items-center justify-between">
+
                 <Link
                   to="/profile"
                   className="w-32 border-b border-text-primary pb-1 text-center text-[16px] font-medium tracking-[0.08em] text-text-primary transition hover:opacity-70"
@@ -185,22 +217,28 @@ function AccountPage() {
                   <span>SIGN OUT</span>
                   <FiLogOut size={13} />
                 </button>
+
               </div>
 
-              {/* WISHLIST + CART LINKS */}
+              {/* WISHLIST + CART + MY ORDERS */}
               <div className="grid gap-4 sm:grid-cols-2">
+
                 {/* WISHLIST */}
                 <Link
                   to="/wishlist"
                   className="group rounded-sm border border-border-soft bg-bg-primary p-5 transition hover:border-text-primary"
                 >
                   <div className="flex items-center justify-between">
+
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent-soft text-accent">
                       <FiHeart size={18} strokeWidth={1.3} />
                     </div>
+
                     <span className="text-[10px] text-text-secondary">
-                      {wishlistCount} {wishlistCount === 1 ? "item" : "items"}
+                      {wishlistCount}{" "}
+                      {wishlistCount === 1 ? "item" : "items"}
                     </span>
+
                   </div>
 
                   <h3 className="mt-5 font-serif text-xl text-text-primary">
@@ -222,12 +260,16 @@ function AccountPage() {
                   className="group rounded-sm border border-border-soft bg-bg-primary p-5 transition hover:border-text-primary"
                 >
                   <div className="flex items-center justify-between">
+
                     <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent-soft text-accent">
                       <FiShoppingBag size={18} strokeWidth={1.3} />
                     </div>
+
                     <span className="text-[10px] text-text-secondary">
-                      {cartCount} {cartCount === 1 ? "item" : "items"}
+                      {cartCount}{" "}
+                      {cartCount === 1 ? "item" : "items"}
                     </span>
+
                   </div>
 
                   <h3 className="mt-5 font-serif text-xl text-text-primary">
@@ -242,8 +284,36 @@ function AccountPage() {
                     VIEW BAG →
                   </p>
                 </Link>
+
+                {/* MY ORDERS */}
+                <Link
+                  to="/my-orders"
+                  className="group rounded-sm border border-border-soft bg-bg-primary p-5 transition hover:border-text-primary"
+                >
+                  <div className="flex items-center justify-between">
+
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent-soft text-accent">
+                      <FiPackage size={18} strokeWidth={1.3} />
+                    </div>
+
+                  </div>
+
+                  <h3 className="mt-5 font-serif text-xl text-text-primary">
+                    My Orders
+                  </h3>
+
+                  <p className="mt-2 text-xs leading-5 text-text-secondary">
+                    Track and view your placed orders.
+                  </p>
+
+                  <p className="mt-4 text-[9px] font-semibold tracking-[0.12em] text-accent group-hover:underline">
+                    VIEW ORDERS →
+                  </p>
+                </Link>
+
               </div>
             </div>
+
           </div>
         </div>
       </main>
@@ -252,7 +322,8 @@ function AccountPage() {
 
   return (
     <main className="min-h-screen w-full bg-bg-primary px-5 py-6 md:px-10 md:py-8 flex flex-col justify-between">
-      {/* Logo/Brand at Top-Left (Balanced margin, not sticking to absolute edge) */}
+
+      {/* LOGO */}
       <div className="w-full">
         <Link
           to="/"
@@ -262,17 +333,20 @@ function AccountPage() {
         </Link>
       </div>
 
-      {/* Centered Form Area */}
-      <div className="mx-auto w-full max-w-[520px] rounded-sm border border-border-soft bg-bg-secondary px-5 py-6 shadow-sm sm:px-8 sm:py-8 md:px-12 md:py-10 my-auto">
+      {/* SIGN IN / SIGN UP */}
+      <div className="mx-auto my-auto w-full max-w-[520px] rounded-sm border border-border-soft bg-bg-secondary px-5 py-6 shadow-sm sm:px-8 sm:py-8 md:px-12 md:py-10">
+
         {mode === "signin" ? (
           <SignIn onSwitch={() => setMode("signup")} />
         ) : (
           <SignUp onSwitch={() => setMode("signin")} />
         )}
+
       </div>
 
-      {/* Empty footer space for balance */}
+      {/* BALANCE */}
       <div />
+
     </main>
   );
 }

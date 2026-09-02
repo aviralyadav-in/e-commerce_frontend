@@ -1,4 +1,6 @@
+
 import { useEffect, useState } from "react";
+
 import { getPromoBanners } from "../../api/homeApi";
 
 function PromoBanner({ page, position }) {
@@ -39,12 +41,11 @@ function PromoBanner({ page, position }) {
 
   return (
     <section className="w-full bg-bg-primary px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-6 lg:px-8 lg:py-8">
-      {/* Yahan rounded-lg aur md:rounded-xl add kiya gaya hai */}
       <div className="w-full overflow-hidden rounded-lg md:rounded-xl shadow-sm">
         <img
           src={banner.image}
           alt={banner.alt || banner.title || "Promo Banner"}
-          className="h-[130px] w-full object-cover sm:h-[150px] md:h-[170px] lg:h-[190px]"
+          className="block h-auto w-full lg:h-[190px] lg:object-cover"
         />
       </div>
     </section>
