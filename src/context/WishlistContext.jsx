@@ -24,7 +24,6 @@ export function WishlistProvider({ children }) {
     }
   }, [wishlistItems]);
 
-  // Sirf ID aur Color ka rule
   const getVariantKey = (product, selectedColor) => {
     const productId = product?.id;
     const color = selectedColor || product?.color;
@@ -35,12 +34,21 @@ export function WishlistProvider({ children }) {
   function toggleWishlist(product, selectedColor = null) {
     const uniqueKey = getVariantKey(product, selectedColor);
     if (!uniqueKey) return;
+    const productId = String(product?.id || "");
 
     setWishlistItems((current) => {
       const exists = current.includes(uniqueKey);
       if (exists) {
         return current.filter((id) => id !== uniqueKey);
       } else {
+        const hasExisting = current.some(
+          (id) => id === productId || id.startsWith(productId + "-")
+        );
+        if (hasExisting) {
+          return current.filter(
+            (id) => id !== productId && !id.startsWith(productId + "-")
+          );
+        }
         return [...current, uniqueKey];
       }
     });
@@ -49,7 +57,10 @@ export function WishlistProvider({ children }) {
   function isInWishlist(product, selectedColor = null) {
     const uniqueKey = getVariantKey(product, selectedColor);
     if (!uniqueKey) return false;
-    return wishlistItems.includes(uniqueKey);
+    const productId = String(product?.id || "");
+    return wishlistItems.some(
+      (item) => item === uniqueKey || item.startsWith(productId + "-")
+    );
   }
 
   const wishlistCount = wishlistItems.length;

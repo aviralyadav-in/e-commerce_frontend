@@ -172,6 +172,19 @@ function ShopPage() {
   }, [searchParams, allBaseProducts, dynamicWomenSubcategories, dynamicMenSubcategories]);
 
   // ===============================
+  // BEST SELLER IDS (orderCount based)
+  // ===============================
+  const bestSellerIds = useMemo(() => {
+    return new Set(
+      allBaseProducts
+        .slice()
+        .sort((a, b) => Number(b.orderCount || 0) - Number(a.orderCount || 0))
+        .slice(0, 8)
+        .map((p) => p.id)
+    );
+  }, [allBaseProducts]);
+
+  // ===============================
   // MULTI-FILTERING LOGIC
   // ===============================
   const filteredProducts = useMemo(() => {
@@ -200,7 +213,7 @@ function ShopPage() {
       if (availabilityFilter.includes("featured") && !p.isFeatured) {
         return false;
       }
-      if (availabilityFilter.includes("best-sellers") && !p.isBestSeller) {
+      if (availabilityFilter.includes("best-sellers") && !bestSellerIds.has(p.id)) {
         return false;
       }
       if (availabilityFilter.includes("new-arrivals")) {
@@ -217,7 +230,7 @@ function ShopPage() {
 
       return true;
     });
-  }, [allBaseProducts, selectedSubcategories, selectedColors, availabilityFilter, priceRange]);
+  }, [allBaseProducts, selectedSubcategories, selectedColors, availabilityFilter, priceRange, bestSellerIds]);
 
   // ===============================
   // CLEAN MULTI-SORTING LOGIC
@@ -670,7 +683,8 @@ function ShopPage() {
               className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             />
 
-<aside className="absolute inset-0 flex h-full w-full flex-col bg-[var(--color-bg-primary)] shadow-2xl">              <div className="flex items-center justify-between border-b border-[var(--color-border)] px-5 py-3">
+            <aside className="absolute inset-0 flex h-full w-full flex-col bg-[var(--color-bg-primary)] shadow-2xl">
+              <div className="flex items-center justify-between border-b border-[var(--color-border)] px-5 py-3">
                 <p className="text-[10px] font-semibold tracking-[0.2em]">
                   FILTERS
                 </p>
@@ -709,14 +723,14 @@ function ShopPage() {
                   selectedColors.length > 0 ||
                   availabilityFilter.length > 0 ||
                   sortBy !== "") && (
-                  <button
-                    type="button"
-                    onClick={clearAllFilters}
-                    className="text-[9px] font-semibold text-[var(--color-accent)]"
-                  >
-                    RESET
-                  </button>
-                )}
+                    <button
+                      type="button"
+                      onClick={clearAllFilters}
+                      className="text-[9px] font-semibold text-[var(--color-accent)]"
+                    >
+                      RESET
+                    </button>
+                  )}
               </div>
 
               {renderAllFiltersContent(false)}

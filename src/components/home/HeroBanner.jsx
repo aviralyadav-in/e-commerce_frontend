@@ -366,70 +366,7 @@ className="absolute -bottom-5 left-4 z-30 flex min-h-[60px] min-w-[150px] flex-c
           </div>
         </div>
 
-        {/* ===============================
-            BOTTOM POPULAR STYLES SECTION
-        =============================== */}
-
-        <div
-          className="w-full px-6 py-4 flex flex-col items-start justify-between gap-4 transition-colors md:flex-row md:items-center lg:px-12"
-          style={{
-            borderTop: "1px solid var(--color-border)",
-          }}
-        >
-          <span className="niyabags-hero-text shrink-0 text-xs font-bold tracking-widest">
-            POPULAR STYLES
-          </span>
-
-          {/* ================= MOBILE / TABLET ================= */}
-
-          <div className="w-full overflow-hidden md:hidden">
-            <div className="popular-styles-carousel flex w-max">
-              <span className="flex items-center gap-2 whitespace-nowrap px-4 text-xs font-semibold tracking-wider">
-                <span className="niyabags-hero-text text-[10px]">01</span>
-                <span className="niyabags-hero-text">STRUCTURED TOTE</span>
-              </span>
-
-              <span className="flex items-center gap-2 whitespace-nowrap px-4 text-xs font-semibold tracking-wider">
-                <span className="niyabags-hero-text text-[10px]">02</span>
-                <span className="niyabags-hero-text">EVERYDAY CROSSBODY</span>
-              </span>
-
-              <span className="flex items-center gap-2 whitespace-nowrap px-4 text-xs font-semibold tracking-wider">
-                <span className="niyabags-hero-text text-[10px]">03</span>
-                <span className="niyabags-hero-text">SLOUCHY HOBO</span>
-              </span>
-
-              <span className="flex items-center gap-2 whitespace-nowrap px-4 text-xs font-semibold tracking-wider">
-                <span className="niyabags-hero-text text-[10px]">04</span>
-                <span className="niyabags-hero-text">STATEMENT CLUTCH</span>
-              </span>
-            </div>
-          </div>
-
-          {/* ================= DESKTOP ================= */}
-
-          <div className="hidden w-full flex-wrap items-center gap-x-8 gap-y-2 text-xs font-semibold tracking-wider md:flex md:w-auto">
-            <span className="flex items-center gap-2">
-              <span className="niyabags-hero-text text-[10px]">01</span>
-              <span className="niyabags-hero-text">STRUCTURED TOTE</span>
-            </span>
-
-            <span className="flex items-center gap-2">
-              <span className="niyabags-hero-text text-[10px]">02</span>
-              <span className="niyabags-hero-text">EVERYDAY CROSSBODY</span>
-            </span>
-
-            <span className="flex items-center gap-2">
-              <span className="niyabags-hero-text text-[10px]">03</span>
-              <span className="niyabags-hero-text">SLOUCHY HOBO</span>
-            </span>
-
-            <span className="flex items-center gap-2">
-              <span className="niyabags-hero-text text-[10px]">04</span>
-              <span className="niyabags-hero-text">STATEMENT CLUTCH</span>
-            </span>
-          </div>
-        </div>
+   
       </section>
 
       <PromoBanner page="home" position="after-hero" />

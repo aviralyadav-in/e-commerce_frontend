@@ -56,19 +56,22 @@ export function CartProvider({ children }) {
     const targetKey = getVariantKey(product, selectedVariant);
     const targetId = getCleanId(product);
     if (!targetKey && !targetId) return false;
+    const targetProductId = String(product._id || product.id || product.productId || "").trim();
 
     return cartItems.some((item) => {
       const itemKey = getVariantKey(item, item.selectedVariant);
       const itemId = getCleanId(item);
+      const itemProductId = String(item._id || item.id || item.product?._id || item.product?.id || "").trim();
       
-      return itemKey === targetKey || itemId === targetId;
+      return itemKey === targetKey || itemId === targetId || itemProductId === targetProductId || String(item.id || "").startsWith(targetProductId + "-");
     });
   }, [cartItems]);
 
-  // --- ADD TO CART (Variant Support) ---
+  // --- ADD TO CART (Variant Support + Deduplication) ---
   const addToCart = (product, selectedVariant = null, qty = 1) => {
     const uniqueKey = getVariantKey(product, selectedVariant);
     if (!uniqueKey) return;
+    const productId = String(product._id || product.id || product.productId || "").trim();
 
     setCartItems((prevItems) => {
       const existingIndex = prevItems.findIndex((item) => {
@@ -81,6 +84,29 @@ export function CartProvider({ children }) {
         updated[existingIndex].quantity += qty;
         return updated;
       } else {
+        const hasExisting = prevItems.some((item) => {
+          const itemProductId = String(item._id || item.id || item.product?._id || item.product?.id || "").trim();
+          const itemKey = String(item.id || "");
+          return itemProductId === productId || itemKey.startsWith(productId + "-");
+        });
+
+        if (hasExisting) {
+          const filtered = prevItems.filter((item) => {
+            const itemProductId = String(item._id || item.id || item.product?._id || item.product?.id || "").trim();
+            const itemKey = String(item.id || "");
+            return itemProductId !== productId && !itemKey.startsWith(productId + "-");
+          });
+          const newItem = {
+            ...product,
+            id: uniqueKey,
+            _id: product._id || product.id,
+            variantId: selectedVariant?.id || selectedVariant?._id || null,
+            selectedVariant: selectedVariant || null,
+            quantity: qty,
+          };
+          return [...filtered, newItem];
+        }
+
         const newItem = {
           ...product,
           id: uniqueKey,
