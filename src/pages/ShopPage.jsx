@@ -319,11 +319,11 @@ function ShopPage() {
     const toggleFn = isMobile ? () => toggleMobileSection("price") : () => toggleSection("price");
 
     return (
-      <div className="border-t border-[var(--color-border)] py-2.5">
+      <div className="border-t border-[var(--color-border)] py-1.5">
         <button
           type="button"
           onClick={toggleFn}
-          className="flex w-full items-center justify-between py-1 text-left"
+          className="flex w-full items-center justify-between py-0.5 text-left"
         >
           <span className="text-[10px] font-semibold tracking-[0.16em] text-[var(--color-text-primary)]">
             PRICE RANGE
@@ -336,7 +336,7 @@ function ShopPage() {
           />
         </button>
         {isOpen && (
-          <div className="mt-2.5 space-y-3 pb-2">
+          <div className="mt-1.5 space-y-2 pb-1">
             <div className="flex items-center gap-3">
               <div className="flex-1">
                 <label className="text-[9px] text-[var(--color-text-muted)]">
@@ -388,7 +388,7 @@ function ShopPage() {
         <button
           type="button"
           onClick={handleToggle}
-          className="flex w-full items-center justify-between py-2.5 text-left"
+          className="flex w-full items-center justify-between py-1.5 text-left"
         >
           <span className="text-[10px] font-semibold tracking-[0.16em] text-[var(--color-text-primary)]">
             {title}
@@ -402,7 +402,7 @@ function ShopPage() {
         </button>
 
         {isOpen && (
-          <div className="space-y-2 pb-3 pt-1">
+          <div className="space-y-1.5 pb-2 pt-0.5">
             {items.map((item) => {
               const isSelected = selectedSubcategories.includes(item.value);
               return (
@@ -450,7 +450,7 @@ function ShopPage() {
           <button
             type="button"
             onClick={toggleCat}
-            className="flex w-full items-center justify-between py-2.5 text-left"
+            className="flex w-full items-center justify-between py-1.5 text-left"
           >
             <span className="text-[10px] font-semibold tracking-[0.16em]">
               SHOP BY CATEGORY
@@ -464,7 +464,7 @@ function ShopPage() {
           </button>
 
           {catOpen && (
-            <div className="pl-2 space-y-1">
+            <div className="pl-2 space-y-0.5">
               {dynamicWomenSubcategories.length > 0 && (
                 <FilterSection
                   title="WOMEN"
@@ -491,7 +491,7 @@ function ShopPage() {
             <button
               type="button"
               onClick={toggleColor}
-              className="flex w-full items-center justify-between py-2.5 text-left"
+              className="flex w-full items-center justify-between py-1.5 text-left"
             >
               <span className="text-[10px] font-semibold tracking-[0.16em]">
                 SHOP BY COLOR
@@ -504,7 +504,7 @@ function ShopPage() {
               />
             </button>
             {colorOpen && (
-              <div className="flex flex-wrap gap-2 pb-3 pt-1">
+              <div className="flex flex-wrap gap-1.5 pb-2 pt-0.5">
                 {dynamicColors.map((colorName) => {
                   const isSelected = selectedColors.includes(colorName);
                   return (
@@ -532,7 +532,7 @@ function ShopPage() {
           <button
             type="button"
             onClick={toggleAvail}
-            className="flex w-full items-center justify-between py-2.5 text-left"
+            className="flex w-full items-center justify-between py-1.5 text-left"
           >
             <span className="text-[10px] font-semibold tracking-[0.16em]">
               COLLECTIONS & AVAILABILITY
@@ -545,7 +545,7 @@ function ShopPage() {
             />
           </button>
           {availOpen && (
-            <div className="space-y-2 pb-3 pt-1">
+            <div className="space-y-1.5 pb-2 pt-0.5">
               {[
                 { id: "new-arrivals", label: "New Arrivals" },
                 { id: "best-sellers", label: "Best Sellers" },
@@ -584,7 +584,7 @@ function ShopPage() {
     <main className="min-h-dvh w-full bg-[var(--color-bg-primary)] text-[13px] text-[var(--color-text-primary)]">
       {/* HEADER */}
       <section className="border-b border-[var(--color-border)]">
-        <div className="mx-auto max-w-[1440px] px-5 py-4 md:px-10 md:py-8">
+        <div className="mx-auto max-w-[1440px] px-5 py-3 md:px-10 md:py-5">
           <div className="flex flex-col justify-between gap-3 md:flex-row md:items-end">
             <div>
               <p className="mb-1.5 text-[8px] font-semibold tracking-[0.24em] text-[var(--color-accent)]">
@@ -605,9 +605,9 @@ function ShopPage() {
       <PromoBanner page="shop" position="after-hero" />
 
       {/* CONTENT */}
-      <section className="mx-auto max-w-[1440px] px-5 py-5 md:px-10 md:py-8">
+      <section className="mx-auto max-w-[1440px] px-5 py-4 md:px-10 md:py-6">
         {/* MOBILE TOOLBAR */}
-        <div className="mb-5 flex items-center justify-between border-b border-[var(--color-border)] pb-3 md:hidden">
+        <div className="mb-3 flex items-center justify-between border-b border-[var(--color-border)] pb-2 md:hidden">
           <p className="text-[9px] tracking-[0.15em] text-[var(--color-text-muted)]">
             {loading ? "LOADING..." : `${sortedProducts.length} PRODUCTS`}
           </p>
@@ -711,11 +711,11 @@ function ShopPage() {
         )}
 
         {/* MAIN LAYOUT */}
-        <div className="grid grid-cols-1 items-start gap-7 md:grid-cols-[210px_1fr] lg:grid-cols-[240px_1fr]">
+        <div className="grid grid-cols-1 items-start gap-5 md:grid-cols-[210px_1fr] lg:grid-cols-[240px_1fr]">
           {/* DESKTOP SIDEBAR */}
           <aside className="hidden md:block sticky top-24">
             <div className="max-h-[calc(100vh-6rem)] overflow-y-auto pr-3 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-              <div className="mb-2 flex items-center justify-between pb-2">
+              <div className="mb-1 flex items-center justify-between pb-1">
                 <p className="text-[9px] font-semibold tracking-[0.2em]">
                   FILTERS
                 </p>
@@ -739,7 +739,7 @@ function ShopPage() {
 
           {/* PRODUCTS GRID & SORT TOOLBAR */}
           <div className="min-w-0">
-            <div className="mb-4 hidden items-center justify-between md:flex">
+            <div className="mb-2.5 hidden items-center justify-between md:flex">
               {/* DROPDOWN SORT TOOLBAR */}
               <div className="relative">
                 <button
@@ -815,7 +815,7 @@ function ShopPage() {
                     No products matching your filters.
                   </div>
                 ) : (
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-9 md:grid-cols-3 lg:grid-cols-4">
+                  <div className="grid grid-cols-2 gap-x-3 gap-y-6 md:grid-cols-3 lg:grid-cols-4">
                     {sortedProducts.map((product) => (
                       <ProductCard
                         key={product.id || product._id}

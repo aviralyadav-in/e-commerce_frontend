@@ -83,27 +83,27 @@ export const heroBannersData = [
 export const reelsData = [
   {
     id: 1,
-    image:
-      "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=700&q=85",
+    video: "/products/bags/WhatsApp Video 2026-09-03 at 13.31.42.mp4",
     title: "Everyday elegance",
+    isActive: true,
   },
   {
     id: 2,
-    image:
-      "https://images.unsplash.com/photo-1591561954557-26941169b49e?auto=format&fit=crop&w=700&q=85",
+    video: "https://www.pexels.com/download/video/5644250/",
     title: "Style it your way",
+    isActive: true,
   },
   {
     id: 3,
-    image:
-      "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?auto=format&fit=crop&w=700&q=85",
+    video: "https://www.pexels.com/download/video/13441306/",
     title: "Behind the craft",
+    isActive: true,
   },
   {
     id: 4,
-    image:
-      "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=700&q=85",
+    video: "https://www.pexels.com/download/video/9595334/",
     title: "The Niya edit",
+    isActive: true,
   },
 ];
 export const announcementsData = [

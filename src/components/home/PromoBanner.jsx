@@ -40,7 +40,7 @@ function PromoBanner({ page, position }) {
   }
 
   return (
-    <section className="w-full bg-bg-primary px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-6 lg:px-8 lg:py-8">
+    <section className="w-full bg-bg-primary px-0 py-1.5 sm:px-0 sm:py-2 md:px-2 md:py-3 lg:px-4 lg:py-4">
       <div className="w-full overflow-hidden rounded-lg md:rounded-xl shadow-sm">
         <img
           src={banner.image}

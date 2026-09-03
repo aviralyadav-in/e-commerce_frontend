@@ -30,12 +30,15 @@ function ProductCard({ product, badgeText }) {
   // Price Calculation Logic
   const priceOriginal = Number(product?.price || 0);
   const priceSale = product?.salePrice ? Number(product.salePrice) : null;
-  const finalPrice = priceSale && priceSale < priceOriginal ? priceSale : priceOriginal;
+  const finalPrice =
+    priceSale && priceSale < priceOriginal ? priceSale : priceOriginal;
   const hasDiscount = Boolean(priceSale && priceSale < priceOriginal);
 
   const discountPercentage =
     product?.discountPercentage ||
-    (hasDiscount ? Math.round(((priceOriginal - priceSale) / priceOriginal) * 100) : 0);
+    (hasDiscount
+      ? Math.round(((priceOriginal - priceSale) / priceOriginal) * 100)
+      : 0);
 
   const handleProductClick = () => {
     if (productId) {
@@ -56,7 +59,7 @@ function ProductCard({ product, badgeText }) {
   return (
     <article
       onClick={handleProductClick}
-      className="group flex flex-col justify-between overflow-hidden rounded-md border border-border-theme bg-bg-secondary p-2.5 shadow-xs transition hover:shadow-md cursor-pointer"
+      className="group flex flex-col justify-between overflow-hidden rounded-md border border-border-theme bg-bg-secondary p-0 shadow-xs transition hover:shadow-md cursor-pointer"
     >
       {/* 1. TOP IMAGE CONTAINER */}
       <div className="relative aspect-[4/5] w-full overflow-hidden rounded-xs bg-bg-tertiary">
@@ -83,7 +86,9 @@ function ProductCard({ product, badgeText }) {
               ? "bg-dark-section text-white"
               : "bg-bg-secondary/90 text-text-primary hover:bg-bg-secondary"
           }`}
-          aria-label={wishlistActive ? "Remove from wishlist" : "Add to wishlist"}
+          aria-label={
+            wishlistActive ? "Remove from wishlist" : "Add to wishlist"
+          }
         >
           <FiHeart
             size={13}
@@ -94,12 +99,12 @@ function ProductCard({ product, badgeText }) {
       </div>
 
       {/* 2. DETAILS & BOTTOM ACTION ROW */}
-      <div className="flex flex-1 flex-col justify-between pt-2.5">
+      <div className="flex flex-1 flex-col justify-between px-2.5 pb-2.5 pt-2.5">
+        {" "}
         {/* TITLE ONLY (MAX 2 LINES) */}
         <h3 className="line-clamp-2 text-xs font-medium leading-snug text-text-primary min-h-[32px]">
           {productTitle}
         </h3>
-
         {/* PRICING + SIDE ADD BUTTON ROW */}
         <div className="mt-2 flex items-end justify-between gap-1 border-t border-border-soft pt-2">
           {/* PRICE COL */}
