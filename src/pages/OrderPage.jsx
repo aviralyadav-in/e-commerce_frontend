@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
 
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import {
   FiArrowLeft,
   FiLock,
-  FiMapPin,
   FiUser,
   FiPhone,
   FiMail,
+  FiMapPin,
   FiShoppingBag,
+  FiPlus,
+  FiCheck,
 } from "react-icons/fi";
 
 import { useCart } from "../context/CartContext";
@@ -19,9 +21,14 @@ import OrderReceipt from "../components/order/OrderReceipt";
 
 // import { createOrder } from "../api/orderApi";
 
-function OrderPage() {
-  const navigate = useNavigate();
+function formatAddress(addr) {
+  if (!addr) return "";
+  return [addr.address, addr.city, addr.state, addr.pincode]
+    .filter(Boolean)
+    .join(", ");
+}
 
+function OrderPage() {
   const { cartItems, clearCart } = useCart();
   const { user } = useAuth();
 
@@ -31,32 +38,24 @@ function OrderPage() {
   const [completedOrder, setCompletedOrder] = useState(null);
 
   // ============================================================
-  // FORM STATE
+  // FORM STATE — contact + payment (address is selected, not edited)
   // ============================================================
 
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
     phone: "",
-    address: "",
-    city: "",
-    state: "",
-    pinCode: "",
     paymentMethod: "COD",
   });
 
   useEffect(() => {
     if (user) {
-      setFormData({
+      setFormData((prev) => ({
+        ...prev,
         fullName: user.name || "",
         email: user.email || "",
         phone: user.phone || "",
-        address: user.address || "",
-        city: user.city || "",
-        state: user.state || "",
-        pinCode: user.pincode || "",
-        paymentMethod: "COD",
-      });
+      }));
     }
   }, [user]);
 
@@ -68,6 +67,30 @@ function OrderPage() {
       [name]: value,
     }));
   };
+
+  // ============================================================
+  // ADDRESS SELECTION — fetch from user.addresses, select only
+  // ============================================================
+
+  const savedAddresses = Array.isArray(user?.addresses)
+    ? user.addresses.filter(
+        (a) => a && a.address && a.city && a.pincode,
+      )
+    : [];
+
+  const defaultAddress =
+    savedAddresses.find((a) => a.isDefault) || savedAddresses[0] || null;
+
+  const [selectedAddressId, setSelectedAddressId] = useState(
+    defaultAddress?.id || "",
+  );
+
+  // Derived: if the current selection is no longer in the saved list,
+  // fall back to the default / first available address.
+  const selectedAddress =
+    savedAddresses.find((a) => a.id === selectedAddressId) ||
+    defaultAddress ||
+    null;
 
   // ============================================================
   // PRICING
@@ -92,14 +115,15 @@ function OrderPage() {
 
     setErrorMessage("");
 
-    if (
-      !formData.fullName ||
-      !formData.phone ||
-      !formData.address ||
-      !formData.city ||
-      !formData.pinCode
-    ) {
-      setErrorMessage("Please fill in all required shipping fields.");
+    if (!formData.fullName || !formData.phone) {
+      setErrorMessage("Please fill in your name and phone number.");
+      return;
+    }
+
+    if (!selectedAddress) {
+      setErrorMessage(
+        "Please select a delivery address to continue.",
+      );
       return;
     }
 
@@ -116,10 +140,11 @@ function OrderPage() {
           fullName: formData.fullName,
           email: formData.email,
           phone: formData.phone,
-          address: formData.address,
-          city: formData.city,
-          state: formData.state,
-          pinCode: formData.pinCode,
+          address: selectedAddress.address,
+          city: selectedAddress.city,
+          state: selectedAddress.state || "",
+          pinCode: selectedAddress.pincode,
+          addressId: selectedAddress.id,
         },
 
         items: cartItems.map((item) => ({
@@ -303,15 +328,26 @@ function OrderPage() {
           className="grid gap-8 lg:grid-cols-[1fr_380px]"
         >
           {/* ================================================== */}
-          {/* SHIPPING INFORMATION */}
+          {/* SHIPPING INFORMATION — contact fields are editable,
+              ADDRESS is fetched & selected only */}
           {/* ================================================== */}
 
           <div className="space-y-6">
             <div className="rounded-sm border border-border-soft bg-bg-secondary p-6 shadow-sm">
-              <h2 className="mb-4 font-serif text-lg font-medium text-text-primary">
-                Shipping Information
-              </h2>
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="font-serif text-lg font-medium text-text-primary">
+                  Shipping Information
+                </h2>
+                <Link
+                  to="/profile"
+                  className="inline-flex items-center gap-1 text-[10px] font-semibold tracking-wider text-accent transition hover:opacity-70"
+                >
+                  <FiPlus size={11} />
+                  MANAGE ADDRESSES
+                </Link>
+              </div>
 
+              {/* CONTACT FIELDS (editable) */}
               <div className="grid gap-4 sm:grid-cols-2">
 
                 {/* FULL NAME */}
@@ -384,81 +420,75 @@ function OrderPage() {
                     />
                   </div>
                 </div>
+              </div>
 
-                {/* ADDRESS */}
-                <div className="sm:col-span-2">
-                  <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-text-secondary">
-                    Street Address <span className="text-red-500">*</span>
-                  </label>
+              {/* DELIVERY ADDRESS — fetched & selected, no editing here */}
+              <div className="mt-6 border-t border-border-soft pt-6">
+                <p className="mb-3 text-[10px] font-semibold tracking-widest text-accent uppercase">
+                  Delivery Address
+                </p>
 
-                  <div className="relative">
+                {savedAddresses.length === 0 ? (
+                  <div className="rounded-xs border border-dashed border-border-soft bg-bg-primary p-6 text-center">
                     <FiMapPin
-                      className="absolute left-3 top-3.5 text-text-muted"
-                      size={14}
+                      className="mx-auto mb-3 text-text-muted"
+                      size={20}
+                      strokeWidth={1.3}
                     />
-
-                    <input
-                      type="text"
-                      name="address"
-                      value={formData.address}
-                      onChange={handleInputChange}
-                      required
-                      placeholder="House no., street name, area"
-                      className="h-10 w-full rounded-xs border border-border-soft bg-bg-primary pl-9 pr-3 text-xs text-text-primary outline-none focus:border-text-primary"
-                    />
+                    <p className="text-xs font-semibold text-text-primary">
+                      No saved addresses yet
+                    </p>
+                    <p className="mt-1 text-[10px] text-text-muted">
+                      Add an address from Edit Profile to place an order.
+                    </p>
+                    <Link
+                      to="/profile"
+                      className="mt-4 inline-flex h-9 items-center gap-1.5 rounded-xs bg-accent px-4 text-[10px] font-semibold tracking-widest text-white transition hover:opacity-90"
+                    >
+                      <FiPlus size={11} />
+                      ADD ADDRESS
+                    </Link>
                   </div>
-                </div>
+                ) : (
+                  <div className="space-y-3">
+                    {savedAddresses.map((addr) => {
+                      const isActive = addr.id === selectedAddress?.id;
+                      return (
+                        <label
+                          key={addr.id}
+                          className={`flex cursor-pointer items-start gap-3 rounded-xs border p-4 transition ${
+                            isActive
+                              ? "border-accent bg-accent-soft/30"
+                              : "border-border-soft bg-bg-primary hover:border-text-secondary"
+                          }`}
+                        >
+                          <input
+                            type="radio"
+                            name="deliveryAddress"
+                            value={addr.id}
+                            checked={isActive}
+                            onChange={() => setSelectedAddressId(addr.id)}
+                            className="mt-1 text-accent"
+                          />
 
-                {/* CITY */}
-                <div>
-                  <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-text-secondary">
-                    City <span className="text-red-500">*</span>
-                  </label>
+                          <div className="flex-1">
+                            <p className="text-[11px] leading-relaxed text-text-secondary">
+                              {formatAddress(addr)}
+                            </p>
+                          </div>
 
-                  <input
-                    type="text"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="City"
-                    className="h-10 w-full rounded-xs border border-border-soft bg-bg-primary px-3 text-xs text-text-primary outline-none focus:border-text-primary"
-                  />
-                </div>
-
-                {/* STATE */}
-                <div>
-                  <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-text-secondary">
-                    State
-                  </label>
-
-                  <input
-                    type="text"
-                    name="state"
-                    value={formData.state}
-                    onChange={handleInputChange}
-                    placeholder="State"
-                    className="h-10 w-full rounded-xs border border-border-soft bg-bg-primary px-3 text-xs text-text-primary outline-none focus:border-text-primary"
-                  />
-                </div>
-
-                {/* PINCODE */}
-                <div>
-                  <label className="mb-1 block text-[10px] font-semibold uppercase tracking-wider text-text-secondary">
-                    Pincode / Postal Code{" "}
-                    <span className="text-red-500">*</span>
-                  </label>
-
-                  <input
-                    type="text"
-                    name="pinCode"
-                    value={formData.pinCode}
-                    onChange={handleInputChange}
-                    required
-                    placeholder="Pincode"
-                    className="h-10 w-full rounded-xs border border-border-soft bg-bg-primary px-3 text-xs text-text-primary outline-none focus:border-text-primary"
-                  />
-                </div>
+                          {isActive && (
+                            <FiCheck
+                              className="mt-1 text-accent"
+                              size={14}
+                              strokeWidth={2}
+                            />
+                          )}
+                        </label>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
             </div>
 

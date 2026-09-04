@@ -96,6 +96,109 @@ export function AuthProvider({ children }) {
   }
 
   // ===============================
+  // ADDRESS MANAGEMENT (local helper)
+  // Saves up to 3 addresses in the user object.
+  // Each address: { id, address, city, state, pincode, isDefault }
+  // ===============================
+
+  const MAX_ADDRESSES = 3;
+
+  function buildAddressObject(partial = {}) {
+    return {
+      id: partial.id || crypto.randomUUID(),
+      address: partial.address || "",
+      city: partial.city || "",
+      state: partial.state || "",
+      pincode: partial.pincode || "",
+      isDefault: partial.isDefault || false,
+    };
+  }
+
+  async function addAddress(addressData) {
+    if (!user) throw new Error("Not logged in");
+
+    const currentAddresses = Array.isArray(user.addresses)
+      ? user.addresses
+      : [];
+
+    if (currentAddresses.length >= MAX_ADDRESSES) {
+      throw new Error(`You can save up to ${MAX_ADDRESSES} addresses.`);
+    }
+
+    const isFirst = currentAddresses.length === 0;
+    const newAddress = buildAddressObject({
+      ...addressData,
+      isDefault: addressData.isDefault ?? isFirst,
+    });
+
+    const updatedAddresses = isFirst
+      ? [newAddress]
+      : currentAddresses.map((a) => ({ ...a, isDefault: false })).concat(
+          newAddress,
+        );
+
+    const response = await updateProfile({ addresses: updatedAddresses });
+    setUser(response.user);
+    return response.user.addresses;
+  }
+
+  async function updateAddressById(id, patch) {
+    if (!user) throw new Error("Not logged in");
+
+    const currentAddresses = Array.isArray(user.addresses)
+      ? user.addresses
+      : [];
+
+    const updatedAddresses = currentAddresses.map((a) =>
+      a.id === id ? { ...a, ...patch } : a,
+    );
+
+    const response = await updateProfile({ addresses: updatedAddresses });
+    setUser(response.user);
+    return response.user.addresses;
+  }
+
+  async function removeAddressById(id) {
+    if (!user) throw new Error("Not logged in");
+
+    const currentAddresses = Array.isArray(user.addresses)
+      ? user.addresses
+      : [];
+
+    const updatedAddresses = currentAddresses.filter(
+      (a) => a.id !== id,
+    );
+
+    if (
+      updatedAddresses.length > 0 &&
+      !updatedAddresses.some((a) => a.isDefault)
+    ) {
+      updatedAddresses[0].isDefault = true;
+    }
+
+    const response = await updateProfile({ addresses: updatedAddresses });
+    setUser(response.user);
+    return response.user.addresses;
+  }
+
+  async function setDefaultAddressById(id) {
+    if (!user) throw new Error("Not logged in");
+
+    const currentAddresses = Array.isArray(user.addresses)
+      ? user.addresses
+      : [];
+
+    const updatedAddresses = currentAddresses.map((a) => ({
+      ...a,
+      isDefault: a.id === id,
+    }));
+
+    const response = await updateProfile({ addresses: updatedAddresses });
+    setUser(response.user);
+    return response.user.addresses;
+  }
+
+  // ===============================
   // LOGOUT
   // ===============================
 
@@ -120,6 +223,11 @@ export function AuthProvider({ children }) {
     login,
     logout,
     updateUserProfile,
+    addAddress,
+    updateAddressById,
+    removeAddressById,
+    setDefaultAddressById,
+    maxAddresses: MAX_ADDRESSES,
     isAuthenticated: !!user,
   };
 

@@ -300,18 +300,24 @@ function OrderReceipt({ order, showPrintButton = true }) {
                   {order.shippingDetails.fullName}
                 </p>
 
-                <p>{order.shippingDetails.address}</p>
+                {order.shippingDetails.address && (
+                  <p>{order.shippingDetails.address}</p>
+                )}
 
                 <p>
-                  {order.shippingDetails.city}
-                  {order.shippingDetails.state
-                    ? `, ${order.shippingDetails.state}`
-                    : ""}
+                  {[
+                    order.shippingDetails.city,
+                    order.shippingDetails.state,
+                    order.shippingDetails.pincode ||
+                      order.shippingDetails.pinCode,
+                  ]
+                    .filter(Boolean)
+                    .join(", ")}
                 </p>
 
-                <p>{order.shippingDetails.pinCode}</p>
-
-                <p>{order.shippingDetails.phone}</p>
+                {order.shippingDetails.phone && (
+                  <p>{order.shippingDetails.phone}</p>
+                )}
 
                 {order.shippingDetails.email && (
                   <p>{order.shippingDetails.email}</p>

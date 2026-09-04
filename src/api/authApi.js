@@ -56,6 +56,7 @@ export async function signupUser(userData) {
   const newUser = {
     id: crypto.randomUUID(),
     ...userData,
+    addresses: [],
   };
 
   users.push(newUser);
@@ -80,6 +81,39 @@ export async function signupUser(userData) {
 }
 
 // ============================================
+// ADDRESS HELPERS
+// ============================================
+
+function migrateLegacyAddress(user) {
+  if (!user) return user;
+
+  if (Array.isArray(user.addresses) && user.addresses.length > 0) {
+    return user;
+  }
+
+  const hasLegacy =
+    user.address || user.city || user.state || user.pincode;
+
+  if (!hasLegacy) {
+    return { ...user, addresses: [] };
+  }
+
+  return {
+    ...user,
+    addresses: [
+      {
+        id: crypto.randomUUID(),
+        address: user.address || "",
+        city: user.city || "",
+        state: user.state || "",
+        pincode: user.pincode || "",
+        isDefault: true,
+      },
+    ],
+  };
+}
+
+// ============================================
 // GET CURRENT USER PROFILE
 // ============================================
 
@@ -92,8 +126,14 @@ export async function getProfile() {
     };
   }
 
+  const user = migrateLegacyAddress(JSON.parse(currentUser));
+
+  if (user.addresses) {
+    localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
+  }
+
   return {
-    user: JSON.parse(currentUser),
+    user,
   };
 }
 

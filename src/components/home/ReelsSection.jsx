@@ -7,9 +7,12 @@ function ReelsSection() {
   const [selectedReel, setSelectedReel] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
 
   const videoRefs = useRef([]);
   const modalVideoRef = useRef(null);
+  const scrollContainerRef = useRef(null);
+  const animationRef = useRef(null);
 
   useEffect(() => {
     let mounted = true;
@@ -40,10 +43,43 @@ function ReelsSection() {
   }, []);
 
   // ===============================
+  // AUTO SCROLL & INFINITE LOOP LOGIC
+  // ===============================
+  useEffect(() => {
+    if (reels.length === 0) return;
+
+    const scrollContainer = scrollContainerRef.current;
+    if (!scrollContainer) return;
+
+    const scroll = () => {
+      if (!isPaused) {
+        // Adjust speed by changing the increment value
+        scrollContainer.scrollLeft += 0.8;
+
+        // Reset scroll position to create infinite loop effect
+        // If scrolled past the first set of items (half of the total scroll width)
+        if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth / 2) {
+          scrollContainer.scrollLeft -= scrollContainer.scrollWidth / 2;
+        }
+      }
+      animationRef.current = requestAnimationFrame(scroll);
+    };
+
+    animationRef.current = requestAnimationFrame(scroll);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+    };
+  }, [reels.length, isPaused]);
+
+  // ===============================
   // VIDEO HOVER
   // ===============================
 
   const handleVideoMouseEnter = (index) => {
+    setIsPaused(true);
     const video = videoRefs.current[index];
 
     if (!video) return;
@@ -53,6 +89,7 @@ function ReelsSection() {
   };
 
   const handleVideoMouseLeave = (index) => {
+    setIsPaused(false);
     const video = videoRefs.current[index];
 
     if (!video) return;
@@ -153,14 +190,23 @@ function ReelsSection() {
 
         {/* CAROUSEL WRAPPER */}
 
-        <div className="relative overflow-hidden">
-          <div className="reels-marquee flex w-max gap-3 sm:gap-4 md:gap-5 hover:[animation-play-state:paused]">
+        <div className="relative w-full">
+          <div
+            ref={scrollContainerRef}
+            className="flex w-full gap-3 overflow-x-auto sm:gap-4 md:gap-5 scroll-smooth [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+            onTouchStart={() => setIsPaused(true)}
+            onTouchEnd={() => setIsPaused(false)}
+          >
             {scrollingReels.map((reel, index) => (
               <button
                 key={`${reel.id}-${index}`}
                 type="button"
                 onClick={() => handleReelClick(reel)}
                 className="group relative aspect-[9/14] w-[calc((100vw-40px)/2)] shrink-0 overflow-hidden rounded-sm text-left sm:w-[220px] md:w-[260px] lg:w-[280px]"
+                onMouseEnter={() => handleVideoMouseEnter(index)}
+                onMouseLeave={() => handleVideoMouseLeave(index)}
               >
                 {/* VIDEO */}
 
@@ -174,8 +220,6 @@ function ReelsSection() {
                   playsInline
                   preload="metadata"
                   draggable="false"
-                  onMouseEnter={() => handleVideoMouseEnter(index)}
-                  onMouseLeave={() => handleVideoMouseLeave(index)}
                   className="pointer-events-none h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
 
@@ -260,33 +304,6 @@ function ReelsSection() {
           </div>
         </div>
       )}
-
-      {/* ===============================
-          MARQUEE ANIMATION CSS
-      =============================== */}
-
-      <style>{`
-        .reels-marquee {
-          animation: niyaReelsScroll 35s linear infinite;
-          will-change: transform;
-        }
-
-        @keyframes niyaReelsScroll {
-          from {
-            transform: translateX(0);
-          }
-
-          to {
-            transform: translateX(calc(-50% - 0.75rem));
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .reels-marquee {
-            animation: none;
-          }
-        }
-      `}</style>
     </section>
   );
 }

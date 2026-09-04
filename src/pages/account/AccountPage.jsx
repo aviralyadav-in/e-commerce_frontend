@@ -154,47 +154,72 @@ function AccountPage() {
                   {currentUser.phone || "—"}
                 </p>
               </div>
+            </div>
 
-              {/* ADDRESS */}
-              <div>
-                <p className="mb-2 text-[10px] font-medium tracking-[0.12em] text-accent">
-                  ADDRESS
+            {/* SAVED ADDRESSES — only render the ones that are actually filled */}
+            <div className="mt-10 border-t border-border-soft pt-8">
+              <div className="mb-5 flex items-center justify-between">
+                <p className="text-[10px] font-medium tracking-[0.12em] text-accent">
+                  SAVED ADDRESSES
                 </p>
-                <p className="text-xs text-text-secondary">
-                  {currentUser.address || "—"}
-                </p>
+                <Link
+                  to="/profile"
+                  className="text-[10px] font-semibold tracking-wider text-accent transition hover:opacity-70"
+                >
+                  + ADD / EDIT
+                </Link>
               </div>
 
-              {/* CITY */}
-              <div>
-                <p className="mb-2 text-[10px] font-medium tracking-[0.12em] text-accent">
-                  CITY
-                </p>
-                <p className="text-xs text-text-secondary">
-                  {currentUser.city || "—"}
-                </p>
-              </div>
+              {(() => {
+                const savedAddresses = Array.isArray(
+                  currentUser.addresses,
+                )
+                  ? currentUser.addresses.filter(
+                      (a) =>
+                        a && a.address && a.city && a.pincode,
+                    )
+                  : [];
 
-              {/* STATE */}
-              <div>
-                <p className="mb-2 text-[10px] font-medium tracking-[0.12em] text-accent">
-                  STATE
-                </p>
-                <p className="text-xs text-text-secondary">
-                  {currentUser.state || "—"}
-                </p>
-              </div>
+                if (savedAddresses.length === 0) {
+                  return (
+                    <p className="text-xs text-text-muted">
+                      You have not saved any addresses yet. Add one from
+                      Edit Profile to use it during checkout.
+                    </p>
+                  );
+                }
 
-              {/* PINCODE */}
-              <div>
-                <p className="mb-2 text-[10px] font-medium tracking-[0.12em] text-accent">
-                  PINCODE
-                </p>
-                <p className="text-xs text-text-secondary">
-                  {currentUser.pincode || "—"}
-                </p>
-              </div>
+                return (
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    {savedAddresses.map((addr, idx) => (
+                      <div
+                        key={addr.id || idx}
+                        className="rounded-xs border border-border-soft bg-bg-primary p-4"
+                      >
+                        <div className="mb-2 flex items-center justify-between">
+                          <p className="text-[10px] font-semibold tracking-wider text-text-primary">
+                            {`Address ${idx + 1}`}
+                          </p>
+                          {addr.isDefault && (
+                            <span className="rounded-xs bg-accent-soft px-2 py-0.5 text-[9px] font-semibold tracking-wider text-accent uppercase">
+                              Default
+                            </span>
+                          )}
+                        </div>
 
+                        <p className="text-xs leading-relaxed text-text-secondary">
+                          {addr.address}
+                        </p>
+                        <p className="mt-1 text-xs text-text-secondary">
+                          {addr.city}
+                          {addr.state ? `, ${addr.state}` : ""}
+                          {addr.pincode ? ` — ${addr.pincode}` : ""}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                );
+              })()}
             </div>
 
             {/* EDIT PROFILE + SIGN OUT */}

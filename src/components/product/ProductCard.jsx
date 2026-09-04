@@ -105,32 +105,37 @@ function ProductCard({ product, badgeText }) {
         <h3 className="line-clamp-2 text-xs font-medium leading-snug text-text-primary min-h-[32px]">
           {productTitle}
         </h3>
-        {/* PRICING + SIDE ADD BUTTON ROW */}
-        <div className="mt-2 flex items-end justify-between gap-1 border-t border-border-soft pt-2">
-          {/* PRICE COL */}
-          <div className="flex flex-col">
-            <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="text-xs font-bold text-text-primary">
-                ₹{finalPrice.toLocaleString("en-IN")}
-              </span>
-              {hasDiscount && (
+        {/* PRICING + ADD BUTTON */}
+        <div className="mt-2 border-t border-border-soft pt-2">
+          {/* PRICE ROW — mobile/tablet: 3 items in one line | desktop: price + original in one line, discount below */}
+          <div className="flex items-center gap-1.5 flex-wrap lg:flex-nowrap">
+            <span className="text-xs font-bold text-text-primary">
+              ₹{finalPrice.toLocaleString("en-IN")}
+            </span>
+            {hasDiscount && (
+              <>
                 <span className="text-[10px] text-text-muted line-through">
                   ₹{priceOriginal.toLocaleString("en-IN")}
                 </span>
-              )}
-            </div>
-            {hasDiscount && (
-              <span className="text-[9px] font-semibold text-accent">
-                {discountPercentage}% OFF
-              </span>
+                <span className="text-[9px] font-semibold text-accent lg:hidden">
+                  {discountPercentage}% OFF
+                </span>
+              </>
             )}
           </div>
 
-          {/* SIDE-ALIGNED ADD BUTTON */}
+          {/* DESKTOP ONLY: discount % on a new line below price */}
+          {hasDiscount && (
+            <span className="hidden text-[9px] font-semibold text-accent lg:block">
+              {discountPercentage}% OFF
+            </span>
+          )}
+
+          {/* ADD BUTTON — full width on mobile/tablet, side width on desktop */}
           <button
             type="button"
             onClick={handleCartClick}
-            className={`flex h-7 items-center justify-center gap-1 rounded-xs px-2.5 text-[10px] font-semibold tracking-wider transition ${
+            className={`mt-2 flex w-full lg:w-auto lg:mt-2 items-center justify-center gap-1 rounded-xs px-2.5 py-1.5 lg:py-0 lg:h-7 text-[10px] font-semibold tracking-wider transition ${
               cartActive
                 ? "bg-accent text-white"
                 : "bg-dark-section text-white hover:opacity-95"
